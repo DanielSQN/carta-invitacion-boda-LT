@@ -351,8 +351,16 @@ blockquote cite {
 .invitation-open .envelope-sprig,
 .invitation-open .envelope-drawing,
 .invitation-open .envelope::after {
+  animation: none;
   opacity: 0;
   transform: translateY(24px) scale(0.96);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.invitation-open .sprig-line {
+  animation: none;
+  stroke-dashoffset: 240;
 }
 
 .invitation-open .wax-seal {
@@ -438,21 +446,14 @@ blockquote cite {
   place-items: center;
   border-radius: 50%;
   transform: translate3d(-50%, -50%, 90px);
-  background:
-    radial-gradient(circle at 34% 28%, rgba(255, 237, 177, 0.95) 0 12%, transparent 18%),
-    radial-gradient(circle at 50% 46%, #d9b76f 0 38%, #b48745 47%, #f0cf86 52%, #9b713b 58%, #d2ad66 66%, #6f4d28 72%);
-  border: 3px double rgba(86, 55, 24, 0.7);
+  background: transparent;
+  border: 0;
   color: #704615;
   font-family: var(--font-playfair), Georgia, serif;
   font-size: 38px;
   font-weight: 600;
-  text-shadow:
-    0 1px 0 rgba(255, 246, 205, 0.92),
-    0 2px 4px rgba(88, 52, 16, 0.28);
-  box-shadow:
-    0 14px 20px rgba(74, 47, 20, 0.3),
-    inset 0 4px 8px rgba(255, 239, 176, 0.75),
-    inset 0 -7px 12px rgba(88, 52, 16, 0.32);
+  text-shadow: none;
+  box-shadow: none;
   opacity: 0;
   animation: sealArrive 0.78s cubic-bezier(0.2, 0.86, 0.2, 1.12) 2s forwards;
   transition: transform 0.45s ease, opacity 0.45s ease;
@@ -465,38 +466,27 @@ blockquote cite {
 
 .wax-seal-image {
   position: absolute;
-  inset: -1px;
+  inset: 0;
   z-index: 4;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
-  object-fit: cover;
-  filter: drop-shadow(0 9px 12px rgba(74, 47, 20, 0.2));
+  object-fit: contain;
+  filter: none;
 }
 
 .wax-seal::before,
 .wax-seal::after {
-  position: absolute;
-  inset: 10px;
-  content: "";
-  border-radius: 50%;
-  border: 1px solid rgba(96, 59, 24, 0.45);
-  box-shadow: inset 0 0 0 1px rgba(255, 232, 164, 0.52);
-}
-
-.wax-seal::after {
-  inset: 17px;
-  border-color: rgba(255, 232, 164, 0.52);
-  box-shadow: 0 0 0 1px rgba(96, 59, 24, 0.22);
+  content: none;
 }
 
 .recipient {
   position: absolute;
   z-index: 30;
-  top: 96px;
+  top: 68px;
   left: 50%;
   bottom: auto;
-  width: min(260px, 42%);
+  width: min(240px, 34%);
   color: var(--ink);
   font-size: 22px;
   font-style: italic;
@@ -948,16 +938,16 @@ blockquote cite {
   }
 
   .recipient {
-    top: 58px;
+    top: 42px;
     left: 50%;
     bottom: auto;
-    width: min(180px, 48%);
+    width: min(150px, 42%);
     gap: 10px;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .recipient-line {
-    width: min(130px, 100%);
+    width: min(112px, 100%);
   }
 
   .open-hint {
