@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import {
   CalendarDays,
@@ -156,6 +157,30 @@ function WeddingCard() {
   );
 }
 
+function WaxSeal() {
+  const [showImage, setShowImage] = useState(true);
+
+  return (
+    <div className="wax-seal" aria-hidden="true">
+      {showImage ? (
+        // Place your exact seal image at public/images/sello-lt.png.
+        <Image
+          className="wax-seal-image"
+          src="/images/sello-lt.png"
+          alt=""
+          fill
+          sizes="118px"
+          priority
+          unoptimized
+          onError={() => setShowImage(false)}
+        />
+      ) : (
+        <span className="seal-fallback">L&amp;T</span>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const openInvitation = () => setIsOpen(true);
@@ -203,11 +228,10 @@ export default function Home() {
             <EnvelopeDrawing />
             <EnvelopeSprig side="left" />
             <EnvelopeSprig side="right" />
-            <div className="wax-seal" aria-hidden="true">
-              L&amp;T
-            </div>
+            <WaxSeal />
             <div className="recipient">
-              Para: <span />
+              <span className="recipient-label">Para:</span>
+              <span className="recipient-line" />
             </div>
           </div>
         </div>

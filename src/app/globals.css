@@ -430,7 +430,7 @@ blockquote cite {
 .wax-seal {
   position: absolute;
   z-index: 31;
-  top: 52%;
+  top: 55%;
   left: 50%;
   width: 118px;
   aspect-ratio: 1;
@@ -458,6 +458,22 @@ blockquote cite {
   transition: transform 0.45s ease, opacity 0.45s ease;
 }
 
+.seal-fallback {
+  position: relative;
+  z-index: 2;
+}
+
+.wax-seal-image {
+  position: absolute;
+  inset: -1px;
+  z-index: 4;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  border-radius: 50%;
+  object-fit: cover;
+  filter: drop-shadow(0 9px 12px rgba(74, 47, 20, 0.2));
+}
+
 .wax-seal::before,
 .wax-seal::after {
   position: absolute;
@@ -477,22 +493,29 @@ blockquote cite {
 .recipient {
   position: absolute;
   z-index: 30;
-  top: 138px;
+  top: 96px;
   left: 50%;
   bottom: auto;
+  width: min(260px, 42%);
   color: var(--ink);
   font-size: 22px;
   font-style: italic;
   transform: translate3d(-50%, 0, 80px);
+  display: grid;
+  gap: 18px;
+  justify-items: center;
   animation-delay: 2.15s;
   transition: opacity 0.35s ease 0.25s, transform 0.5s ease 0.25s;
 }
 
-.recipient span {
-  display: inline-block;
-  width: 190px;
+.recipient-label {
+  display: block;
+}
+
+.recipient-line {
+  display: block;
+  width: min(230px, 100%);
   border-bottom: 1px solid rgba(74, 57, 37, 0.36);
-  margin-left: 12px;
 }
 
 .open-hint,
@@ -919,20 +942,22 @@ blockquote cite {
   }
 
   .wax-seal {
-    top: 58%;
+    top: 57%;
     width: 72px;
     font-size: 24px;
   }
 
   .recipient {
-    top: 84px;
+    top: 58px;
     left: 50%;
     bottom: auto;
+    width: min(180px, 48%);
+    gap: 10px;
     font-size: 16px;
   }
 
-  .recipient span {
-    width: 110px;
+  .recipient-line {
+    width: min(130px, 100%);
   }
 
   .open-hint {
