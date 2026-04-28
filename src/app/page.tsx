@@ -3,7 +3,6 @@
 import { useState } from "react";
 import {
   CalendarDays,
-  ChevronDown,
   Gift,
   Heart,
   MapPin,
@@ -204,11 +203,6 @@ export default function Home() {
             <EnvelopeDrawing />
             <EnvelopeSprig side="left" />
             <EnvelopeSprig side="right" />
-            <div className="envelope-copy">
-              <span>Nuestra boda</span>
-              <strong>26 de septiembre</strong>
-              <i />
-            </div>
             <div className="wax-seal" aria-hidden="true">
               L&amp;T
             </div>
@@ -218,16 +212,12 @@ export default function Home() {
           </div>
         </div>
 
-        <ChevronDown className="down-cue" aria-hidden="true" />
-
         <button
-          className="open-banner"
+          className="open-hint"
           type="button"
           onClick={openInvitation}
         >
-          <Heart aria-hidden="true" />
-          <span>¡Pulsa aquí y desliza!</span>
-          <Heart aria-hidden="true" />
+          <span>Haz clic en el sello para abrir</span>
           <svg className="pencil-wave" viewBox="0 0 260 34" aria-hidden="true">
             <path d="M8 20 C36 4 55 33 84 18 S132 8 162 18 S212 30 252 10" />
           </svg>

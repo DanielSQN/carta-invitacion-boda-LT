@@ -105,8 +105,8 @@ a {
 }
 
 .invitation-open .verse-block,
-.invitation-open .down-cue,
-.invitation-open .open-banner {
+.invitation-open .open-hint {
+  animation: none;
   opacity: 0;
   transform: translateY(-14px);
   pointer-events: none;
@@ -356,7 +356,8 @@ blockquote cite {
 }
 
 .invitation-open .wax-seal {
-  transform: translate(-50%, -50%) scale(0.2);
+  animation: none;
+  transform: translate3d(-50%, -50%, 90px) scale(0.2);
   opacity: 0;
 }
 
@@ -373,6 +374,7 @@ blockquote cite {
 
 .invitation-open .envelope-copy,
 .invitation-open .recipient {
+  animation: none;
   opacity: 0;
   transform: translate3d(-50%, -18px, 80px);
 }
@@ -430,34 +432,58 @@ blockquote cite {
   z-index: 31;
   top: 52%;
   left: 50%;
-  width: 110px;
+  width: 118px;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
   border-radius: 50%;
   transform: translate3d(-50%, -50%, 90px);
   background:
-    radial-gradient(circle at 35% 28%, #f8d991, transparent 18%),
-    radial-gradient(circle, #d5ad62 0 48%, #9b7038 50% 58%, #d2ae6b 60% 68%, #7b562c 71%);
-  border: 4px double rgba(91, 59, 25, 0.52);
-  color: #6e471c;
+    radial-gradient(circle at 34% 28%, rgba(255, 237, 177, 0.95) 0 12%, transparent 18%),
+    radial-gradient(circle at 50% 46%, #d9b76f 0 38%, #b48745 47%, #f0cf86 52%, #9b713b 58%, #d2ad66 66%, #6f4d28 72%);
+  border: 3px double rgba(86, 55, 24, 0.7);
+  color: #704615;
   font-family: var(--font-playfair), Georgia, serif;
-  font-size: 36px;
-  text-shadow: 0 1px 0 rgba(255, 244, 206, 0.8);
-  box-shadow: 0 12px 18px rgba(74, 47, 20, 0.24);
+  font-size: 38px;
+  font-weight: 600;
+  text-shadow:
+    0 1px 0 rgba(255, 246, 205, 0.92),
+    0 2px 4px rgba(88, 52, 16, 0.28);
+  box-shadow:
+    0 14px 20px rgba(74, 47, 20, 0.3),
+    inset 0 4px 8px rgba(255, 239, 176, 0.75),
+    inset 0 -7px 12px rgba(88, 52, 16, 0.32);
   opacity: 0;
   animation: sealArrive 0.78s cubic-bezier(0.2, 0.86, 0.2, 1.12) 2s forwards;
   transition: transform 0.45s ease, opacity 0.45s ease;
 }
 
+.wax-seal::before,
+.wax-seal::after {
+  position: absolute;
+  inset: 10px;
+  content: "";
+  border-radius: 50%;
+  border: 1px solid rgba(96, 59, 24, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(255, 232, 164, 0.52);
+}
+
+.wax-seal::after {
+  inset: 17px;
+  border-color: rgba(255, 232, 164, 0.52);
+  box-shadow: 0 0 0 1px rgba(96, 59, 24, 0.22);
+}
+
 .recipient {
   position: absolute;
   z-index: 30;
-  left: 20%;
-  bottom: 62px;
+  top: 138px;
+  left: 50%;
+  bottom: auto;
   color: var(--ink);
   font-size: 22px;
   font-style: italic;
+  transform: translate3d(-50%, 0, 80px);
   animation-delay: 2.15s;
   transition: opacity 0.35s ease 0.25s, transform 0.5s ease 0.25s;
 }
@@ -469,16 +495,7 @@ blockquote cite {
   margin-left: 12px;
 }
 
-.down-cue {
-  width: 34px;
-  height: 34px;
-  color: var(--gold-deep);
-  stroke-width: 1.5;
-  animation: cue 1.7s ease-in-out infinite;
-  transition: opacity 0.35s ease, transform 0.35s ease;
-}
-
-.open-banner,
+.open-hint,
 .whatsapp-button {
   min-height: 48px;
   display: inline-flex;
@@ -492,17 +509,36 @@ blockquote cite {
   transition: opacity 0.35s ease, transform 0.2s ease, background 0.2s ease;
 }
 
-.open-banner {
+.open-hint {
   width: min(480px, 86vw);
   position: relative;
-  padding: 14px 22px 18px;
-  font-size: 22px;
-  clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+  min-height: 64px;
+  flex-direction: column;
+  gap: 4px;
+  border: 0;
+  padding: 0 22px;
+  background: transparent;
+  box-shadow: none;
+  font-size: 20px;
   opacity: 0;
   animation: bannerReveal 0.7s ease 2.55s forwards;
 }
 
-.open-banner > svg:not(.pencil-wave),
+.open-hint::before {
+  display: block;
+  width: min(380px, 74vw);
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
+  transform: scaleX(0);
+  animation: drawHintRule 0.8s ease 2.72s forwards;
+}
+
+.open-hint span {
+  display: block;
+}
+
+.open-hint > svg:not(.pencil-wave),
 .whatsapp-button svg {
   width: 18px;
   height: 18px;
@@ -511,10 +547,10 @@ blockquote cite {
   flex: 0 0 auto;
 }
 
-.open-banner:hover,
+.open-hint:hover,
 .whatsapp-button:hover {
   transform: translateY(-2px);
-  background: rgba(255, 246, 230, 0.95);
+  background: transparent;
 }
 
 .pencil-wave {
@@ -708,12 +744,6 @@ blockquote cite {
   font-size: 14px;
 }
 
-@keyframes cue {
-  50% {
-    transform: translateY(7px);
-  }
-}
-
 @keyframes drawEnvelope {
   to {
     stroke-dashoffset: 0;
@@ -749,6 +779,12 @@ blockquote cite {
 @keyframes drawSmallRule {
   to {
     opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drawHintRule {
+  to {
     transform: scaleX(1);
   }
 }
@@ -889,8 +925,9 @@ blockquote cite {
   }
 
   .recipient {
-    left: 15%;
-    bottom: 40px;
+    top: 84px;
+    left: 50%;
+    bottom: auto;
     font-size: 16px;
   }
 
@@ -898,7 +935,7 @@ blockquote cite {
     width: 110px;
   }
 
-  .open-banner {
+  .open-hint {
     font-size: 16px;
   }
 
