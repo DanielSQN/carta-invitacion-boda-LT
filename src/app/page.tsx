@@ -42,6 +42,46 @@ function BotanicalCorner({ side }: { side: "left" | "right" }) {
   );
 }
 
+function EnvelopeDrawing() {
+  return (
+    <svg
+      className="envelope-drawing"
+      viewBox="0 0 620 390"
+      aria-hidden="true"
+    >
+      <path className="draw-line draw-outline" d="M2 2 H618 V388 H2 Z" />
+      <path className="draw-line draw-flap" d="M2 2 L310 205 L618 2" />
+      <path className="draw-line draw-fold" d="M2 388 L228 207" />
+      <path className="draw-line draw-fold" d="M618 388 L392 207" />
+      <path className="draw-line draw-front" d="M2 388 L310 178 L618 388" />
+      <path className="draw-line draw-soft" d="M248 262 H372" />
+    </svg>
+  );
+}
+
+function EnvelopeSprig({ side }: { side: "left" | "right" }) {
+  return (
+    <svg
+      className={`envelope-sprig envelope-sprig-${side}`}
+      viewBox="0 0 120 170"
+      aria-hidden="true"
+    >
+      <path className="sprig-line" d="M55 160 C42 118 44 75 76 12" />
+      <path className="sprig-line" d="M52 126 C31 115 20 99 15 75" />
+      <path className="sprig-line" d="M61 96 C86 91 100 78 108 54" />
+      <path className="sprig-line" d="M64 67 C43 59 30 45 23 24" />
+      <ellipse cx="35" cy="112" rx="7" ry="18" transform="rotate(-48 35 112)" />
+      <ellipse cx="24" cy="85" rx="6" ry="16" transform="rotate(-36 24 85)" />
+      <ellipse cx="88" cy="88" rx="7" ry="18" transform="rotate(42 88 88)" />
+      <ellipse cx="101" cy="62" rx="6" ry="16" transform="rotate(30 101 62)" />
+      <ellipse cx="42" cy="54" rx="7" ry="17" transform="rotate(-42 42 54)" />
+      <circle cx="58" cy="108" r="4" />
+      <circle cx="66" cy="102" r="4" />
+      <circle cx="54" cy="99" r="3.5" />
+    </svg>
+  );
+}
+
 function WeddingCard() {
   return (
     <div className="card-shell">
@@ -153,6 +193,7 @@ export default function Home() {
         >
           <div className="envelope">
             <div className="envelope-back" />
+            <div className="envelope-paper-texture" />
             <div className="card-pocket">
               <WeddingCard />
             </div>
@@ -160,6 +201,9 @@ export default function Home() {
             <div className="flap flap-left" />
             <div className="flap flap-right" />
             <div className="flap flap-bottom" />
+            <EnvelopeDrawing />
+            <EnvelopeSprig side="left" />
+            <EnvelopeSprig side="right" />
             <div className="envelope-copy">
               <span>Nuestra boda</span>
               <strong>26 de septiembre</strong>
@@ -177,13 +221,16 @@ export default function Home() {
         <ChevronDown className="down-cue" aria-hidden="true" />
 
         <button
-          className="open-button"
+          className="open-banner"
           type="button"
           onClick={openInvitation}
         >
           <Heart aria-hidden="true" />
-          <span>Haz clic en la carta para abrirla</span>
+          <span>¡Pulsa aquí y desliza!</span>
           <Heart aria-hidden="true" />
+          <svg className="pencil-wave" viewBox="0 0 260 34" aria-hidden="true">
+            <path d="M8 20 C36 4 55 33 84 18 S132 8 162 18 S212 30 252 10" />
+          </svg>
         </button>
       </section>
     </main>
