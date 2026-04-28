@@ -245,10 +245,10 @@ blockquote cite {
 
 .envelope-copy {
   position: absolute;
-  z-index: 8;
+  z-index: 30;
   top: 70px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate3d(-50%, 0, 80px);
   text-align: center;
   color: var(--ink);
   transition: opacity 0.35s ease 0.25s, transform 0.5s ease 0.25s;
@@ -257,7 +257,7 @@ blockquote cite {
 .invitation-open .envelope-copy,
 .invitation-open .recipient {
   opacity: 0;
-  transform: translateX(-50%) translateY(-18px);
+  transform: translate3d(-50%, -18px, 80px);
 }
 
 .envelope-copy span,
@@ -286,7 +286,7 @@ blockquote cite {
 
 .wax-seal {
   position: absolute;
-  z-index: 10;
+  z-index: 31;
   top: 52%;
   left: 50%;
   width: 110px;
@@ -294,7 +294,7 @@ blockquote cite {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 90px);
   background:
     radial-gradient(circle at 35% 28%, #f8d991, transparent 18%),
     radial-gradient(circle, #d5ad62 0 48%, #9b7038 50% 58%, #d2ae6b 60% 68%, #7b562c 71%);
@@ -309,7 +309,7 @@ blockquote cite {
 
 .recipient {
   position: absolute;
-  z-index: 9;
+  z-index: 30;
   left: 20%;
   bottom: 62px;
   color: var(--ink);
@@ -386,10 +386,10 @@ blockquote cite {
   border: 1px solid rgba(129, 104, 70, 0.28);
   border-radius: 6px;
   box-shadow: 0 28px 52px rgba(70, 53, 32, 0.18);
-  opacity: 0.98;
+  opacity: 0;
   overflow: hidden;
   pointer-events: none;
-  transform: translate(-50%, -11%) scale(0.46);
+  transform: translate(-50%, 39%) scale(0.46);
   transform-origin: top center;
   transition: box-shadow 0.6s ease;
 }
@@ -538,11 +538,19 @@ blockquote cite {
 @keyframes cardLeavesEnvelope {
   0% {
     z-index: 3;
-    transform: translate(-50%, -11%) scale(0.46);
+    opacity: 0;
+    transform: translate(-50%, 39%) scale(0.46);
     filter: drop-shadow(0 10px 16px rgba(70, 53, 32, 0.08));
+  }
+  12% {
+    z-index: 3;
+    opacity: 1;
+    transform: translate(-50%, -11%) scale(0.46);
+    filter: drop-shadow(0 12px 18px rgba(70, 53, 32, 0.1));
   }
   28% {
     z-index: 3;
+    opacity: 1;
     transform: translate(-50%, -66%) scale(0.48);
     filter: drop-shadow(0 20px 20px rgba(70, 53, 32, 0.16));
   }
