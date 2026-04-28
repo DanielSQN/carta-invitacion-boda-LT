@@ -17,7 +17,7 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "Nuestra boda | Luisa & Tatian",
-  description: "Carta de invitacion digital para la boda de Luisa y Tatian.",
+  description: "Carta de invitación digital para la boda de Luisa y Tatian.",
 };
 
 export default function RootLayout({

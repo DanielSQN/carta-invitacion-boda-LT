@@ -1,13 +1,16 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import type { CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
   Gift,
   Heart,
-  MapPin,
+  MapPinned,
   MessageCircle,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 function BotanicalCorner({ side }: { side: "left" | "right" }) {
@@ -59,99 +62,196 @@ function EnvelopeDrawing() {
   );
 }
 
-function EnvelopeSprig({ side }: { side: "left" | "right" }) {
+const particles = [
+  { x: 7, size: 4, delay: 1.05, duration: 12, drift: -22, spin: 44 },
+  { x: 12, size: 3, delay: 1.8, duration: 14, drift: 18, spin: -38 },
+  { x: 18, size: 4, delay: 1.35, duration: 13, drift: -16, spin: 58 },
+  { x: 24, size: 3, delay: 2.2, duration: 15, drift: 26, spin: -30 },
+  { x: 31, size: 5, delay: 1.6, duration: 16, drift: -24, spin: 54 },
+  { x: 38, size: 3, delay: 2.85, duration: 12.5, drift: 16, spin: -52 },
+  { x: 45, size: 4, delay: 2.05, duration: 14.5, drift: -20, spin: 36 },
+  { x: 52, size: 3, delay: 1.2, duration: 13.5, drift: 22, spin: -42 },
+  { x: 59, size: 4, delay: 2.45, duration: 15.5, drift: -18, spin: 48 },
+  { x: 66, size: 3, delay: 1.95, duration: 12.8, drift: 20, spin: -34 },
+  { x: 73, size: 4, delay: 3.05, duration: 14.8, drift: -26, spin: 52 },
+  { x: 80, size: 3, delay: 1.55, duration: 13.8, drift: 14, spin: -46 },
+  { x: 87, size: 4, delay: 2.3, duration: 15.2, drift: -18, spin: 40 },
+  { x: 94, size: 3, delay: 3.35, duration: 12.9, drift: 16, spin: -50 },
+];
+
+function FloatingParticles() {
   return (
-    <svg
-      className={`envelope-sprig envelope-sprig-${side}`}
-      viewBox="0 0 120 170"
-      aria-hidden="true"
-    >
-      <path className="sprig-line" d="M55 160 C42 118 44 75 76 12" />
-      <path className="sprig-line" d="M52 126 C31 115 20 99 15 75" />
-      <path className="sprig-line" d="M61 96 C86 91 100 78 108 54" />
-      <path className="sprig-line" d="M64 67 C43 59 30 45 23 24" />
-      <ellipse cx="35" cy="112" rx="7" ry="18" transform="rotate(-48 35 112)" />
-      <ellipse cx="24" cy="85" rx="6" ry="16" transform="rotate(-36 24 85)" />
-      <ellipse cx="88" cy="88" rx="7" ry="18" transform="rotate(42 88 88)" />
-      <ellipse cx="101" cy="62" rx="6" ry="16" transform="rotate(30 101 62)" />
-      <ellipse cx="42" cy="54" rx="7" ry="17" transform="rotate(-42 42 54)" />
-      <circle cx="58" cy="108" r="4" />
-      <circle cx="66" cy="102" r="4" />
-      <circle cx="54" cy="99" r="3.5" />
-    </svg>
+    <div className="floating-particles" aria-hidden="true">
+      {particles.map((particle, index) => (
+        <span
+          key={`${particle.x}-${particle.delay}`}
+          className="floating-particle"
+          style={
+            {
+              "--particle-x": `${particle.x}%`,
+              "--particle-size": `${particle.size}px`,
+              "--particle-delay": `${particle.delay}s`,
+              "--particle-duration": `${particle.duration}s`,
+              "--particle-drift": `${particle.drift}px`,
+              "--particle-spin": `${particle.spin}deg`,
+            } as CSSProperties
+          }
+        >
+          <i className={index % 3 === 0 ? "particle-petal" : "particle-dot"} />
+        </span>
+      ))}
+    </div>
   );
 }
 
-function WeddingCard() {
-  return (
-    <div className="card-shell">
-      <div className="card-heading">
-        <span>Nuestra boda</span>
-        <p>26 de septiembre</p>
-        <h1>Luisa &amp; Tatian</h1>
-        <p className="card-intro">
-          Con la bendicion de Dios tenemos el honor de invitarte a nuestra boda
-        </p>
-      </div>
+const MUSIC_SRC = "/audio/musica-fondo.wav";
 
-      <div className="card-details">
-        <div className="event-grid">
-          <article>
-            <h2>Ceremonia</h2>
+function useScrollTitles(isOpen: boolean) {
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    const titles = document.querySelectorAll<HTMLElement>(".write-title");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-writing");
+          }
+        });
+      },
+      { threshold: 0.45 },
+    );
+
+    titles.forEach((title) => observer.observe(title));
+
+    return () => observer.disconnect();
+  }, [isOpen]);
+}
+
+function TypedTitle({ children }: { children: string }) {
+  return (
+    <h2
+      className="write-title"
+      style={{ "--title-characters": children.length } as CSSProperties}
+    >
+      {children}
+    </h2>
+  );
+}
+
+function WeddingCard({ musicEnabled, onToggleMusic }: {
+  musicEnabled: boolean;
+  onToggleMusic: () => void;
+}) {
+  return (
+    <div className="details-page">
+      <div className="details-photo-backdrop" aria-hidden="true" />
+
+      <section className="details-hero">
+        <div className="hero-copy">
+          <p>¡Nos casamos!</p>
+          <h1>Luisa &amp; Tatian</h1>
+          <span>26 ~ 09 ~ 2026</span>
+        </div>
+        <div className="scroll-cue">
+          <span>Desliza</span>
+        </div>
+      </section>
+
+      <section className="story-strip">
+        <p>Toda aventura comienza con un &quot;Sí&quot;</p>
+      </section>
+
+      <section className="overlay-section overlay-dark">
+        <div className="wave wave-top" aria-hidden="true" />
+        <div className="section-content">
+          <TypedTitle>Ceremonia</TypedTitle>
+          <h3>Iglesia de la Unidad</h3>
+          <p>
+            Calle 123 #45 - 67
+            <br />
+            Ciudad
+          </p>
+          <time>5:00 PM</time>
+          <a
+            className="map-link map-link-light"
+            href="https://maps.google.com/?q=Iglesia%20de%20la%20Unidad"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <MapPinned aria-hidden="true" />
+            Pulsa para ver en Maps
+          </a>
+        </div>
+        <div className="wave wave-bottom" aria-hidden="true" />
+      </section>
+
+      <section className="overlay-section overlay-paper">
+        <div className="section-content">
+          <TypedTitle>Celebración</TypedTitle>
+          <h3>Hacienda San Miguel</h3>
+          <p>
+            Km 12 vía al Sol
+            <br />
+            Ciudad
+          </p>
+          <time>7:30 PM</time>
+          <a
+            className="map-link"
+            href="https://maps.google.com/?q=Hacienda%20San%20Miguel"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <MapPinned aria-hidden="true" />
+            Pulsa para ver en Maps
+          </a>
+        </div>
+      </section>
+
+      <section className="overlay-section overlay-light">
+        <div className="section-content">
+          <TypedTitle>Detalles</TypedTitle>
+          <div className="detail-list">
             <p>
               <CalendarDays aria-hidden="true" />
-              5:00 PM
+              26 ~ 09 ~ 2026
             </p>
             <p>
-              <MapPin aria-hidden="true" />
-              <span>
-                Iglesia de la Unidad
-                <br />
-                Calle 123 #45 - 67
-                <br />
-                Ciudad
-              </span>
+              <Heart aria-hidden="true" />
+              Vestimenta formal / elegante
             </p>
-          </article>
-          <article>
-            <h2>Recepcion</h2>
             <p>
               <Gift aria-hidden="true" />
-              7:30 PM
+              Tu presencia es nuestro mejor regalo
             </p>
-            <p>
-              <MapPin aria-hidden="true" />
-              <span>
-                Hacienda San Miguel
-                <br />
-                Km 12 via al Sol
-                <br />
-                Ciudad
-              </span>
-            </p>
-          </article>
+          </div>
+          <a
+            className="whatsapp-button"
+            href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tatian"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <MessageCircle aria-hidden="true" />
+            Confirmar por WhatsApp
+          </a>
+          <blockquote>
+            &quot;El que halla esposa halla el bien,
+            <br />y alcanza la benevolencia de Jehova.&quot;
+            <cite>Proverbios 18:22</cite>
+          </blockquote>
         </div>
+      </section>
 
-        <div className="dress-code">
-          <span>Vestimenta</span>
-          <p>Formal / Elegante</p>
-        </div>
-
-        <a
-          className="whatsapp-button"
-          href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tatian"
-          target="_blank"
-          rel="noreferrer"
+      <div className="floating-controls" aria-label="Controles">
+        <button
+          type="button"
+          onClick={onToggleMusic}
+          aria-label={musicEnabled ? "Pausar musica" : "Reproducir musica"}
         >
-          <MessageCircle aria-hidden="true" />
-          Confirmar por WhatsApp
-        </a>
-
-        <blockquote>
-          &quot;El que halla esposa halla el bien,
-          <br />y alcanza la benevolencia de Jehova.&quot;
-          <cite>Proverbios 18:22</cite>
-        </blockquote>
+          {musicEnabled ? <Volume2 aria-hidden="true" /> : <VolumeX aria-hidden="true" />}
+        </button>
       </div>
     </div>
   );
@@ -183,12 +283,65 @@ function WaxSeal() {
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
-  const openInvitation = () => setIsOpen(true);
+  const [musicEnabled, setMusicEnabled] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [guestName] = useState(() => {
+    if (typeof window === "undefined") {
+      return "Daniel Santiago";
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    return (
+      params.get("para")?.trim() ||
+      params.get("invitado")?.trim() ||
+      "Daniel Santiago"
+    );
+  });
+  useScrollTitles(isOpen);
+
+  const playMusic = async () => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    try {
+      audio.volume = 0.45;
+      await audio.play();
+      setMusicEnabled(true);
+    } catch {
+      setMusicEnabled(false);
+    }
+  };
+
+  const openInvitation = () => {
+    setIsOpen(true);
+    void playMusic();
+  };
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    if (audio.paused) {
+      void playMusic();
+      return;
+    }
+
+    audio.pause();
+    setMusicEnabled(false);
+  };
 
   return (
     <main className={`wedding-page ${isOpen ? "invitation-open" : ""}`}>
+      <audio ref={audioRef} src={MUSIC_SRC} loop preload="auto" />
       <BotanicalCorner side="left" />
       <BotanicalCorner side="right" />
+      <FloatingParticles />
 
       <section className="initial-scene" aria-label="Carta de invitacion">
         <div className="verse-block">
@@ -218,21 +371,17 @@ export default function Home() {
           <div className="envelope">
             <div className="envelope-back" />
             <div className="envelope-paper-texture" />
-            <div className="card-pocket">
-              <WeddingCard />
-            </div>
             <div className="flap flap-top" />
             <div className="flap flap-left" />
             <div className="flap flap-right" />
             <div className="flap flap-bottom" />
             <EnvelopeDrawing />
-            <EnvelopeSprig side="left" />
-            <EnvelopeSprig side="right" />
-            <WaxSeal />
             <div className="recipient">
               <span className="recipient-label">Para:</span>
+              <span className="recipient-name">{guestName}</span>
               <span className="recipient-line" />
             </div>
+            <WaxSeal />
           </div>
         </div>
 
@@ -246,6 +395,14 @@ export default function Home() {
             <path d="M8 20 C36 4 55 33 84 18 S132 8 162 18 S212 30 252 10" />
           </svg>
         </button>
+      </section>
+
+      <section
+        className="invitation-view"
+        aria-hidden={!isOpen}
+        aria-label="Detalles de la invitacion"
+      >
+        <WeddingCard musicEnabled={musicEnabled} onToggleMusic={toggleMusic} />
       </section>
     </main>
   );
