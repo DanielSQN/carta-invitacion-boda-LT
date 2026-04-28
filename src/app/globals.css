@@ -370,6 +370,19 @@ blockquote cite {
   background: rgba(255, 246, 230, 0.95);
 }
 
+.card-pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  clip-path: inset(0);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.invitation-open .card-pocket {
+  animation: releaseCardPocket 1.9s cubic-bezier(0.2, 0.78, 0.2, 1) forwards;
+}
+
 .card-shell {
   width: min(540px, 92vw);
   min-height: 720px;
@@ -386,10 +399,9 @@ blockquote cite {
   border: 1px solid rgba(129, 104, 70, 0.28);
   border-radius: 6px;
   box-shadow: 0 28px 52px rgba(70, 53, 32, 0.18);
-  opacity: 0;
   overflow: hidden;
   pointer-events: none;
-  transform: translate(-50%, 39%) scale(0.46);
+  transform: translate(-50%, 76%) scale(0.46);
   transform-origin: top center;
   transition: box-shadow 0.6s ease;
 }
@@ -535,17 +547,28 @@ blockquote cite {
   }
 }
 
+@keyframes releaseCardPocket {
+  0%,
+  34% {
+    z-index: 3;
+    clip-path: inset(0);
+  }
+  44%,
+  100% {
+    z-index: 14;
+    clip-path: inset(-140vh -140vw -140vh -140vw);
+  }
+}
+
 @keyframes cardLeavesEnvelope {
   0% {
     z-index: 3;
-    opacity: 0;
-    transform: translate(-50%, 39%) scale(0.46);
+    transform: translate(-50%, 76%) scale(0.46);
     filter: drop-shadow(0 10px 16px rgba(70, 53, 32, 0.08));
   }
   12% {
     z-index: 3;
-    opacity: 1;
-    transform: translate(-50%, -11%) scale(0.46);
+    transform: translate(-50%, 12%) scale(0.46);
     filter: drop-shadow(0 12px 18px rgba(70, 53, 32, 0.1));
   }
   28% {

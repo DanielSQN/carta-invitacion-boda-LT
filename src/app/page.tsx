@@ -153,7 +153,9 @@ export default function Home() {
         >
           <div className="envelope">
             <div className="envelope-back" />
-            <WeddingCard />
+            <div className="card-pocket">
+              <WeddingCard />
+            </div>
             <div className="flap flap-top" />
             <div className="flap flap-left" />
             <div className="flap flap-right" />
