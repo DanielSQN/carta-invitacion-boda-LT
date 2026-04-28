@@ -703,6 +703,9 @@ blockquote cite {
   pointer-events: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  background:
+    linear-gradient(90deg, rgba(20, 34, 28, 0.28), transparent 18%, transparent 82%, rgba(20, 34, 28, 0.28)),
+    var(--details-paper, #e9dfc8);
   transition: opacity 0.28s ease, visibility 0.28s ease;
 }
 
@@ -756,6 +759,7 @@ blockquote cite {
   --details-dark: rgba(38, 36, 33, 0.9);
   --details-coral: #df947d;
   --details-green: #9aac83;
+  width: 100%;
   min-height: 100%;
   position: relative;
   overflow-x: hidden;
@@ -764,16 +768,44 @@ blockquote cite {
   scroll-behavior: smooth;
 }
 
+.details-page::before,
+.details-page::after {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: 30;
+  width: clamp(18px, 5vw, 58px);
+  content: "";
+  pointer-events: none;
+}
+
+.details-page::before {
+  left: 50%;
+  background: linear-gradient(90deg, rgba(233, 223, 200, 0.98), rgba(233, 223, 200, 0));
+  transform: translateX(-260px);
+}
+
+.details-page::after {
+  right: 50%;
+  background: linear-gradient(270deg, rgba(233, 223, 200, 0.98), rgba(233, 223, 200, 0));
+  transform: translateX(260px);
+}
+
 .details-photo-backdrop {
   position: fixed;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: min(100vw, 520px);
   z-index: 0;
   background:
     linear-gradient(180deg, rgba(36, 35, 32, 0.6) 0%, rgba(36, 35, 32, 0.08) 28%, rgba(36, 35, 32, 0.72) 100%),
     linear-gradient(120deg, rgba(223, 148, 125, 0.18), rgba(154, 172, 131, 0.22)),
     url("/images/foto-pareja.png");
-  background-position: center;
-  background-size: cover;
+  background-position: center top;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: translateX(-50%);
   pointer-events: none;
 }
 
@@ -1414,6 +1446,21 @@ blockquote cite {
   .invitation-view .card-shell {
     min-height: 100%;
     padding: 0;
+  }
+
+  .details-page {
+    width: 100%;
+  }
+
+  .details-page::before,
+  .details-page::after {
+    display: none;
+  }
+
+  .details-photo-backdrop {
+    width: 100%;
+    background-size: cover;
+    background-position: center top;
   }
 
   .card-heading span {
