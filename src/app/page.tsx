@@ -42,8 +42,84 @@ function BotanicalCorner({ side }: { side: "left" | "right" }) {
   );
 }
 
+function WeddingCard() {
+  return (
+    <div className="card-shell">
+      <div className="card-heading">
+        <span>Nuestra boda</span>
+        <p>26 de septiembre</p>
+        <h1>Luisa &amp; Tatian</h1>
+        <p className="card-intro">
+          Con la bendicion de Dios tenemos el honor de invitarte a nuestra boda
+        </p>
+      </div>
+
+      <div className="card-details">
+        <div className="event-grid">
+          <article>
+            <h2>Ceremonia</h2>
+            <p>
+              <CalendarDays aria-hidden="true" />
+              5:00 PM
+            </p>
+            <p>
+              <MapPin aria-hidden="true" />
+              <span>
+                Iglesia de la Unidad
+                <br />
+                Calle 123 #45 - 67
+                <br />
+                Ciudad
+              </span>
+            </p>
+          </article>
+          <article>
+            <h2>Recepcion</h2>
+            <p>
+              <Gift aria-hidden="true" />
+              7:30 PM
+            </p>
+            <p>
+              <MapPin aria-hidden="true" />
+              <span>
+                Hacienda San Miguel
+                <br />
+                Km 12 via al Sol
+                <br />
+                Ciudad
+              </span>
+            </p>
+          </article>
+        </div>
+
+        <div className="dress-code">
+          <span>Vestimenta</span>
+          <p>Formal / Elegante</p>
+        </div>
+
+        <a
+          className="whatsapp-button"
+          href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tatian"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <MessageCircle aria-hidden="true" />
+          Confirmar por WhatsApp
+        </a>
+
+        <blockquote>
+          &quot;El que halla esposa halla el bien,
+          <br />y alcanza la benevolencia de Jehova.&quot;
+          <cite>Proverbios 18:22</cite>
+        </blockquote>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
+  const openInvitation = () => setIsOpen(true);
 
   return (
     <main className={`wedding-page ${isOpen ? "invitation-open" : ""}`}>
@@ -62,19 +138,22 @@ export default function Home() {
           <span>Proverbios 18:22</span>
         </div>
 
-        <button
+        <div
           className="envelope-stage"
-          type="button"
-          onClick={() => setIsOpen(true)}
+          role={isOpen ? undefined : "button"}
+          tabIndex={isOpen ? -1 : 0}
+          onClick={isOpen ? undefined : openInvitation}
+          onKeyDown={(event) => {
+            if (!isOpen && (event.key === "Enter" || event.key === " ")) {
+              event.preventDefault();
+              openInvitation();
+            }
+          }}
           aria-label="Abrir carta de invitacion"
         >
           <div className="envelope">
             <div className="envelope-back" />
-            <div className="invite-card-preview">
-              <span>Nuestra boda</span>
-              <strong>Luisa & Tatian</strong>
-              <small>26 de septiembre</small>
-            </div>
+            <WeddingCard />
             <div className="flap flap-top" />
             <div className="flap flap-left" />
             <div className="flap flap-right" />
@@ -91,91 +170,19 @@ export default function Home() {
               Para: <span />
             </div>
           </div>
-        </button>
+        </div>
 
         <ChevronDown className="down-cue" aria-hidden="true" />
 
         <button
           className="open-button"
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={openInvitation}
         >
           <Heart aria-hidden="true" />
           <span>Haz clic en la carta para abrirla</span>
           <Heart aria-hidden="true" />
         </button>
-      </section>
-
-      <section className="invitation-card" aria-label="Invitacion completa">
-        <div className="card-shell">
-          <div className="card-heading">
-            <span>Nuestra boda</span>
-            <p>26 de septiembre</p>
-            <h1>Luisa &amp; Tatian</h1>
-            <p>
-              Con la bendicion de Dios tenemos el honor de invitarte a nuestra
-              boda
-            </p>
-          </div>
-
-          <div className="event-grid">
-            <article>
-              <h2>Ceremonia</h2>
-              <p>
-                <CalendarDays aria-hidden="true" />
-                5:00 PM
-              </p>
-              <p>
-                <MapPin aria-hidden="true" />
-                <span>
-                  Iglesia de la Unidad
-                  <br />
-                  Calle 123 #45 - 67
-                  <br />
-                  Ciudad
-                </span>
-              </p>
-            </article>
-            <article>
-              <h2>Recepcion</h2>
-              <p>
-                <Gift aria-hidden="true" />
-                7:30 PM
-              </p>
-              <p>
-                <MapPin aria-hidden="true" />
-                <span>
-                  Hacienda San Miguel
-                  <br />
-                  Km 12 via al Sol
-                  <br />
-                  Ciudad
-                </span>
-              </p>
-            </article>
-          </div>
-
-          <div className="dress-code">
-            <span>Vestimenta</span>
-            <p>Formal / Elegante</p>
-          </div>
-
-          <a
-            className="whatsapp-button"
-            href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tatian"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <MessageCircle aria-hidden="true" />
-            Confirmar por WhatsApp
-          </a>
-
-          <blockquote>
-            &quot;El que halla esposa halla el bien,
-            <br />y alcanza la benevolencia de Jehova.&quot;
-            <cite>Proverbios 18:22</cite>
-          </blockquote>
-        </div>
       </section>
     </main>
   );
