@@ -62,23 +62,25 @@ function EnvelopeDrawing() {
   );
 }
 
-const particles = [
-  { x: 7, size: 4, delay: 1.05, duration: 12, drift: -22, spin: 44 },
-  { x: 12, size: 3, delay: 1.8, duration: 14, drift: 18, spin: -38 },
-  { x: 18, size: 4, delay: 1.35, duration: 13, drift: -16, spin: 58 },
-  { x: 24, size: 3, delay: 2.2, duration: 15, drift: 26, spin: -30 },
-  { x: 31, size: 5, delay: 1.6, duration: 16, drift: -24, spin: 54 },
-  { x: 38, size: 3, delay: 2.85, duration: 12.5, drift: 16, spin: -52 },
-  { x: 45, size: 4, delay: 2.05, duration: 14.5, drift: -20, spin: 36 },
-  { x: 52, size: 3, delay: 1.2, duration: 13.5, drift: 22, spin: -42 },
-  { x: 59, size: 4, delay: 2.45, duration: 15.5, drift: -18, spin: 48 },
-  { x: 66, size: 3, delay: 1.95, duration: 12.8, drift: 20, spin: -34 },
-  { x: 73, size: 4, delay: 3.05, duration: 14.8, drift: -26, spin: 52 },
-  { x: 80, size: 3, delay: 1.55, duration: 13.8, drift: 14, spin: -46 },
-  { x: 87, size: 4, delay: 2.3, duration: 15.2, drift: -18, spin: 40 },
-  { x: 94, size: 3, delay: 3.35, duration: 12.9, drift: 16, spin: -50 },
-  
-];
+const PARTICLE_COUNT = 32;
+const PARTICLE_MIN_DURATION = 24;
+const PARTICLE_DURATION_SPREAD = 30;
+
+const particles = Array.from({ length: PARTICLE_COUNT }, (_, index) => {
+  const progress = index / PARTICLE_COUNT;
+  const wave = Math.sin(index * 1.73);
+  const duration = PARTICLE_MIN_DURATION + ((index * 7) % PARTICLE_DURATION_SPREAD);
+  const delayGroup = index % 14;
+
+  return {
+    x: 3 + progress * 94,
+    size: 2 + (index % 3),
+    delay: delayGroup * 0.38,
+    duration,
+    drift: Math.round(wave * 32),
+    spin: Math.round((index % 2 === 0 ? 1 : -1) * (34 + (index % 7) * 6)),
+  };
+});
 
 function FloatingParticles() {
   return (
@@ -105,7 +107,41 @@ function FloatingParticles() {
   );
 }
 
-const MUSIC_SRC = "/audio/musica-fondo.wav";
+// const MUSIC_SRC = "/audio/musica-fondo.wav";
+const MUSIC_SRC = "/audio/song1.mp3";
+const WEDDING_DATE = new Date("2026-09-26T17:00:00-05:00").getTime();
+
+function getCountdown() {
+  const distance = Math.max(0, WEDDING_DATE - Date.now());
+  const days = Math.floor(distance / 86_400_000);
+  const hours = Math.floor((distance % 86_400_000) / 3_600_000);
+  const minutes = Math.floor((distance % 3_600_000) / 60_000);
+  const seconds = Math.floor((distance % 60_000) / 1000);
+
+  return { days, hours, minutes, seconds };
+}
+
+function useCountdown() {
+  const [countdown, setCountdown] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const updateCountdown = () => setCountdown(getCountdown());
+    const starter = window.setTimeout(updateCountdown, 0);
+    const timer = window.setInterval(updateCountdown, 1000);
+
+    return () => {
+      window.clearTimeout(starter);
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  return countdown;
+}
 
 function useScrollTitles(isOpen: boolean) {
   useEffect(() => {
@@ -126,8 +162,24 @@ function useScrollTitles(isOpen: boolean) {
     );
 
     titles.forEach((title) => observer.observe(title));
+    const countdownSections = document.querySelectorAll<HTMLElement>(".countdown-section");
+    const countdownObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-active");
+          }
+        });
+      },
+      { threshold: 0.34 },
+    );
 
-    return () => observer.disconnect();
+    countdownSections.forEach((section) => countdownObserver.observe(section));
+
+    return () => {
+      observer.disconnect();
+      countdownObserver.disconnect();
+    };
   }, [isOpen]);
 }
 
@@ -146,6 +198,8 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
   musicEnabled: boolean;
   onToggleMusic: () => void;
 }) {
+  const countdown = useCountdown();
+
   return (
     <div className="details-page">
       <div className="details-photo-backdrop" aria-hidden="true">
@@ -173,6 +227,42 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
 
       <section className="story-strip">
         <p>Toda aventura comienza con un &quot;Sí&quot;</p>
+      </section>
+
+      <section className="overlay-section countdown-section">
+        <div className="wave wave-top" aria-hidden="true" />
+        <div className="countdown-content">
+          <svg className="countdown-rings" viewBox="0 0 320 320" aria-hidden="true">
+            <path pathLength="1" d="M160 25 C248 25 297 90 287 172 C278 247 217 299 136 287 C59 275 21 206 35 129 C48 56 99 20 160 25" />
+            <path pathLength="1" d="M145 31 C224 15 292 75 292 160 C292 244 221 294 145 289 C63 283 28 223 31 151 C34 74 76 45 145 31" />
+            <path pathLength="1" d="M165 36 C235 38 286 87 281 169 C277 243 212 280 149 281 C75 282 38 229 40 156 C42 77 96 35 165 36" />
+            <path pathLength="1" d="M154 21 C231 22 302 79 297 158 C292 237 229 303 151 294 C71 285 24 220 28 145 C32 70 82 21 154 21" />
+            <path pathLength="1" d="M162 44 C231 44 271 95 273 158 C275 228 223 272 156 276 C88 280 47 232 45 160 C43 91 93 43 162 44" />
+          </svg>
+          <div className="countdown-panel">
+            <TypedTitle>Faltan</TypedTitle>
+            <dl className="countdown-grid">
+              <div>
+                <dt>{countdown.days}</dt>
+                <dd>Días</dd>
+              </div>
+              <div>
+                <dt>{countdown.hours}</dt>
+                <dd>Horas</dd>
+              </div>
+              <div>
+                <dt>{countdown.minutes}</dt>
+                <dd>Mins</dd>
+              </div>
+              <div>
+                <dt>{countdown.seconds}</dt>
+                <dd>Segs</dd>
+              </div>
+            </dl>
+            <Heart className="countdown-heart" aria-hidden="true" fill="currentColor" />
+          </div>
+        </div>
+        <div className="wave wave-bottom" aria-hidden="true" />
       </section>
 
       <section className="overlay-section overlay-dark">

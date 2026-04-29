@@ -99,7 +99,7 @@ a {
   --particle-drift: 20px;
   --particle-spin: 40deg;
   position: absolute;
-  top: 0;
+  top: -10vh;
   left: var(--particle-x);
   width: var(--particle-size);
   height: var(--particle-size);
@@ -954,6 +954,118 @@ blockquote cite {
   font-style: italic;
 }
 
+.countdown-section {
+  min-height: 92svh;
+  color: #fffaf2;
+  background: linear-gradient(rgba(38, 36, 33, 0.72), rgba(38, 36, 33, 0.72));
+  overflow: hidden;
+}
+
+.countdown-content {
+  width: min(100%, 520px);
+  aspect-ratio: 1;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.countdown-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--details-coral);
+}
+
+.countdown-rings path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1.02;
+  stroke-dashoffset: 1.02;
+  opacity: 0;
+}
+
+.countdown-section.is-active .countdown-rings path {
+  animation: drawCountdownRing 6.2s linear forwards;
+}
+
+.countdown-section.is-active .countdown-rings path:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.countdown-section.is-active .countdown-rings path:nth-child(3) {
+  animation-delay: 0.34s;
+}
+
+.countdown-section.is-active .countdown-rings path:nth-child(4) {
+  animation-delay: 0.5s;
+}
+
+.countdown-section.is-active .countdown-rings path:nth-child(5) {
+  animation-delay: 0.66s;
+}
+
+.countdown-panel {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  padding: clamp(28px, 7vw, 54px);
+  text-align: center;
+}
+
+.countdown-panel .write-title {
+  margin-bottom: 2px;
+  font-size: clamp(52px, 12vw, 92px);
+}
+
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(48px, 1fr));
+  gap: clamp(10px, 3vw, 24px);
+  margin: 0;
+  color: var(--details-green);
+}
+
+.countdown-grid div {
+  display: grid;
+  gap: 4px;
+}
+
+.countdown-grid dt,
+.countdown-grid dd {
+  margin: 0;
+}
+
+.countdown-grid dt {
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: clamp(22px, 5vw, 34px);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.countdown-grid dd {
+  font-size: clamp(14px, 3.4vw, 20px);
+  font-weight: 700;
+}
+
+.countdown-heart {
+  width: clamp(42px, 11vw, 64px);
+  height: clamp(42px, 11vw, 64px);
+  color: #fffaf2;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.28));
+  transform-origin: center;
+}
+
+.countdown-section.is-active .countdown-heart {
+  animation: heartbeat 1.45s ease-in-out infinite;
+}
+
 .overlay-section {
   min-height: 88svh;
   position: relative;
@@ -1338,23 +1450,23 @@ blockquote cite {
 @keyframes particleFloat {
   0% {
     opacity: 1;
-    transform: translate3d(0, -10vh, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0) rotate(0deg);
   }
   25% {
     opacity: 1;
-    transform: translate3d(var(--particle-drift), 25vh, 0) rotate(var(--particle-spin));
+    transform: translate3d(var(--particle-drift), 32vh, 0) rotate(var(--particle-spin));
   }
   50% {
     opacity: 1;
-    transform: translate3d(calc(var(--particle-drift) * -0.45), 54vh, 0) rotate(calc(var(--particle-spin) * -0.7));
+    transform: translate3d(calc(var(--particle-drift) * -0.45), 64vh, 0) rotate(calc(var(--particle-spin) * -0.7));
   }
   75% {
     opacity: 1;
-    transform: translate3d(calc(var(--particle-drift) * 0.7), 82vh, 0) rotate(calc(var(--particle-spin) * 1.2));
+    transform: translate3d(calc(var(--particle-drift) * 0.7), 96vh, 0) rotate(calc(var(--particle-spin) * 1.2));
   }
   100% {
     opacity: 1;
-    transform: translate3d(calc(var(--particle-drift) * -0.35), 112vh, 0) rotate(calc(var(--particle-spin) * -1.6));
+    transform: translate3d(calc(var(--particle-drift) * -0.35), 124vh, 0) rotate(calc(var(--particle-spin) * -1.6));
   }
 }
 
@@ -1399,6 +1511,40 @@ blockquote cite {
   100% {
     stroke-dashoffset: 0;
     opacity: 1;
+  }
+}
+
+@keyframes drawCountdownRing {
+  0% {
+    opacity: 0.88;
+    stroke-dashoffset: 1.02;
+  }
+  92% {
+    opacity: 0.88;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0.88;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  16% {
+    transform: scale(1.16);
+  }
+  30% {
+    transform: scale(0.96);
+  }
+  46% {
+    transform: scale(1.1);
+  }
+  62% {
+    transform: scale(1);
   }
 }
 
