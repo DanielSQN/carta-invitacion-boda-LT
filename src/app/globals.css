@@ -236,7 +236,7 @@ blockquote cite {
   border-radius: 44% 44% 10px 10px / 58% 58% 16px 16px;
   background:
     radial-gradient(ellipse at center, rgba(82, 60, 35, 0.24), rgba(82, 60, 35, 0.12) 44%, transparent 72%);
-  filter: blur(24px);
+  /* filter: blur(24px); */
   opacity: 0.68;
   transform: translateY(22px) scaleX(0.92);
   pointer-events: none;
