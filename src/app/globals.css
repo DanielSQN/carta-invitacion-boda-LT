@@ -89,27 +89,22 @@ a {
   z-index: 3;
   overflow: hidden;
   pointer-events: none;
-  transition: opacity 0.5s ease;
-}
-
-.invitation-open .floating-particles {
-  opacity: 0;
 }
 
 .floating-particle {
   --particle-x: 50%;
   --particle-size: 5px;
   --particle-delay: 0s;
-  --particle-duration: 12s;
+  --particle-duration: 15s;
   --particle-drift: 20px;
   --particle-spin: 40deg;
   position: absolute;
-  top: -28px;
+  top: 0;
   left: var(--particle-x);
   width: var(--particle-size);
   height: var(--particle-size);
-  opacity: 0;
-  animation: particleFloat var(--particle-duration) ease var(--particle-delay) infinite;
+  opacity: 1;
+  animation: particleFloat var(--particle-duration) linear var(--particle-delay) infinite;
   will-change: opacity, transform;
 }
 
@@ -142,7 +137,7 @@ a {
 }
 
 .initial-scene {
-  gap: 14px;
+  gap: 30px;
   opacity: 1;
   transform: translateY(0) scale(1);
   z-index: 2;
@@ -167,7 +162,7 @@ a {
 .verse-block {
   text-align: center;
   color: var(--ink);
-  font-size: 22px;
+  font-size: 16px;
   line-height: 1.25;
   transition: opacity 0.45s ease, transform 0.45s ease;
 }
@@ -1342,21 +1337,24 @@ blockquote cite {
 
 @keyframes particleFloat {
   0% {
-    opacity: 0;
-    transform: translate3d(0, -8vh, 0) rotate(0deg);
-  }
-  12% {
     opacity: 1;
+    transform: translate3d(0, -10vh, 0) rotate(0deg);
   }
-  46% {
-    /* transform: translate3d(var(--particle-drift), 48vh, 0) rotate(var(--particle-spin)); */
-  }
-  82% {
+  25% {
     opacity: 1;
+    transform: translate3d(var(--particle-drift), 25vh, 0) rotate(var(--particle-spin));
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(calc(var(--particle-drift) * -0.45), 54vh, 0) rotate(calc(var(--particle-spin) * -0.7));
+  }
+  75% {
+    opacity: 1;
+    transform: translate3d(calc(var(--particle-drift) * 0.7), 82vh, 0) rotate(calc(var(--particle-spin) * 1.2));
   }
   100% {
     opacity: 1;
-    transform: translate3d(calc(var(--particle-drift) * -0.35), 108vh, 0) rotate(calc(var(--particle-spin) * -1.2));
+    transform: translate3d(calc(var(--particle-drift) * -0.35), 112vh, 0) rotate(calc(var(--particle-spin) * -1.6));
   }
 }
 
@@ -1436,8 +1434,8 @@ blockquote cite {
   }
 
   .envelope-stage {
-    width: min(360px, 86vw);
-    height: 250px;
+    width: min(550px, 86vw);
+    height: 350px;
   }
 
   .envelope-copy {
@@ -1458,9 +1456,9 @@ blockquote cite {
   }
 
   .wax-seal {
-    top: 57%;
-    width: 72px;
-    font-size: 24px;
+    top: 50%;
+    width: 90px;
+    font-size: 30px;
   }
 
   .recipient {
@@ -1469,11 +1467,11 @@ blockquote cite {
     bottom: auto;
     width: min(142px, 40%);
     gap: 4px;
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .recipient-name {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .recipient-line {
@@ -1551,5 +1549,59 @@ blockquote cite {
 
   .dress-code {
     width: 86%;
+  }
+
+  .envelope-stage {
+    width: min(550px, 86vw);
+    height: 280px;
+  }
+
+  .wax-seal {
+    top: 50%;
+    width: 90px;
+    font-size: 30px;
+  }
+
+  .recipient {
+    top: 18px;
+    left: 50%;
+    bottom: auto;
+    width: min(142px, 40%);
+    gap: 4px;
+    font-size: 16px;
+  }
+
+  .recipient-name {
+    font-size: 16px;
+  }
+
+  .hero-copy h1 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 450px) {
+  .envelope-stage {
+    width: min(310px, 86vw);
+    height: 200px;
+  }
+
+  .wax-seal {
+    top: 55%;
+    width: 60px;
+    font-size: 30px;
+  }
+
+  .recipient {
+    top: 18px;
+    left: 50%;
+    bottom: auto;
+    width: min(142px, 40%);
+    gap: 4px;
+    font-size: 14px;
+  }
+
+  .recipient-name {
+    font-size: 14px;
   }
 }

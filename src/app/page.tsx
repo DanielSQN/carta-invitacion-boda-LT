@@ -77,6 +77,7 @@ const particles = [
   { x: 80, size: 3, delay: 1.55, duration: 13.8, drift: 14, spin: -46 },
   { x: 87, size: 4, delay: 2.3, duration: 15.2, drift: -18, spin: 40 },
   { x: 94, size: 3, delay: 3.35, duration: 12.9, drift: 16, spin: -50 },
+  
 ];
 
 function FloatingParticles() {
@@ -349,6 +350,7 @@ export default function Home() {
       <audio ref={audioRef} src={MUSIC_SRC} loop preload="auto" />
       <BotanicalCorner side="left" />
       <BotanicalCorner side="right" />
+
       <FloatingParticles />
 
       <section className="initial-scene" aria-label="Carta de invitacion">
