@@ -261,7 +261,7 @@ blockquote cite {
 }
 
 .envelope-stage:hover .envelope {
-  transform: translateY(-10px) rotateX(2deg);
+  transform: translateY(-8px) scale(1.01);
 }
 
 .envelope-stage:hover .envelope .wax-seal {
@@ -270,6 +270,10 @@ blockquote cite {
 
 .invitation-open .envelope-stage:hover .envelope {
   transform: none;
+}
+
+.invitation-open .envelope {
+  animation: none;
 }
 
 .envelope-back,
@@ -638,7 +642,7 @@ blockquote cite {
   animation: bannerReveal 0.7s ease 2s forwards;
 }
 
-.open-hint::before {
+/* .open-hint::before {
   display: block;
   width: min(380px, 74vw);
   height: 1px;
@@ -646,7 +650,7 @@ blockquote cite {
   background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
   transform: scaleX(0);
   animation: drawHintRule 0.8s ease 1.48s forwards;
-}
+} */
 
 .open-hint span {
   display: block;
@@ -684,7 +688,7 @@ blockquote cite {
   stroke-linecap: round;
   stroke-dasharray: 320;
   stroke-dashoffset: 320;
-  animation: pencilWave 1.6s ease-in-out 1.78s infinite;
+  animation: pencilWave 1.6s ease-in-out 1.78s forwards;
 }
 
 .card-shell {
@@ -1400,6 +1404,26 @@ blockquote cite {
   }
 }
 
+@keyframes envelopeIdleZoom {
+  0%,
+  68%,
+  100% {
+    transform: scale(1);
+  }
+  72% {
+    transform: scale(1.012);
+  }
+  76% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(1.008);
+  }
+  84% {
+    transform: scale(1);
+  }
+}
+
 @keyframes drawSprig {
   to {
     stroke-dashoffset: 0;
@@ -1590,6 +1614,18 @@ blockquote cite {
     opacity: 1;
     transform: scale(1);
     filter: drop-shadow(0 28px 36px rgba(70, 53, 32, 0.18));
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .envelope {
+    animation: envelopeIdleZoom 3.2s ease-in-out 0.85s infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envelope {
+    animation: none !important;
   }
 }
 
