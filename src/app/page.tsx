@@ -49,15 +49,18 @@ function EnvelopeDrawing() {
   return (
     <svg
       className="envelope-drawing"
-      viewBox="0 0 620 390"
+      viewBox="0 0 600 400"
       aria-hidden="true"
     >
-      <path className="draw-line draw-outline" d="M2 2 H618 V388 H2 Z" />
-      <path className="draw-line draw-flap" d="M2 2 L310 205 L618 2" />
-      <path className="draw-line draw-fold" d="M2 388 L228 207" />
-      <path className="draw-line draw-fold" d="M618 388 L392 207" />
-      <path className="draw-line draw-front" d="M2 388 L310 178 L618 388" />
-      <path className="draw-line draw-soft" d="M248 262 H372" />
+      <path className="draw-line draw-outline" d="M16 22 H584 V370 H16 Z" />
+      <path
+        className="draw-line draw-flap"
+        d="M24 28 L280 294 Q300 316 320 294 L576 28"
+      />
+      <path className="draw-line draw-fold" d="M16 370 L210 224" />
+      <path className="draw-line draw-fold" d="M584 370 L390 224" />
+      <path className="draw-line draw-front" d="M16 370 L246 236" />
+      <path className="draw-line draw-front" d="M584 370 L354 236" />
     </svg>
   );
 }
@@ -469,17 +472,19 @@ export default function Home() {
           aria-label="Abrir carta de invitacion"
         >
           <div className="envelope">
-            <div className="envelope-back" />
-            <div className="envelope-paper-texture" />
-            <div className="flap flap-top" />
-            <div className="flap flap-left" />
-            <div className="flap flap-right" />
-            <div className="flap flap-bottom" />
+            <Image
+              className="envelope-realistic-image"
+              src="/images/nuevo-sobre.png"
+              alt=""
+              fill
+              sizes="(max-width: 760px) 86vw, 620px"
+              priority
+            />
             <EnvelopeDrawing />
             <div className="recipient">
+              <span className="recipient-label">Para:</span>
               <span className="recipient-name">{guestName}</span>
               <span className="recipient-line" />
-              <span className="recipient-label">Para:</span>
             </div>
             <WaxSeal />
           </div>
