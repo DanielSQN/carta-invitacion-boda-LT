@@ -215,8 +215,8 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
         <div className="hero-ornament hero-ornament-top" aria-hidden="true" />
         <div className="hero-copy">
           <p>¡Nos casamos!</p>
-          <h1>Luisa &amp; Tattan</h1>
-          <span>26 ~ 09 ~ 2026</span>
+          <h1>Lu &amp; Tattan</h1>
+          <span>26 ~ sep ~ 26</span>
         </div>
         <div className="hero-ornament hero-ornament-bottom" aria-hidden="true">
         </div>
@@ -386,7 +386,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [guestName, setGuestName] = useState("Daniel Santiago");
+  const [guestName, setGuestName] = useState("Invitado Especial");
   useScrollTitles(isOpen);
 
   useEffect(() => {
@@ -477,9 +477,9 @@ export default function Home() {
             <div className="flap flap-bottom" />
             <EnvelopeDrawing />
             <div className="recipient">
-              <span className="recipient-label">Para:</span>
               <span className="recipient-name">{guestName}</span>
               <span className="recipient-line" />
+              <span className="recipient-label">Para:</span>
             </div>
             <WaxSeal />
           </div>

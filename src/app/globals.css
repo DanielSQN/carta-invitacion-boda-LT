@@ -99,7 +99,7 @@ a {
   --particle-drift: 20px;
   --particle-spin: 40deg;
   position: absolute;
-  top: -10vh;
+  top: -1vh;
   left: var(--particle-x);
   width: var(--particle-size);
   height: var(--particle-size);
@@ -112,7 +112,7 @@ a {
   display: block;
   width: 100%;
   height: 100%;
-  background: #a2793e;
+  background: #D7A86F;
   box-shadow: 0 0 8px #fff6e5;
 }
 
@@ -160,11 +160,14 @@ a {
 }
 
 .verse-block {
+  opacity: 0;
   text-align: center;
   color: var(--ink);
-  font-size: 16px;
+  font-size: 25px;
   line-height: 1.25;
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  animation: verseReveal 0.5s ease 1s forwards;
+  
+  transition: opacity 2s ease, transform 2s ease;
 }
 
 .verse-block p {
@@ -242,11 +245,13 @@ blockquote cite {
 }
 
 .envelope-stage:hover .envelope {
-  transform: translateY(-8px) rotateX(2deg);
+  transform: translateY(-10px) rotateX(2deg);
 }
 
-.envelope-stage:hover .envelope .wax-seal .wax-seal-image {
-  filter: brightness(1);
+.envelope-stage:hover .envelope .wax-seal {
+  opacity: 1;
+  filter: brightness(1.15) !important;
+  /* transform aument scale */
 }
 
 .invitation-open .envelope-stage:hover .envelope {
@@ -519,7 +524,7 @@ blockquote cite {
   text-shadow: none;
   box-shadow: none;
   opacity: 0;
-  animation: sealArrive 0.78s cubic-bezier(0.2, 0.86, 0.2, 1.12) 1.5s forwards;
+  animation: sealArrive 0.78s cubic-bezier(0.2, 0.86, 0.2, 1.12) 1.7s forwards;
   transition: transform 0.45s ease, opacity 0.45s ease;
 }
 
@@ -1447,6 +1452,17 @@ blockquote cite {
   }
 }
 
+@keyframes verseReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @keyframes particleFloat {
   0% {
     opacity: 1;
@@ -1576,7 +1592,7 @@ blockquote cite {
   }
 
   .verse-block {
-    font-size: 16px;
+    font-size: 20px;
   }
 
   .envelope-stage {
@@ -1723,6 +1739,10 @@ blockquote cite {
 
   .hero-copy h1 {
     font-size: 32px;
+  }
+
+  .verse-block {
+    font-size: 16px;
   }
 }
 
