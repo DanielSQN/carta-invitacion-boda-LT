@@ -544,7 +544,7 @@ blockquote cite {
   text-shadow: none;
   box-shadow: none;
   opacity: 0;
-  animation: sealArrive 0.78s cubic-bezier(0.2, 0.86, 0.2, 1.12) 1.7s forwards;
+  animation: sealFadeIn 1.15s cubic-bezier(0.22, 0.9, 0.28, 1) 0.35s forwards;
   transition: transform 0.45s ease, opacity 0.45s ease;
 }
 
@@ -1463,21 +1463,21 @@ blockquote cite {
   }
 }
 
-@keyframes sealArrive {
+@keyframes sealFadeIn {
   0% {
     opacity: 0;
-    transform: translate3d(-50%, -50%, 90px) scale(0.72);
-    filter: brightness(1.2);
+    transform: translate3d(-50%, -50%, 90px) scale(0.94);
+    filter: brightness(1.06) saturate(0.95);
   }
-  70% {
-    opacity: 1;
-    transform: translate3d(-50%, -50%, 90px) scale(1.06);
-    filter: brightness(1.15);
+  45% {
+    opacity: 0.72;
+    transform: translate3d(-50%, -50%, 90px) scale(0.985);
+    filter: brightness(1.03) saturate(0.98);
   }
   100% {
     opacity: 1;
     transform: translate3d(-50%, -50%, 90px) scale(1);
-    filter: brightness(1);
+    filter: brightness(1) saturate(1);
   }
 }
 
