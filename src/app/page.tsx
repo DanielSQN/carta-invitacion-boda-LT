@@ -147,13 +147,23 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
 }) {
   return (
     <div className="details-page">
-      <div className="details-photo-backdrop" aria-hidden="true" />
+      <div className="details-photo-backdrop" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className="details-photo-image"
+          src="/images/foto-pareja.png"
+          alt=""
+        />
+      </div>
 
       <section className="details-hero">
+        <div className="hero-ornament hero-ornament-top" aria-hidden="true" />
         <div className="hero-copy">
           <p>¡Nos casamos!</p>
-          <h1>Luisa &amp; Tatian</h1>
+          <h1>Luisa &amp; Tattan</h1>
           <span>26 ~ 09 ~ 2026</span>
+        </div>
+        <div className="hero-ornament hero-ornament-bottom" aria-hidden="true">
         </div>
         <div className="scroll-cue">
           <span>Desliza</span>
@@ -229,7 +239,7 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
           </div>
           <a
             className="whatsapp-button"
-            href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tatian"
+            href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tattan"
             target="_blank"
             rel="noreferrer"
           >
@@ -285,19 +295,17 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const [guestName] = useState(() => {
-    if (typeof window === "undefined") {
-      return "Daniel Santiago";
-    }
-
-    const params = new URLSearchParams(window.location.search);
-    return (
-      params.get("para")?.trim() ||
-      params.get("invitado")?.trim() ||
-      "Daniel Santiago"
-    );
-  });
+  const [guestName, setGuestName] = useState("Daniel Santiago");
   useScrollTitles(isOpen);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const name = params.get("para")?.trim() || params.get("invitado")?.trim();
+
+    if (name) {
+      queueMicrotask(() => setGuestName(name));
+    }
+  }, []);
 
   const playMusic = async () => {
     const audio = audioRef.current;

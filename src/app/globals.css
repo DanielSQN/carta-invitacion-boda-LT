@@ -703,10 +703,8 @@ blockquote cite {
   pointer-events: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  background:
-    linear-gradient(90deg, rgba(20, 34, 28, 0.28), transparent 18%, transparent 82%, rgba(20, 34, 28, 0.28)),
-    var(--details-paper, #e9dfc8);
-  transition: opacity 0.28s ease, visibility 0.28s ease;
+  /* background: #2f2a24; */
+  transition: opacity 3s ease, visibility 5s ease;
 }
 
 .invitation-view::-webkit-scrollbar {
@@ -759,6 +757,7 @@ blockquote cite {
   --details-dark: rgba(38, 36, 33, 0.9);
   --details-coral: #df947d;
   --details-green: #9aac83;
+  --details-photo-max: 980px;
   width: 100%;
   min-height: 100%;
   position: relative;
@@ -768,45 +767,48 @@ blockquote cite {
   scroll-behavior: smooth;
 }
 
-.details-page::before,
-.details-page::after {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  z-index: 30;
-  width: clamp(18px, 5vw, 58px);
-  content: "";
-  pointer-events: none;
-}
-
-.details-page::before {
-  left: 50%;
-  background: linear-gradient(90deg, rgba(233, 223, 200, 0.98), rgba(233, 223, 200, 0));
-  transform: translateX(-260px);
-}
-
-.details-page::after {
-  right: 50%;
-  background: linear-gradient(270deg, rgba(233, 223, 200, 0.98), rgba(233, 223, 200, 0));
-  transform: translateX(260px);
-}
-
 .details-photo-backdrop {
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: min(100vw, 520px);
+  inset: 0;
   z-index: 0;
-  background:
-    linear-gradient(180deg, rgba(36, 35, 32, 0.6) 0%, rgba(36, 35, 32, 0.08) 28%, rgba(36, 35, 32, 0.72) 100%),
-    linear-gradient(120deg, rgba(223, 148, 125, 0.18), rgba(154, 172, 131, 0.22)),
-    url("/images/foto-pareja.png");
-  background-position: center top;
-  background-size: contain;
-  background-repeat: no-repeat;
-  transform: translateX(-50%);
+  display: grid;
+  justify-items: center;
+  overflow: hidden;
+  /* background: #2f2a24; */
   pointer-events: none;
+}
+
+.details-photo-backdrop::before,
+.details-photo-backdrop::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  content: "";
+}
+
+/* .details-photo-backdrop::before {
+  background:
+    radial-gradient(ellipse at center, rgba(47, 42, 36, 0) 22%, rgba(47, 42, 36, 0.3) 60%, rgba(47, 42, 36, 0.94) 100%), 
+    linear-gradient(180deg, rgba(36, 35, 32, 0.68) 0%, rgba(36, 35, 32, 0.04) 34%, rgba(36, 35, 32, 0.72) 100%);
+} */
+
+/* .details-photo-backdrop::after {
+  background:
+    linear-gradient(90deg, #2f2a24 0%, rgba(47, 42, 36, 0.88) 10%, rgba(47, 42, 36, 0.34) 24%, rgba(47, 42, 36, 0) 40%, rgba(47, 42, 36, 0) 60%, rgba(47, 42, 36, 0.34) 76%, rgba(47, 42, 36, 0.88) 90%, #2f2a24 100%);
+} */
+
+.details-photo-image {
+  /* width: min(100vw, var(--details-photo-max)); */
+  width: min(100vw, 600px);
+  /* height: 100%; */
+  height: auto;
+  position: relative;
+  z-index: 1;
+  display: block;
+  object-fit: contain;
+  object-position: center top;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
 }
 
 .details-hero {
@@ -819,22 +821,34 @@ blockquote cite {
   padding: clamp(28px, 7vw, 72px) 24px 72px;
   text-align: center;
   color: #fffaf2;
-  background: linear-gradient(180deg, rgba(36, 35, 32, 0.58) 0%, rgba(36, 35, 32, 0.04) 36%, rgba(36, 35, 32, 0.58) 100%);
+  /* background:
+    radial-gradient(ellipse at center, rgba(255, 250, 242, 0.16) 0%, rgba(255, 250, 242, 0.06) 28%, rgba(47, 42, 36, 0.42) 76%, rgba(47, 42, 36, 0.72) 100%),
+    linear-gradient(180deg, rgba(36, 35, 32, 0.66) 0%, rgba(36, 35, 32, 0.04) 36%, rgba(36, 35, 32, 0.68) 100%); */
 }
 
 .details-hero::after {
   position: absolute;
-  inset: auto 0 0;
-  height: 32%;
+  inset: 0;
   content: "";
-  background: linear-gradient(180deg, transparent, rgba(38, 36, 33, 0.66));
+  /* background:
+    linear-gradient(90deg, rgba(47, 42, 36, 0.78), transparent 28%, transparent 72%, rgba(47, 42, 36, 0.78)),
+    linear-gradient(180deg, rgba(47, 42, 36, 0.3), transparent 34%, rgba(47, 42, 36, 0.64)); */
+  background:
+    linear-gradient(180deg, rgba(36, 35, 32, 1) 0%, rgba(36, 35, 32, 0.9) 10%,rgba(36, 35, 32, 0.8) 20%, rgba(36, 35, 32, 0.1) 50%, rgba(36, 35, 32, 0.05) 60%, transparent 70%, transparent 100%);
+  /* add backgroudn gradient in bottom and top */
+  /* background:transparent; */
+  /* background:
+    radial-gradient(ellipse at center, transparent 0%, transparent 44%, rgba(47, 42, 36, 0.02) 50%, rgba(47, 42, 36, 0.94) 100%); */
   pointer-events: none;
 }
 
 .hero-copy {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  width: min(100%, var(--details-photo-max));
+  padding-inline: clamp(18px, 4vw, 42px);
   text-shadow: 0 2px 20px rgba(0, 0, 0, 0.32);
+  color: #E9DFC8;
 }
 
 .hero-copy p {
@@ -847,17 +861,63 @@ blockquote cite {
 
 .hero-copy h1 {
   margin: 0;
-  font-size: clamp(58px, 11vw, 112px);
+  font-size: clamp(54px, 7vw, 88px);
   font-weight: 400;
   line-height: 0.95;
 }
 
 .hero-copy span {
   display: block;
-  margin-top: clamp(56vh, 62vh, 68vh);
+  /* margin-top: clamp(56vh, 62vh, 68vh); */
   font-family: var(--font-playfair), Georgia, serif;
   font-size: clamp(24px, 5vw, 44px);
   letter-spacing: 0.08em;
+}
+
+.hero-ornament {
+  --ornament-width: min(240px, 46vw);
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+  width: var(--ornament-width);
+  height: 18px;
+  transform: translateX(-50%);
+  opacity: 0.82;
+}
+
+.hero-ornament::before,
+.hero-ornament::after {
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 22px);
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(36, 35, 32, 1));
+}
+
+.hero-ornament::before {
+  left: 0;
+}
+
+.hero-ornament::after {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+.hero-ornament {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(36, 35, 32, 1) 0 4px, transparent 2px),
+    radial-gradient(ellipse at 45% 50%, rgba(36, 35, 32, 1) 0 7px, transparent 4px),
+    radial-gradient(ellipse at 55% 50%, rgba(36, 35, 32, 1) 0 7px, transparent 4px);
+  background-repeat: no-repeat;
+}
+
+.hero-ornament-top {
+  top: clamp(22px, 5vw, 48px);
+}
+
+.hero-ornament-bottom {
+  bottom: clamp(36px, 7vw, 72px);
 }
 
 .scroll-cue {
@@ -1452,15 +1512,11 @@ blockquote cite {
     width: 100%;
   }
 
-  .details-page::before,
-  .details-page::after {
-    display: none;
-  }
-
-  .details-photo-backdrop {
+  .details-photo-image {
     width: 100%;
-    background-size: cover;
-    background-position: center top;
+    object-fit: cover;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .card-heading span {
