@@ -112,7 +112,7 @@ function FloatingParticles() {
 
 // const MUSIC_SRC = "/audio/musica-fondo.wav";
 const MUSIC_SRC = "/audio/song1.mp3";
-const START_IN_WEDDING_CARD = true;
+const START_IN_WEDDING_CARD = false;
 const WEDDING_DATE = new Date("2026-09-26T17:00:00-05:00").getTime();
 
 function getCountdown() {
