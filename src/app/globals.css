@@ -1019,7 +1019,8 @@ blockquote cite {
 .story-strip {
   position: relative;
   z-index: 3;
-  padding: 92px 24px 96px;
+  /* padding: 92px 24px 96px; */
+  padding: 8px 0;
   color: #30271f;
   background: var(--details-paper);
   text-align: center;
@@ -1929,7 +1930,7 @@ blockquote cite {
   }
 
   .story-strip {
-    padding-block: 76px 82px;
+    /* padding-block: 76px 82px; */
   }
 
   .wave {
