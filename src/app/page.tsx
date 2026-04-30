@@ -112,6 +112,7 @@ function FloatingParticles() {
 
 // const MUSIC_SRC = "/audio/musica-fondo.wav";
 const MUSIC_SRC = "/audio/song1.mp3";
+const START_IN_WEDDING_CARD = true;
 const WEDDING_DATE = new Date("2026-09-26T17:00:00-05:00").getTime();
 
 function getCountdown() {
@@ -165,8 +166,10 @@ function useScrollTitles(isOpen: boolean) {
     );
 
     titles.forEach((title) => observer.observe(title));
-    const countdownSections = document.querySelectorAll<HTMLElement>(".countdown-section");
-    const countdownObserver = new IntersectionObserver(
+    const animatedSections = document.querySelectorAll<HTMLElement>(
+      ".story-strip, .overlay-section",
+    );
+    const sectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -174,14 +177,14 @@ function useScrollTitles(isOpen: boolean) {
           }
         });
       },
-      { threshold: 0.34 },
+      { threshold: 0.12 },
     );
 
-    countdownSections.forEach((section) => countdownObserver.observe(section));
+    animatedSections.forEach((section) => sectionObserver.observe(section));
 
     return () => {
       observer.disconnect();
-      countdownObserver.disconnect();
+      sectionObserver.disconnect();
     };
   }, [isOpen]);
 }
@@ -209,7 +212,7 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="details-photo-image"
-          src="/images/foto-pareja.png"
+          src="/images/_DSC1207-2.jpg"
           alt=""
         />
       </div>
@@ -217,9 +220,9 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
       <section className="details-hero">
         <div className="hero-ornament hero-ornament-top" aria-hidden="true" />
         <div className="hero-copy">
-          <p>¡Nos casamos!</p>
           <h1>Lu &amp; Tattan</h1>
-          <span>26 ~ sep ~ 26</span>
+          <p>¡Nos casamos!</p>
+          <span className="hero-date">26 ~ sep ~ 26</span>
         </div>
         <div className="hero-ornament hero-ornament-bottom" aria-hidden="true">
         </div>
@@ -229,11 +232,12 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
       </section>
 
       <section className="story-strip">
-        <p>Toda aventura comienza con un &quot;Sí&quot;</p>
+        <div className="wave wave-top wave-paper" aria-hidden="true" />
+        <p>Toda aventura comienza con un <b>&quot;Sí&quot;</b></p>
+        <div className="wave-line wave-line-bottom" aria-hidden="true" />
       </section>
 
       <section className="overlay-section countdown-section">
-        <div className="wave wave-top" aria-hidden="true" />
         <div className="countdown-content">
           <svg className="countdown-rings" viewBox="0 0 320 320" aria-hidden="true">
             <path pathLength="1" d="M160 25 C248 25 297 90 287 172 C278 247 217 299 136 287 C59 275 21 206 35 129 C48 56 99 20 160 25" />
@@ -265,11 +269,10 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
             <Heart className="countdown-heart" aria-hidden="true" fill="currentColor" />
           </div>
         </div>
-        <div className="wave wave-bottom" aria-hidden="true" />
       </section>
 
-      <section className="overlay-section overlay-dark">
-        <div className="wave wave-top" aria-hidden="true" />
+      <section className="overlay-section overlay-paper">
+        <div className="wave wave-top wave-paper" aria-hidden="true" />
         <div className="section-content">
           <TypedTitle>Ceremonia</TypedTitle>
           <h3>Iglesia de la Unidad</h3>
@@ -280,7 +283,7 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
           </p>
           <time>5:00 PM</time>
           <a
-            className="map-link map-link-light"
+            className="map-link"
             href="https://maps.google.com/?q=Iglesia%20de%20la%20Unidad"
             target="_blank"
             rel="noreferrer"
@@ -289,10 +292,10 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
             Pulsa para ver en Maps
           </a>
         </div>
-        <div className="wave wave-bottom" aria-hidden="true" />
+        <div className="wave-line wave-line-bottom" aria-hidden="true" />
       </section>
 
-      <section className="overlay-section overlay-paper">
+      <section className="overlay-section overlay-dark">
         <div className="section-content">
           <TypedTitle>Celebración</TypedTitle>
           <h3>Hacienda San Miguel</h3>
@@ -303,7 +306,7 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
           </p>
           <time>7:30 PM</time>
           <a
-            className="map-link"
+            className="map-link map-link-light"
             href="https://maps.google.com/?q=Hacienda%20San%20Miguel"
             target="_blank"
             rel="noreferrer"
@@ -315,6 +318,7 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
       </section>
 
       <section className="overlay-section overlay-light">
+        <div className="wave wave-top wave-paper" aria-hidden="true" />
         <div className="section-content">
           <TypedTitle>Detalles</TypedTitle>
           <div className="detail-list">
@@ -346,6 +350,7 @@ function WeddingCard({ musicEnabled, onToggleMusic }: {
             <cite>Proverbios 18:22</cite>
           </blockquote>
         </div>
+        <div className="wave-line wave-line-bottom" aria-hidden="true" />
       </section>
 
       <div className="floating-controls" aria-label="Controles">
@@ -386,7 +391,7 @@ function WaxSeal() {
 }
 
 export default function Home() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(START_IN_WEDDING_CARD);
   const [musicEnabled, setMusicEnabled] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [guestName, setGuestName] = useState("Invitado Especial");
