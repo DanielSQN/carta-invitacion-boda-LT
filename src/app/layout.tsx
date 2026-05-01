@@ -15,9 +15,42 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+const metadataBase = new URL(
+  siteUrl.startsWith("http://") || siteUrl.startsWith("https://")
+    ? siteUrl
+    : `https://${siteUrl}`,
+);
+const title = "Boda Luisa & Tattan";
+const description = "Estás invitado a celebrar con nosotros este día tan especial.";
+const previewImage = "/preview-boda.png";
+
 export const metadata: Metadata = {
-  title: "Nuestra boda | Luisa & Tatian",
-  description: "Carta de invitación digital para la boda de Luisa y Tatian.",
+  metadataBase,
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: "/",
+    type: "website",
+    locale: "es_CO",
+    siteName: title,
+    images: [
+      {
+        url: previewImage,
+        width: 1200,
+        height: 630,
+        alt: title,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: [previewImage],
+  },
 };
 
 export default function RootLayout({
