@@ -70,10 +70,10 @@ npx vercel --prod --yes
 ## Assets Reemplazables
 
 - Foto principal: `public/images/foto-pareja.png`
-- Preview de WhatsApp/Open Graph: `public/preview-boda.png`
+- Preview de WhatsApp/Open Graph: `public/preview-boda-v2.png`
 - Música de fondo: `public/audio/musica-fondo.wav`
 - Sello: `public/images/sello-lt.png`
 
 Puedes reemplazar esos archivos manteniendo el mismo nombre para no tocar código.
 
-WhatsApp puede guardar cache del preview. Para probar cambios puedes compartir la URL con `?preview=2` o cambiar el nombre de la imagen a `preview-boda-v2.png`.
+WhatsApp puede guardar cache del preview. Para probar cambios puedes compartir la URL con `?preview=2` o cambiar el nombre de la imagen a una nueva versión, por ejemplo `preview-boda-v3.png`.

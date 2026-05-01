@@ -23,7 +23,7 @@ const metadataBase = new URL(
 );
 const title = "Boda Luisa & Tattan";
 const description = "Estás invitado a celebrar con nosotros este día tan especial.";
-const previewImage = "/preview-boda.png";
+const previewImage = "/preview-boda-v2.png";
 
 export const metadata: Metadata = {
   metadataBase,
