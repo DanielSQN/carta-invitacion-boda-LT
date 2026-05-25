@@ -6,6 +6,7 @@ import DecorativeText from "./DecorativeText";
 import Envelope from "./Envelope";
 import FloralCorners from "./FloralCorners";
 import Verse from "./Verse";
+import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 
 function normalizeGuestName(value: string) {
   let normalized = value;
@@ -48,13 +49,13 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       <div className="absolute inset-0 z-[1] bg-paper-texture" aria-hidden="true" />
       <FloralCorners />
 
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false}>
         {!isOpen ? (
           <motion.section
             key="home"
-            className="wedding-home-scene relative z-[3] mx-auto grid h-dvh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
-            exit={{ opacity: 0, scale: 0.96, filter: "blur(2px)" }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-dvh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
+            exit={{ opacity: 0, y: -34, scale: 0.94, filter: "blur(3px)" }}
+            transition={{ duration: 0.88, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="invitation-hero-stack">
               <DecorativeText guestName={guestName} />
@@ -79,22 +80,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             <Verse />
           </motion.section>
         ) : (
-          <motion.section
-            key="placeholder"
-            className="relative z-[8] grid min-h-dvh place-items-center px-8 text-center"
-            initial={{ opacity: 0, y: 32, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.58, duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div>
-              <p className="mb-4 font-serif text-sm uppercase tracking-[0.32em] text-soft-gold">
-                Luisa &amp; Tattan
-              </p>
-              <h2 className="font-script text-[clamp(4rem,20vw,6.8rem)] leading-none text-olive">
-                Nuestra boda
-              </h2>
-            </div>
-          </motion.section>
+          <WeddingHeroSection key="wedding-hero" />
         )}
       </AnimatePresence>
     </main>
