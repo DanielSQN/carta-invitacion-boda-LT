@@ -16,7 +16,7 @@ export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
       onClick={onOpen}
       initial={{ opacity: 0, y: 34, rotate: -10, scale: 0.92 }}
       animate={{ opacity: 1, y: 0, rotate: -7, scale: 1 }}
-      transition={{ delay: 2, duration: 1.05, ease: [0.18, 1, 0.28, 1] }}
+      transition={{ delay: 1.05, duration: 0.78, ease: [0.18, 1, 0.28, 1] }}
       whileTap={isOpen ? undefined : { scale: 0.985 }}
     >
       <motion.div

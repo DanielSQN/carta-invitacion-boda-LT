@@ -7,13 +7,32 @@ import Envelope from "./Envelope";
 import FloralCorners from "./FloralCorners";
 import Verse from "./Verse";
 
+function normalizeGuestName(value: string) {
+  let normalized = value;
+
+  for (let index = 0; index < 2; index += 1) {
+    try {
+      normalized = decodeURIComponent(normalized);
+    } catch {
+      break;
+    }
+  }
+
+  return normalized
+    .replace(/\+/g, " ")
+    .replace(/%20/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export default function WeddingHome() {
   const [isOpen, setIsOpen] = useState(false);
   const [guestName, setGuestName] = useState("Invitado Especial");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const name = params.get("para")?.trim() || params.get("invitado")?.trim();
+    const rawName = params.get("para") || params.get("invitado");
+    const name = rawName ? normalizeGuestName(rawName) : "";
 
     if (name) {
       queueMicrotask(() => setGuestName(name));
@@ -45,7 +64,7 @@ export default function WeddingHome() {
                   onClick={() => setIsOpen(true)}
                   initial={{ opacity: 0, x: "7%", y: 12, rotate: -7 }}
                   animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
-                  transition={{ delay: 3, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: 2.05, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
                   aria-label="Clic para abrir"
                 >
                   <svg className="open-cta-arrow" viewBox="0 0 88 76" fill="none" aria-hidden="true">

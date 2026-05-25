@@ -8,14 +8,14 @@ type WaxSealProps = {
 export default function WaxSeal({ isOpen }: WaxSealProps) {
   return (
     <motion.div
-      className="wax-seal absolute left-1/2 top-[56.5%] z-[8] grid aspect-square place-items-center"
+      className="wax-seal absolute left-1/2 top-[58.5%] z-[8] grid aspect-square place-items-center"
       initial={{ opacity: 0, scale: 0.72, x: "-50%", y: "calc(-50% + 8px)" }}
       animate={
         isOpen
           ? { opacity: 0, scale: 0.35, x: "-50%", y: "calc(-50% - 8px)" }
           : { opacity: 1, scale: 1, x: "-50%", y: "-50%" }
       }
-      transition={{ delay: isOpen ? 0 : 2.6, duration: isOpen ? 0.42 : 0.85, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ delay: isOpen ? 0 : 1.55, duration: isOpen ? 0.42 : 0.62, ease: [0.22, 1, 0.36, 1] }}
       aria-hidden="true"
     >
       <Image

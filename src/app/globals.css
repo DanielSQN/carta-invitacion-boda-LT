@@ -138,8 +138,8 @@ button {
 }
 
 .wax-seal {
-  width: min(27vw, 12.8dvh, 108px);
-  max-width: 28%;
+  width: min(24.5vw, 11.8dvh, 100px);
+  max-width: 26%;
 }
 
 .open-cta {
@@ -232,8 +232,8 @@ button {
   }
 
   .wax-seal {
-    width: min(26vw, 12dvh, 96px);
-    max-width: 28%;
+    width: min(23.5vw, 11dvh, 88px);
+    max-width: 25%;
   }
 
   .open-cta {
