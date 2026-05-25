@@ -191,7 +191,7 @@ button {
 .verse-block {
   align-self: end;
   max-width: min(82vw, 320px);
-  margin-bottom: clamp(4.15rem, 12dvh, 7.6rem);
+  margin-bottom: clamp(3.1rem, 9dvh, 6.1rem);
   text-shadow: 0 1px 0 rgba(255, 252, 244, 0.8);
 }
 
@@ -310,7 +310,7 @@ button {
 
   .verse-block {
     max-width: min(82vw, 300px);
-    margin-bottom: clamp(3.05rem, 10dvh, 5.4rem);
+    margin-bottom: clamp(2rem, 6.8dvh, 4.1rem);
   }
 
   .verse-reference {
