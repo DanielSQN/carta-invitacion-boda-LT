@@ -188,6 +188,11 @@ button {
   perspective: 900px;
   transform-origin: top center;
   transform-style: preserve-3d;
+  opacity: 0;
+}
+
+.envelope-letter-insert {
+  opacity: 0;
 }
 
 .envelope-top-flap > div {

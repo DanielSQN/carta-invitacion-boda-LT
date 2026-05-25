@@ -25,19 +25,23 @@ function normalizeGuestName(value: string) {
     .trim();
 }
 
-export default function WeddingHome() {
+type WeddingHomeProps = {
+  initialGuestName: string;
+};
+
+export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [guestName, setGuestName] = useState("Invitado Especial");
+  const [guestName, setGuestName] = useState(initialGuestName);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const rawName = params.get("para") || params.get("invitado");
     const name = rawName ? normalizeGuestName(rawName) : "";
 
-    if (name) {
+    if (name && name !== initialGuestName) {
       queueMicrotask(() => setGuestName(name));
     }
-  }, []);
+  }, [initialGuestName]);
 
   return (
     <main className="relative h-dvh overflow-hidden bg-paper text-olive">
@@ -64,7 +68,7 @@ export default function WeddingHome() {
                   onClick={() => setIsOpen(true)}
                   initial={{ opacity: 0, x: "7%", y: 12, rotate: -7 }}
                   animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
-                  transition={{ delay: 2.05, duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: 1.5, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
                   aria-label="Clic para abrir"
                 >
                   <svg className="open-cta-arrow" viewBox="0 0 88 76" fill="none" aria-hidden="true">
