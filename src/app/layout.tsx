@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Great_Vibes, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -15,6 +15,13 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
+const greatVibes = Great_Vibes({
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
 const metadataBase = new URL(
   siteUrl.startsWith("http://") || siteUrl.startsWith("https://")
@@ -22,7 +29,7 @@ const metadataBase = new URL(
     : `https://${siteUrl}`,
 );
 const title = "Boda Luisa & Tattan";
-const description = "Estás invitado a celebrar con nosotros este día tan especial.";
+const description = "Estas invitado a celebrar con nosotros este dia tan especial.";
 const previewImage = "/preview-boda-v2.png";
 
 export const metadata: Metadata = {
@@ -61,7 +68,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${playfair.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${playfair.variable} ${cormorant.variable} ${greatVibes.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
