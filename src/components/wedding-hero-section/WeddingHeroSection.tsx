@@ -3,8 +3,10 @@
 import { motion } from "framer-motion";
 import { CalendarHeart, ChevronsDown, Clock3, MapPin } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
-const assetVersion = "20260525-wedding-hero-3";
+const assetVersion = "20260525-wedding-hero-4";
+const weddingDate = new Date("2024-09-19T00:00:00-05:00");
 
 const fadeUp = {
   hidden: { opacity: 0, y: 18, scale: 0.985 },
@@ -39,12 +41,12 @@ function FloralTopDecorations() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[21dvh] min-h-28 overflow-hidden" aria-hidden="true">
       <Image
-        src={`/images/floral-top.webp?v=${assetVersion}`}
+        src={`/images/floral-bottom.webp?v=${assetVersion}`}
         alt=""
-        width={360}
-        height={240}
+        width={240}
+        height={360}
         priority
-        className="absolute -left-24 -top-16 w-64 rotate-[-8deg] object-contain opacity-95"
+        className="absolute -left-16 -top-20 w-44 rotate-[-18deg] scale-x-[-1] object-contain opacity-95"
       />
       <Image
         src={`/images/floral-top.webp?v=${assetVersion}`}
@@ -52,7 +54,7 @@ function FloralTopDecorations() {
         width={360}
         height={240}
         priority
-        className="absolute -right-24 -top-16 w-64 rotate-[8deg] scale-x-[-1] object-contain opacity-92"
+        className="absolute -right-24 -top-14 w-64 rotate-[8deg] scale-x-[-1] object-contain opacity-92"
       />
     </div>
   );
@@ -113,7 +115,7 @@ function WeddingTitleBlock() {
         transition={{ ...smoothTransition, delay: 0.62 }}
       >
         <CalendarHeart className="wedding-info-icon mx-auto mb-1.5 size-7 text-soft-gold" strokeWidth={1.55} />
-        <p className="wedding-hero-date whitespace-nowrap font-display text-[clamp(2.25rem,10.6vw,3.5rem)] font-medium leading-none tracking-[0.04em] text-olive">
+        <p className="wedding-hero-date whitespace-nowrap font-display text-[clamp(2rem,9.8vw,3.1rem)] font-medium leading-none tracking-[0.04em] text-olive">
           26 <span className="text-soft-gold">·</span> 09 <span className="text-soft-gold">·</span> 26
         </p>
       </motion.div>
@@ -122,6 +124,22 @@ function WeddingTitleBlock() {
 }
 
 function WeddingInfoBlock() {
+  const [daysRemaining, setDaysRemaining] = useState(0);
+
+  useEffect(() => {
+    const updateDaysRemaining = () => {
+      const millisecondsPerDay = 1000 * 60 * 60 * 24;
+      const days = Math.ceil((weddingDate.getTime() - Date.now()) / millisecondsPerDay);
+
+      setDaysRemaining(Math.max(days, 0));
+    };
+
+    updateDaysRemaining();
+    const interval = window.setInterval(updateDaysRemaining, 60 * 60 * 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
   return (
     <motion.div
       className="wedding-info-block relative z-[4] mx-auto mt-5 grid w-full max-w-[350px] grid-cols-[1fr_auto_1fr] items-center gap-4 text-center"
@@ -138,7 +156,9 @@ function WeddingInfoBlock() {
 
       <div className="min-w-0 px-1">
         <Clock3 className="wedding-info-icon mx-auto mb-1 size-7 text-soft-gold" strokeWidth={1.65} />
-        <p className="wedding-count-number font-display text-[2.55rem] font-semibold leading-none text-olive">100</p>
+        <p className="wedding-count-number font-display text-[2.55rem] font-semibold leading-none text-olive">
+          {daysRemaining}
+        </p>
         <p className="wedding-count-copy mt-1 text-[0.9rem] leading-tight text-olive/85">días para nuestra boda</p>
       </div>
     </motion.div>
@@ -147,7 +167,7 @@ function WeddingInfoBlock() {
 
 function TornPaperDivider() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-[-4.2dvh] z-20 h-[9dvh] min-h-14 overflow-hidden" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-x-[-5%] bottom-[-6dvh] z-20 h-[13dvh] min-h-20 overflow-hidden" aria-hidden="true">
       <Image
         src={`/images/torn-paper-edge.webp?v=${assetVersion}`}
         alt=""
@@ -156,6 +176,7 @@ function TornPaperDivider() {
         className="w-full object-cover object-bottom"
         priority
       />
+      <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-[#f6ead7]/90 to-transparent" />
     </div>
   );
 }
@@ -168,8 +189,8 @@ function ScrollHint() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...smoothTransition, delay: 1.22 }}
     >
-      <p className="font-script text-[1.9rem] leading-none drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
-        Desliza para continuar
+      <p className="font-script text-[1.7rem] leading-none opacity-90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.42)]">
+        Continuar
       </p>
       <motion.div
         className="mt-2 text-soft-gold drop-shadow-[0_2px_10px_rgba(0,0,0,0.36)]"
@@ -197,8 +218,9 @@ function CouplePhotoSection() {
         fill
         priority
         sizes="(max-width: 430px) 100vw, 430px"
-        className="object-cover object-[center_22%]"
+        className="object-cover object-[center_8%]"
       />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(20,18,12,0.3)_0%,rgba(20,18,12,0)_13%,rgba(20,18,12,0)_87%,rgba(20,18,12,0.3)_100%)] backdrop-blur-[0.2px]" />
       <div className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/58 via-black/18 to-transparent" />
       <ScrollHint />
     </motion.section>
@@ -218,7 +240,7 @@ export default function WeddingHeroSection() {
         className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+0.75rem)]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(250, 242, 229, 0.88), rgba(246, 234, 215, 0.93)), url('/images/paper-texture.webp?v=20260525-wedding-hero-3')",
+            "linear-gradient(rgba(250, 242, 229, 0.56), rgba(246, 234, 215, 0.68)), url('/images/paper-texture.webp?v=20260525-wedding-hero-4')",
           backgroundPosition: "center top",
           backgroundSize: "cover",
         }}
