@@ -15,8 +15,21 @@ export default function DecorativeText({ guestName }: DecorativeTextProps) {
       <p className="decorative-label font-script leading-none">
         Para:
       </p>
-      <h1 className="decorative-name whitespace-nowrap font-script leading-[0.88] tracking-normal">
-        {guestName}
+      <h1 className="decorative-name font-script leading-[0.88] tracking-normal">
+        <span className="decorative-name-line">
+          <span>{guestName}</span>
+          <svg
+            className="calligraphy-heart"
+            viewBox="0 0 88 48"
+            fill="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              d="M2 27C14 27 20 23 29 18C36 14 43 16 48 24C52 15 59 11 67 14C76 17 80 27 76 36C72 44 62 49 49 52C36 47 25 39 24 30C23 23 28 18 35 17C42 16 47 21 49 29C52 21 58 17 65 18C72 20 75 27 72 33C69 40 60 45 50 48"
+            />
+          </svg>
+        </span>
       </h1>
 
       <div
@@ -26,18 +39,24 @@ export default function DecorativeText({ guestName }: DecorativeTextProps) {
         <span className="h-px flex-1 bg-gradient-to-l from-soft-gold to-transparent" />
         <svg className="h-5 w-12 shrink-0" viewBox="0 0 96 34" fill="none">
           <path
-            d="M7 17h23m36 0h23M33 17c8-13 22-13 30 0-8 13-22 13-30 0Z"
+            d="M7 17h25m32 0h25"
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
           />
           <path
-            d="M43 10c-3 2-5 4-5 7s2 5 5 7m10-14c3 2 5 4 5 7s-2 5-5 7"
+            d="M48 25C39 19 35 15 35 10.8C35 7.5 37.6 5 40.9 5C43.7 5 46 6.7 48 9.1C50 6.7 52.3 5 55.1 5C58.4 5 61 7.5 61 10.8C61 15 57 19 48 25Z"
             stroke="currentColor"
-            strokeWidth="1.7"
+            strokeWidth="2"
+            strokeLinejoin="round"
             strokeLinecap="round"
           />
-          <circle cx="48" cy="17" r="2.8" fill="currentColor" />
+          <path
+            d="M42 28c3.8 2.3 8.2 2.3 12 0"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+          />
         </svg>
         <span className="h-px flex-1 bg-gradient-to-r from-soft-gold to-transparent" />
       </div>

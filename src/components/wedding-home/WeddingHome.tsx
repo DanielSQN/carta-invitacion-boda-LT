@@ -71,21 +71,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
                   transition={{ delay: 1.5, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
                   aria-label="Clic para abrir"
                 >
-                  <svg className="open-cta-arrow" viewBox="0 0 88 76" fill="none" aria-hidden="true">
-                    <path
-                      d="M44 68C55 48 48 27 27 23"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeWidth="2.4"
-                    />
-                    <path
-                      d="M27 23c8-3 14-8 20-16M27 23c8 3 14 8 20 16"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2.4"
-                    />
-                  </svg>
                   <span>Clic para abrir</span>
                 </motion.button>
               </div>
