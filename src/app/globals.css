@@ -259,12 +259,13 @@ button {
 @media (max-height: 700px) {
   .wedding-hero-paper {
     height: 45dvh;
-    padding-top: calc(env(safe-area-inset-top) + 1.35rem);
+    padding-top: calc(env(safe-area-inset-top) + 2.65rem);
     padding-bottom: 2.85rem;
   }
 
   .wedding-hero-content {
-    transform: none;
+    transform: scale(0.88);
+    transform-origin: top center;
   }
 
   .wedding-hero-logo {
@@ -326,7 +327,7 @@ button {
 @media (min-height: 760px) {
   .wedding-hero-paper {
     height: 45dvh;
-    padding-top: calc(env(safe-area-inset-top) + 1rem);
+    padding-top: calc(env(safe-area-inset-top) + 3.15rem);
   }
 
   .wedding-hero-content {

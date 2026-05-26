@@ -160,16 +160,24 @@ function WeddingInfoBlock() {
 function TornPaperDivider() {
   return (
     <div
-      className="wedding-torn-divider pointer-events-none absolute inset-x-0 bottom-[-28px] z-20 h-[5.8dvh] min-h-9 overflow-hidden"
+      className="wedding-torn-divider pointer-events-none absolute inset-x-0 bottom-[-18px] z-20 h-[3.8dvh] min-h-7 overflow-hidden"
       aria-hidden="true"
     >
-      <div className="absolute inset-x-[-6%] top-0 h-full bg-[#f6ead7] [clip-path:polygon(0_0,100%_0,100%_42%,93%_49%,84%_41%,75%_55%,66%_44%,56%_58%,46%_48%,36%_61%,26%_45%,17%_56%,8%_47%,0_54%)]" />
+      <div
+        className="absolute inset-x-[-6%] top-0 h-full [clip-path:polygon(0_0,100%_0,100%_43%,93%_51%,84%_44%,75%_56%,66%_46%,56%_58%,46%_49%,36%_60%,26%_47%,17%_57%,8%_49%,0_55%)]"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(250, 242, 229, 0.12), rgba(246, 234, 215, 0.2)), url('/images/paper-texture.webp?v=20260525-wedding-hero-7')",
+          backgroundPosition: "center bottom",
+          backgroundSize: "cover",
+        }}
+      />
       <Image
         src={`/images/torn-paper-edge.png?v=${assetVersion}`}
         alt=""
         fill
         sizes="(max-width: 430px) 100vw, 430px"
-        className="w-full object-cover object-center opacity-35 mix-blend-multiply [clip-path:polygon(0_0,100%_0,100%_50%,90%_54%,80%_47%,70%_58%,60%_49%,50%_61%,40%_51%,30%_62%,20%_48%,10%_57%,0_51%)]"
+        className="w-full object-cover object-center opacity-22 mix-blend-multiply [clip-path:polygon(0_0,100%_0,100%_50%,90%_54%,80%_47%,70%_58%,60%_49%,50%_61%,40%_51%,30%_62%,20%_48%,10%_57%,0_51%)]"
         priority
       />
     </div>
@@ -224,33 +232,74 @@ function CouplePhotoSection() {
   );
 }
 
+function WeddingDetailSection({
+  title,
+  tone,
+}: {
+  title: string;
+  tone: "warm" | "paper";
+}) {
+  return (
+    <motion.section
+      className={[
+        "relative isolate grid min-h-[42dvh] place-items-center overflow-hidden px-8 py-20 text-center",
+        tone === "warm" ? "bg-[#efe0c8]" : "bg-[#f7eddd]",
+      ].join(" ")}
+      initial={{ opacity: 0, y: 34 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.45 }}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="absolute inset-0 -z-10 bg-paper-texture opacity-72" aria-hidden="true" />
+      <div
+        className="absolute inset-x-0 top-0 z-10 h-9 bg-[#f7eddd] [clip-path:polygon(0_0,100%_0,100%_34%,92%_47%,82%_35%,72%_52%,62%_40%,52%_55%,42%_42%,32%_57%,22%_40%,12%_51%,0_38%)]"
+        aria-hidden="true"
+      />
+      <motion.h2
+        className="font-script text-[clamp(3.4rem,16vw,5rem)] leading-none text-olive"
+        initial={{ opacity: 0, y: 26, scale: 0.98 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: true, amount: 0.6 }}
+        transition={{ duration: 0.78, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {title}
+      </motion.h2>
+    </motion.section>
+  );
+}
+
 export default function WeddingHeroSection() {
   return (
     <motion.section
-      className="absolute inset-x-0 top-0 z-[8] mx-auto flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
+      className="relative z-[8] mx-auto w-full max-w-[430px] overflow-hidden bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
       initial={{ opacity: 0, y: 72, scale: 0.975 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 1.05, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
-      <section
-        className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+1.35rem)]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(250, 242, 229, 0.28), rgba(246, 234, 215, 0.42)), url('/images/paper-texture.webp?v=20260525-wedding-hero-7')",
-          backgroundPosition: "center top",
-          backgroundSize: "cover",
-        }}
-      >
-        <FloralTopDecorations />
-        <motion.div initial="hidden" animate="visible" className="wedding-hero-content relative z-[30] w-full">
-          <WeddingTitleBlock />
-          <WeddingInfoBlock />
-        </motion.div>
-        <TornPaperDivider />
-      </section>
+      <div className="flex h-dvh flex-col overflow-hidden">
+        <section
+          className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+3.1rem)]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(250, 242, 229, 0.18), rgba(246, 234, 215, 0.28)), url('/images/paper-texture.webp?v=20260525-wedding-hero-7')",
+            backgroundPosition: "center top",
+            backgroundSize: "cover",
+          }}
+        >
+          <FloralTopDecorations />
+          <motion.div initial="hidden" animate="visible" className="wedding-hero-content relative z-[30] w-full">
+            <WeddingTitleBlock />
+            <WeddingInfoBlock />
+          </motion.div>
+          <TornPaperDivider />
+        </section>
 
-      <CouplePhotoSection />
+        <CouplePhotoSection />
+      </div>
+
+      <WeddingDetailSection title="Itinerario" tone="warm" />
+      <WeddingDetailSection title="Lugar del evento" tone="paper" />
     </motion.section>
   );
 }

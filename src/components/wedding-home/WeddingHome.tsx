@@ -63,7 +63,13 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   };
 
   return (
-    <main className="relative h-dvh overflow-hidden bg-paper text-olive">
+    <main
+      className={
+        showWeddingHero
+          ? "relative min-h-dvh overflow-x-hidden bg-paper text-olive"
+          : "relative h-dvh overflow-hidden bg-paper text-olive"
+      }
+    >
       <div className="absolute inset-0 z-[1] bg-paper-texture" aria-hidden="true">
         <Image
           src="/images/paper-texture.webp?v=20260525-wedding-home"
