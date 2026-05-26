@@ -5,7 +5,7 @@ import { CalendarHeart, ChevronsDown, Clock3, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const assetVersion = "20260525-wedding-hero-6";
+const assetVersion = "20260525-wedding-hero-7";
 const weddingDate = new Date("2026-09-26T00:00:00-05:00");
 
 const fadeUp = {
@@ -21,9 +21,9 @@ const smoothTransition = {
 function LTLogo() {
   return (
     <motion.p
-      className="wedding-hero-logo mx-auto font-display text-[0.82rem] font-semibold uppercase tracking-[0.18em] text-soft-gold"
+      className="wedding-hero-logo mx-auto mt-2 font-display text-[0.82rem] font-semibold uppercase tracking-[0.18em] text-soft-gold"
       variants={fadeUp}
-      transition={{ ...smoothTransition, delay: 0.12 }}
+      transition={{ ...smoothTransition, delay: 0.44 }}
     >
       LUISA &amp; TATTAN
     </motion.p>
@@ -39,7 +39,7 @@ function FloralTopDecorations() {
         width={360}
         height={240}
         priority
-        className="absolute -left-14 -top-12 w-56 rotate-[-4deg] object-contain opacity-95"
+        className="absolute -left-3 -top-3 w-48 rotate-[-5deg] scale-x-[-1] object-contain opacity-95"
       />
       <Image
         src={`/images/floral-top.webp?v=${assetVersion}`}
@@ -47,7 +47,7 @@ function FloralTopDecorations() {
         width={360}
         height={240}
         priority
-        className="absolute -right-14 -top-12 w-56 rotate-[4deg] scale-x-[-1] object-contain opacity-92"
+        className="absolute -right-3 -top-3 w-48 rotate-[5deg] object-contain opacity-92"
       />
     </div>
   );
@@ -57,8 +57,7 @@ function DecorativeHeartRule() {
   return (
     <div className="mx-auto flex w-full max-w-[285px] items-center justify-center gap-3 text-soft-gold" aria-hidden="true">
       <span className="h-px flex-1 bg-gradient-to-r from-transparent via-soft-gold/80 to-soft-gold" />
-      <span className="relative grid size-6 place-items-center">
-        <span className="absolute size-5 rotate-45 rounded-[6px] border border-soft-gold/65" />
+      <span className="grid size-6 place-items-center">
         <span className="font-serif text-lg leading-none">♡</span>
       </span>
       <span className="h-px flex-1 bg-gradient-to-l from-transparent via-soft-gold/80 to-soft-gold" />
@@ -69,12 +68,21 @@ function DecorativeHeartRule() {
 function WeddingTitleBlock() {
   return (
     <div className="relative z-[4] text-center">
+      <motion.h1
+        id="wedding-hero-title"
+        className="wedding-hero-title whitespace-nowrap font-script text-[clamp(3.35rem,15.8vw,5.35rem)] leading-[0.84] text-olive drop-shadow-[0_2px_0_rgba(255,252,244,0.72)]"
+        variants={fadeUp}
+        transition={{ ...smoothTransition, delay: 0.36 }}
+      >
+        Nuestra Boda
+      </motion.h1>
+
       <LTLogo />
 
       <motion.div
-        className="wedding-logo-divider relative mx-auto -mt-1 h-8 w-28"
+        className="wedding-logo-divider relative mx-auto mt-1 h-8 w-28"
         variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.22 }}
+        transition={{ ...smoothTransition, delay: 0.5 }}
       >
         <Image
           src={`/images/floral-divider-horizontal.webp?v=${assetVersion}`}
@@ -85,19 +93,10 @@ function WeddingTitleBlock() {
         />
       </motion.div>
 
-      <motion.h1
-        id="wedding-hero-title"
-        className="wedding-hero-title mt-2 whitespace-nowrap font-script text-[clamp(3.35rem,15.8vw,5.35rem)] leading-[0.84] text-olive drop-shadow-[0_2px_0_rgba(255,252,244,0.72)]"
-        variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.36 }}
-      >
-        Nuestra Boda
-      </motion.h1>
-
       <motion.div
-        className="wedding-heart-rule mt-5"
+        className="wedding-heart-rule mt-3"
         variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.5 }}
+        transition={{ ...smoothTransition, delay: 0.56 }}
       >
         <DecorativeHeartRule />
       </motion.div>
@@ -105,7 +104,7 @@ function WeddingTitleBlock() {
       <motion.div
         className="wedding-date-block mt-4 text-center"
         variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.62 }}
+        transition={{ ...smoothTransition, delay: 0.66 }}
       >
         <CalendarHeart className="wedding-info-icon mx-auto mb-1.5 size-7 text-soft-gold" strokeWidth={1.55} />
         <p className="wedding-hero-date whitespace-nowrap font-display text-[clamp(2rem,9.8vw,3.1rem)] font-medium leading-none tracking-[0.04em] text-olive">
@@ -141,8 +140,8 @@ function WeddingInfoBlock() {
     >
       <div className="min-w-0 px-1">
         <MapPin className="wedding-info-icon mx-auto mb-2 size-7 text-soft-gold" strokeWidth={1.65} />
-        <p className="wedding-place-name text-[0.98rem] font-semibold leading-tight text-olive">Jardín Las Bugambilias</p>
-        <p className="wedding-place-city mt-1 text-[0.9rem] leading-tight text-olive/85">Guadalajara, Jalisco</p>
+        <p className="wedding-place-name text-[0.98rem] font-semibold leading-tight text-olive">El lugar de su presencia</p>
+        <p className="wedding-place-city mt-1 text-[0.9rem] leading-tight text-olive/85">Bogotá</p>
       </div>
 
       <div className="wedding-info-separator h-20 w-px bg-gradient-to-b from-transparent via-soft-gold/75 to-transparent" aria-hidden="true" />
@@ -161,15 +160,16 @@ function WeddingInfoBlock() {
 function TornPaperDivider() {
   return (
     <div
-      className="wedding-torn-divider pointer-events-none absolute inset-x-[-4%] bottom-[-3.4dvh] z-20 h-[7dvh] min-h-11 overflow-hidden"
+      className="wedding-torn-divider pointer-events-none absolute inset-x-0 bottom-[-28px] z-20 h-[5.8dvh] min-h-9 overflow-hidden"
       aria-hidden="true"
     >
+      <div className="absolute inset-x-[-6%] top-0 h-full bg-[#f6ead7] [clip-path:polygon(0_0,100%_0,100%_42%,93%_49%,84%_41%,75%_55%,66%_44%,56%_58%,46%_48%,36%_61%,26%_45%,17%_56%,8%_47%,0_54%)]" />
       <Image
         src={`/images/torn-paper-edge.png?v=${assetVersion}`}
         alt=""
         fill
         sizes="(max-width: 430px) 100vw, 430px"
-        className="w-full object-cover object-center drop-shadow-[0_7px_8px_rgba(77,58,35,0.08)]"
+        className="w-full object-cover object-center opacity-35 mix-blend-multiply [clip-path:polygon(0_0,100%_0,100%_50%,90%_54%,80%_47%,70%_58%,60%_49%,50%_61%,40%_51%,30%_62%,20%_48%,10%_57%,0_51%)]"
         priority
       />
     </div>
@@ -215,7 +215,7 @@ function CouplePhotoSection() {
         sizes="(max-width: 430px) 100vw, 430px"
         className="object-cover object-[58%_2%]"
       />
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(20,18,12,0.3)_0%,rgba(20,18,12,0)_13%,rgba(20,18,12,0)_87%,rgba(20,18,12,0.3)_100%)] backdrop-blur-[0.2px]" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(20,18,12,0.14)_0%,rgba(20,18,12,0)_14%,rgba(20,18,12,0)_86%,rgba(20,18,12,0.14)_100%)] [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_18%,black_52%)] backdrop-blur-[0.2px]" />
       <div className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/58 via-black/18 to-transparent" />
       <ScrollHint />
     </motion.section>
@@ -232,16 +232,16 @@ export default function WeddingHeroSection() {
       aria-labelledby="wedding-hero-title"
     >
       <section
-        className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+0.75rem)]"
+        className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+1.35rem)]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(250, 242, 229, 0.28), rgba(246, 234, 215, 0.42)), url('/images/paper-texture.webp?v=20260525-wedding-hero-6')",
+            "linear-gradient(rgba(250, 242, 229, 0.28), rgba(246, 234, 215, 0.42)), url('/images/paper-texture.webp?v=20260525-wedding-hero-7')",
           backgroundPosition: "center top",
           backgroundSize: "cover",
         }}
       >
         <FloralTopDecorations />
-        <motion.div initial="hidden" animate="visible" className="wedding-hero-content relative z-[4] w-full">
+        <motion.div initial="hidden" animate="visible" className="wedding-hero-content relative z-[30] w-full">
           <WeddingTitleBlock />
           <WeddingInfoBlock />
         </motion.div>
