@@ -5,7 +5,7 @@ import { CalendarHeart, ChevronsDown, Clock3, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const assetVersion = "20260525-wedding-hero-5";
+const assetVersion = "20260525-wedding-hero-6";
 const weddingDate = new Date("2026-09-26T00:00:00-05:00");
 
 const fadeUp = {
@@ -20,33 +20,26 @@ const smoothTransition = {
 
 function LTLogo() {
   return (
-    <motion.div
-      className="wedding-hero-logo relative mx-auto h-14 w-28"
+    <motion.p
+      className="wedding-hero-logo mx-auto font-display text-[0.82rem] font-semibold uppercase tracking-[0.18em] text-soft-gold"
       variants={fadeUp}
       transition={{ ...smoothTransition, delay: 0.12 }}
     >
-      <Image
-        src={`/images/lt-logo.webp?v=${assetVersion}`}
-        alt="L&T"
-        fill
-        priority
-        sizes="112px"
-        className="object-contain drop-shadow-[0_8px_14px_rgba(139,100,41,0.14)]"
-      />
-    </motion.div>
+      LUISA &amp; TATTAN
+    </motion.p>
   );
 }
 
 function FloralTopDecorations() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[18dvh] min-h-24 overflow-visible" aria-hidden="true">
+    <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[18dvh] min-h-24 overflow-hidden" aria-hidden="true">
       <Image
-        src={`/images/floral-bottom.webp?v=${assetVersion}`}
+        src={`/images/floral-top.webp?v=${assetVersion}`}
         alt=""
-        width={240}
-        height={360}
+        width={360}
+        height={240}
         priority
-        className="absolute -left-10 -top-6 w-32 rotate-[-22deg] scale-x-[-1] object-contain opacity-95"
+        className="absolute -left-14 -top-12 w-56 rotate-[-4deg] object-contain opacity-95"
       />
       <Image
         src={`/images/floral-top.webp?v=${assetVersion}`}
@@ -54,7 +47,7 @@ function FloralTopDecorations() {
         width={360}
         height={240}
         priority
-        className="absolute -right-20 -top-10 w-56 rotate-[8deg] scale-x-[-1] object-contain opacity-92"
+        className="absolute -right-14 -top-12 w-56 rotate-[4deg] scale-x-[-1] object-contain opacity-92"
       />
     </div>
   );
@@ -167,13 +160,16 @@ function WeddingInfoBlock() {
 
 function TornPaperDivider() {
   return (
-    <div className="pointer-events-none absolute inset-x-[-8%] bottom-[-6.8dvh] z-20 h-[14dvh] min-h-20 overflow-hidden" aria-hidden="true">
+    <div
+      className="wedding-torn-divider pointer-events-none absolute inset-x-[-4%] bottom-[-3.4dvh] z-20 h-[7dvh] min-h-11 overflow-hidden"
+      aria-hidden="true"
+    >
       <Image
         src={`/images/torn-paper-edge.png?v=${assetVersion}`}
         alt=""
         fill
         sizes="(max-width: 430px) 100vw, 430px"
-        className="w-full object-cover object-center drop-shadow-[0_8px_10px_rgba(77,58,35,0.1)]"
+        className="w-full object-cover object-center drop-shadow-[0_7px_8px_rgba(77,58,35,0.08)]"
         priority
       />
     </div>
@@ -217,7 +213,7 @@ function CouplePhotoSection() {
         fill
         priority
         sizes="(max-width: 430px) 100vw, 430px"
-        className="object-cover object-[center_2%]"
+        className="object-cover object-[58%_2%]"
       />
       <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(20,18,12,0.3)_0%,rgba(20,18,12,0)_13%,rgba(20,18,12,0)_87%,rgba(20,18,12,0.3)_100%)] backdrop-blur-[0.2px]" />
       <div className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/58 via-black/18 to-transparent" />
@@ -239,7 +235,7 @@ export default function WeddingHeroSection() {
         className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+0.75rem)]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(250, 242, 229, 0.28), rgba(246, 234, 215, 0.42)), url('/images/paper-texture.webp?v=20260525-wedding-hero-5')",
+            "linear-gradient(rgba(250, 242, 229, 0.28), rgba(246, 234, 215, 0.42)), url('/images/paper-texture.webp?v=20260525-wedding-hero-6')",
           backgroundPosition: "center top",
           backgroundSize: "cover",
         }}

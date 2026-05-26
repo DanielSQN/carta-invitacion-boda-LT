@@ -268,8 +268,9 @@ button {
   }
 
   .wedding-hero-logo {
-    width: 3.85rem;
-    height: 1.45rem;
+    width: auto;
+    height: auto;
+    font-size: 0.68rem;
   }
 
   .wedding-logo-divider {
