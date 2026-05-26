@@ -22,7 +22,7 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
     >
       <Image
         className="object-contain drop-shadow-[0_14px_18px_rgba(76,48,18,0.28)]"
-        src={`/images/wax-seal.png?v=${assetVersion}`}
+        src={`/images/ui/wax-seal.png?v=${assetVersion}`}
         alt=""
         fill
         sizes="108px"

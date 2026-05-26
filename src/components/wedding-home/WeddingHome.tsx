@@ -72,7 +72,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     >
       <div className="absolute inset-0 z-[1] bg-paper-texture" aria-hidden="true">
         <Image
-          src="/images/paper-texture.webp?v=20260525-wedding-home"
+          src="/images/paper/paper-texture.webp?v=20260525-wedding-home"
           alt=""
           fill
           priority

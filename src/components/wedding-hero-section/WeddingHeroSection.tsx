@@ -5,7 +5,7 @@ import { CalendarHeart, ChevronsDown, Clock3, MapPin, MessageCircle, Navigation 
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const assetVersion = "20260525-wedding-hero-7";
+const assetVersion = "20260526-organized-assets-1";
 const weddingDate = new Date("2026-09-26T00:00:00-05:00");
 
 const fadeUp = {
@@ -34,7 +34,7 @@ function FloralTopDecorations() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[18dvh] min-h-24 overflow-hidden" aria-hidden="true">
       <Image
-        src={`/images/floral-top.webp?v=${assetVersion}`}
+        src={`/images/florals/floral-top.webp?v=${assetVersion}`}
         alt=""
         width={360}
         height={240}
@@ -42,7 +42,7 @@ function FloralTopDecorations() {
         className="absolute -left-3 -top-3 w-48 rotate-[-5deg] scale-x-[-1] object-contain opacity-95"
       />
       <Image
-        src={`/images/floral-top.webp?v=${assetVersion}`}
+        src={`/images/florals/floral-top.webp?v=${assetVersion}`}
         alt=""
         width={360}
         height={240}
@@ -85,7 +85,7 @@ function WeddingTitleBlock() {
         transition={{ ...smoothTransition, delay: 0.5 }}
       >
         <Image
-          src={`/images/floral-divider-horizontal.webp?v=${assetVersion}`}
+          src={`/images/florals/floral-divider-horizontal.webp?v=${assetVersion}`}
           alt=""
           fill
           sizes="112px"
@@ -157,33 +157,6 @@ function WeddingInfoBlock() {
   );
 }
 
-function TornPaperDivider() {
-  return (
-    <div
-      className="wedding-torn-divider pointer-events-none absolute inset-x-0 bottom-[-18px] z-20 h-[3.8dvh] min-h-7 overflow-hidden"
-      aria-hidden="true"
-    >
-      <div
-        className="absolute inset-x-[-6%] top-0 h-full [clip-path:polygon(0_0,100%_0,100%_43%,93%_51%,84%_44%,75%_56%,66%_46%,56%_58%,46%_49%,36%_60%,26%_47%,17%_57%,8%_49%,0_55%)]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(250, 242, 229, 0.12), rgba(246, 234, 215, 0.2)), url('/images/paper-texture.webp?v=20260525-wedding-hero-7')",
-          backgroundPosition: "center bottom",
-          backgroundSize: "cover",
-        }}
-      />
-      <Image
-        src={`/images/torn-paper-edge.png?v=${assetVersion}`}
-        alt=""
-        fill
-        sizes="(max-width: 430px) 100vw, 430px"
-        className="w-full object-cover object-center opacity-22 mix-blend-multiply [clip-path:polygon(0_0,100%_0,100%_50%,90%_54%,80%_47%,70%_58%,60%_49%,50%_61%,40%_51%,30%_62%,20%_48%,10%_57%,0_51%)]"
-        priority
-      />
-    </div>
-  );
-}
-
 function ScrollHint() {
   return (
     <motion.div
@@ -209,23 +182,20 @@ function ScrollHint() {
 function CouplePhotoSection() {
   return (
     <motion.section
-      className="relative min-h-0 flex-1 overflow-hidden bg-olive"
+      className="relative -mt-4 min-h-0 flex-1 overflow-hidden bg-[#f6ead7]"
       initial={{ opacity: 0, scale: 1.035 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.05, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
       aria-label="Foto de la pareja"
     >
       <Image
-        src={`/images/couple-photo-1.jpg?v=${assetVersion}`}
+        src={`/images/couple/couple-border.webp?v=${assetVersion}`}
         alt="Luisa y Tattan"
         fill
         priority
         sizes="(max-width: 430px) 100vw, 430px"
-        className="object-cover object-[58%_2%]"
+        className="object-cover object-top"
       />
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#f6ead7]/55 via-[#f6ead7]/16 to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#f6ead7]/55 via-[#f6ead7]/16 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 bg-gradient-to-b from-[#f6ead7]/68 via-[#f6ead7]/18 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/58 via-black/18 to-transparent" />
       <ScrollHint />
     </motion.section>
@@ -240,19 +210,27 @@ function BotanicalDecorations() {
   return (
     <>
       <Image
-        src={`/images/botanical-corner.webp?v=${assetVersion}`}
+        src={`/images/florals/floral-top.webp?v=${assetVersion}`}
         alt=""
         width={360}
-        height={360}
-        className="flowers flowers--top-left reveal-item"
+        height={240}
+        className="flowers section-flower section-flower--top reveal-item"
         aria-hidden="true"
       />
       <Image
-        src={`/images/botanical-corner.webp?v=${assetVersion}`}
+        src={`/images/florals/floral-bottom.webp?v=${assetVersion}`}
         alt=""
-        width={360}
-        height={360}
-        className="flowers flowers--bottom-right reveal-item"
+        width={320}
+        height={260}
+        className="flowers section-flower section-flower--bottom-left reveal-item"
+        aria-hidden="true"
+      />
+      <Image
+        src={`/images/florals/floral-bottom-right.png?v=${assetVersion}`}
+        alt=""
+        width={280}
+        height={220}
+        className="flowers section-flower section-flower--bottom-right reveal-item"
         aria-hidden="true"
       />
     </>
@@ -359,7 +337,7 @@ export default function WeddingHeroSection() {
           className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+3.1rem)]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(250, 242, 229, 0.18), rgba(246, 234, 215, 0.28)), url('/images/paper-texture.webp?v=20260525-wedding-hero-7')",
+              "linear-gradient(rgba(250, 242, 229, 0.18), rgba(246, 234, 215, 0.28)), url('/images/paper/paper-texture.webp?v=20260526-organized-assets-1')",
             backgroundPosition: "center top",
             backgroundSize: "cover",
           }}
@@ -369,7 +347,6 @@ export default function WeddingHeroSection() {
             <WeddingTitleBlock />
             <WeddingInfoBlock />
           </motion.div>
-          <TornPaperDivider />
         </section>
 
         <CouplePhotoSection />

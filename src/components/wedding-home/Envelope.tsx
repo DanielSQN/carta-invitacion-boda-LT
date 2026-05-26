@@ -45,7 +45,7 @@ export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
         <div className="absolute inset-0 z-[5]">
           <Image
             className="object-contain drop-shadow-[0_24px_28px_rgba(77,58,35,0.22)]"
-            src={`/images/envelope.png?v=${assetVersion}`}
+            src={`/images/ui/envelope.png?v=${assetVersion}`}
             alt=""
             fill
             sizes="(max-width: 430px) 86vw, 385px"
