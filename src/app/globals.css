@@ -52,7 +52,7 @@ button {
 
 .bg-paper-texture {
   background:
-    url("/images/paper-texture.png?v=20260525-assets-refresh-2"),
+    url("/images/paper-texture.webp?v=20260525-wedding-home"),
     radial-gradient(circle at 16% 10%, rgba(255, 255, 255, 0.76), transparent 23%),
     radial-gradient(circle at 86% 72%, rgba(184, 143, 71, 0.14), transparent 32%),
     linear-gradient(180deg, #fbf4e9 0%, #f2e3cf 48%, #fbf4e9 100%);
