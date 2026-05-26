@@ -21,7 +21,7 @@ const smoothTransition = {
 function LTLogo() {
   return (
     <motion.p
-      className="wedding-hero-logo mx-auto mt-2 font-display text-[0.82rem] font-semibold uppercase tracking-[0.18em] text-soft-gold"
+      className="wedding-hero-logo mx-auto mt-2 font-display text-[0.94rem] font-semibold uppercase tracking-[0.18em] text-[#9a7132]"
       variants={fadeUp}
       transition={{ ...smoothTransition, delay: 0.44 }}
     >
@@ -215,7 +215,9 @@ function CouplePhotoSection() {
         sizes="(max-width: 430px) 100vw, 430px"
         className="object-cover object-[58%_2%]"
       />
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[linear-gradient(90deg,rgba(20,18,12,0.14)_0%,rgba(20,18,12,0)_14%,rgba(20,18,12,0)_86%,rgba(20,18,12,0.14)_100%)] [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_18%,black_52%)] backdrop-blur-[0.2px]" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#f6ead7]/55 via-[#f6ead7]/16 to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#f6ead7]/55 via-[#f6ead7]/16 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-10 bg-gradient-to-b from-[#f6ead7]/68 via-[#f6ead7]/18 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/58 via-black/18 to-transparent" />
       <ScrollHint />
     </motion.section>
