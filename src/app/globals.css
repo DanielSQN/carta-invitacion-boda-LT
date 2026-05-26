@@ -5,10 +5,16 @@
   --foreground: #3f4f3c;
   --paper: #f7eddd;
   --paper-deep: #e6d5ba;
+  --paper-cream: #eadcc4;
+  --paper-sage: #a3a690;
+  --paper-warm: #eedfc8;
+  --ink: #2c2521;
+  --muted: #6e625c;
   --olive: #3f4f3c;
   --olive-soft: #6f7a66;
   --soft-gold: #b88f47;
   --gold-deep: #8b6429;
+  --tear-height: clamp(3.8rem, 8vh, 5.2rem);
 }
 
 @theme inline {
@@ -256,6 +262,252 @@ button {
   transform-style: preserve-3d;
 }
 
+.paper-stack {
+  isolation: isolate;
+}
+
+.paper-section {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255, 250, 236, 0.22), transparent 19rem),
+    linear-gradient(rgba(234, 220, 196, 0.36), rgba(234, 220, 196, 0.36)),
+    url("/images/paper-texture-old.webp") center / cover no-repeat,
+    var(--paper-cream);
+  background-blend-mode: soft-light, normal, multiply, normal;
+}
+
+.paper-section--hero {
+  background:
+    radial-gradient(circle at 32% 16%, rgba(255, 250, 236, 0.16), transparent 18rem),
+    linear-gradient(rgba(246, 234, 215, 0.3), rgba(246, 234, 215, 0.24)),
+    url("/images/paper-texture-old.webp") center / cover no-repeat,
+    #f6ead7;
+  background-blend-mode: soft-light, normal, multiply, normal;
+}
+
+.paper-section--warm {
+  background:
+    radial-gradient(circle at 28% 20%, rgba(255, 250, 236, 0.22), transparent 19rem),
+    linear-gradient(rgba(238, 223, 200, 0.38), rgba(238, 223, 200, 0.38)),
+    url("/images/paper-texture-old.webp") center / cover no-repeat,
+    var(--paper-warm);
+  background-blend-mode: soft-light, normal, multiply, normal;
+}
+
+.paper-section--paper {
+  background:
+    radial-gradient(circle at 82% 30%, rgba(255, 255, 240, 0.12), transparent 17rem),
+    linear-gradient(rgba(163, 166, 144, 0.54), rgba(163, 166, 144, 0.54)),
+    url("/images/paper-texture-old.webp") center / cover no-repeat,
+    var(--paper-sage);
+  background-blend-mode: soft-light, normal, multiply, normal;
+}
+
+.paper-section::before,
+.paper-section::after {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: clamp(4rem, 12vh, 7rem);
+  pointer-events: none;
+  content: "";
+}
+
+.paper-section::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(56, 42, 30, 0.13), transparent);
+}
+
+.paper-section::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(56, 42, 30, 0.12), transparent);
+}
+
+.paper-section-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: calc(env(safe-area-inset-top) + 4rem) 2rem calc(env(safe-area-inset-bottom) + 4rem);
+  text-align: center;
+}
+
+.paper-eyebrow {
+  font-family: var(--font-display), Georgia, serif;
+  color: var(--gold-deep);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.paper-title {
+  margin-top: 1rem;
+  max-width: 8.5em;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  color: var(--olive);
+  font-size: clamp(3.2rem, 15vw, 4.8rem);
+  font-weight: 400;
+  line-height: 0.92;
+}
+
+.paper-copy {
+  max-width: 19rem;
+  margin-top: 1.15rem;
+  color: rgba(44, 37, 33, 0.78);
+  font-size: clamp(1.05rem, 4.6vw, 1.25rem);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.paper-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  margin-top: 1.6rem;
+  padding: 0.72rem 1.45rem;
+  border: 1px solid rgba(139, 100, 41, 0.28);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(63, 79, 60, 0.94), rgba(44, 52, 38, 0.88));
+  box-shadow: 0 0.8rem 1.8rem rgba(44, 34, 25, 0.16);
+  color: #fff8eb;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  gap: 0.5rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.paper-action--light {
+  background: rgba(255, 250, 240, 0.58);
+  box-shadow: inset 0 0 0 1px rgba(139, 100, 41, 0.18), 0 0.7rem 1.5rem rgba(44, 34, 25, 0.1);
+  color: var(--olive);
+}
+
+.event-card-grid {
+  display: grid;
+  width: min(100%, 21rem);
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.event-card {
+  min-height: 10.6rem;
+  padding: 1rem 0.75rem;
+  border: 1px solid rgba(139, 100, 41, 0.18);
+  background: rgba(255, 250, 240, 0.36);
+  box-shadow: inset 0 0 2rem rgba(255, 255, 255, 0.22);
+}
+
+.event-card h3 {
+  margin-top: 0.8rem;
+  color: var(--olive);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.event-card p {
+  margin-top: 0.42rem;
+  color: rgba(44, 37, 33, 0.72);
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.tear-divider {
+  position: relative;
+  z-index: 20;
+  height: var(--tear-height);
+  margin-top: calc(var(--tear-height) * -0.5);
+  margin-bottom: calc(var(--tear-height) * -0.5);
+  pointer-events: none;
+  background: var(--tear-image) center 50% / 118% auto no-repeat;
+  filter:
+    drop-shadow(0 0.38rem 0.28rem rgba(44, 34, 25, 0.16))
+    drop-shadow(0 1rem 0.8rem rgba(44, 34, 25, 0.08));
+}
+
+.tear-divider--one {
+  --tear-image: url("/images/tear-1.webp");
+}
+
+.tear-divider--two {
+  --tear-image: url("/images/tear-2.webp");
+}
+
+.flowers {
+  position: absolute;
+  z-index: 4;
+  width: clamp(10rem, 46vw, 16rem);
+  max-width: 56vw;
+  height: auto;
+  opacity: 0.72;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(0.82) sepia(0.08);
+}
+
+.flowers--top-left {
+  top: max(-5.2rem, -18vw);
+  left: max(-3.8rem, -13vw);
+  transform: rotate(18deg);
+}
+
+.flowers--bottom-right {
+  right: max(-4.6rem, -14vw);
+  bottom: max(-5.5rem, -18vw);
+  transform: scaleX(-1) rotate(2deg);
+}
+
+.flowers--bottom-left {
+  left: max(-4.2rem, -14vw);
+  bottom: max(-4.8rem, -16vw);
+  transform: rotate(-16deg);
+}
+
+.reveal-item {
+  opacity: 0;
+  transform: translateY(2.2rem) scale(0.98);
+  transition:
+    opacity 760ms ease,
+    transform 900ms cubic-bezier(0.2, 0.72, 0.22, 1);
+}
+
+.flowers.reveal-item {
+  transform: translateY(2.5rem) scale(0.96);
+  transition-duration: 980ms;
+}
+
+.paper-section.is-visible .reveal-item {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.paper-section.is-visible .flowers--top-left {
+  transform: rotate(18deg);
+}
+
+.paper-section.is-visible .flowers--bottom-right {
+  transform: scaleX(-1) rotate(2deg);
+}
+
+.paper-section.is-visible .flowers--bottom-left {
+  transform: rotate(-16deg);
+}
+
 @media (max-height: 700px) {
   .wedding-hero-paper {
     height: 45dvh;
@@ -400,6 +652,13 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .reveal-item,
+  .flowers.reveal-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   *,
   *::before,
   *::after {

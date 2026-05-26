@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CalendarHeart, ChevronsDown, Clock3, MapPin } from "lucide-react";
+import { CalendarHeart, ChevronsDown, Clock3, MapPin, MessageCircle, Navigation } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -232,52 +232,129 @@ function CouplePhotoSection() {
   );
 }
 
-function WeddingDetailSection({
-  title,
-  tone,
-}: {
-  title: string;
-  tone: "warm" | "paper";
-}) {
+function TearDivider({ variant }: { variant: "one" | "two" }) {
+  return <div className={`tear-divider tear-divider--${variant}`} aria-hidden="true" />;
+}
+
+function BotanicalDecorations() {
   return (
-    <motion.section
-      className={[
-        "relative isolate grid min-h-[42dvh] place-items-center overflow-hidden px-8 py-20 text-center",
-        tone === "warm" ? "bg-[#efe0c8]" : "bg-[#f7eddd]",
-      ].join(" ")}
-      initial={{ opacity: 0, y: 34 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.45 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="absolute inset-0 -z-10 bg-paper-texture opacity-72" aria-hidden="true" />
-      <div
-        className="absolute inset-x-0 top-0 z-10 h-9 bg-[#f7eddd] [clip-path:polygon(0_0,100%_0,100%_34%,92%_47%,82%_35%,72%_52%,62%_40%,52%_55%,42%_42%,32%_57%,22%_40%,12%_51%,0_38%)]"
+    <>
+      <Image
+        src={`/images/botanical-corner.webp?v=${assetVersion}`}
+        alt=""
+        width={360}
+        height={360}
+        className="flowers flowers--top-left reveal-item"
         aria-hidden="true"
       />
-      <motion.h2
-        className="font-script text-[clamp(3.4rem,16vw,5rem)] leading-none text-olive"
-        initial={{ opacity: 0, y: 26, scale: 0.98 }}
-        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-        viewport={{ once: true, amount: 0.6 }}
-        transition={{ duration: 0.78, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {title}
-      </motion.h2>
-    </motion.section>
+      <Image
+        src={`/images/botanical-corner.webp?v=${assetVersion}`}
+        alt=""
+        width={360}
+        height={360}
+        className="flowers flowers--bottom-right reveal-item"
+        aria-hidden="true"
+      />
+    </>
+  );
+}
+
+function ConfirmationSection() {
+  return (
+    <section className="paper-section paper-section--warm reveal-section snap-start" aria-labelledby="confirmation-section-title">
+      <BotanicalDecorations />
+      <div className="paper-section-content">
+        <p className="reveal-item paper-eyebrow">Confirma tu asistencia</p>
+        <h2 id="confirmation-section-title" className="reveal-item paper-title">
+          Nos encantaria verte
+        </h2>
+        <p className="reveal-item paper-copy">
+          Tu presencia es muy importante para nosotros. Por favor confirma tu asistencia antes del 10 de agosto de 2026.
+        </p>
+        <a
+          className="reveal-item paper-action"
+          href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tattan"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <MessageCircle className="size-4" strokeWidth={1.8} />
+          Confirmar asistencia
+        </a>
+      </div>
+    </section>
+  );
+}
+
+function LocationSection() {
+  return (
+    <section className="paper-section paper-section--paper reveal-section snap-start" aria-labelledby="location-section-title">
+      <BotanicalDecorations />
+      <div className="paper-section-content">
+        <p className="reveal-item paper-eyebrow">Lugar del evento</p>
+        <h2 id="location-section-title" className="reveal-item paper-title">
+          El lugar de su presencia
+        </h2>
+        <p className="reveal-item paper-copy">Bogota</p>
+
+        <div className="reveal-item event-card-grid">
+          <article className="event-card">
+            <CalendarHeart className="mx-auto size-9 text-soft-gold" strokeWidth={1.45} />
+            <h3>Ceremonia</h3>
+            <p>3:00 P. M.</p>
+            <p>El lugar de su presencia</p>
+          </article>
+          <article className="event-card">
+            <Clock3 className="mx-auto size-9 text-soft-gold" strokeWidth={1.45} />
+            <h3>Recepcion</h3>
+            <p>Despues de la ceremonia</p>
+            <p>Bogota, Colombia</p>
+          </article>
+        </div>
+
+        <a
+          className="reveal-item paper-action paper-action--light"
+          href="https://www.google.com/maps/search/?api=1&query=El%20lugar%20de%20su%20presencia%20Bogota"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Navigation className="size-4" strokeWidth={1.8} />
+          Ver ubicacion
+        </a>
+      </div>
+    </section>
   );
 }
 
 export default function WeddingHeroSection() {
+  useEffect(() => {
+    const sections = document.querySelectorAll(".reveal-section");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
+        }
+      },
+      {
+        threshold: 0.38,
+        rootMargin: "-8% 0px -8% 0px",
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <motion.section
-      className="relative z-[8] mx-auto w-full max-w-[430px] overflow-hidden bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
+      className="paper-stack relative z-[8] mx-auto w-full max-w-[430px] overflow-hidden bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
       initial={{ opacity: 0, y: 72, scale: 0.975 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 1.05, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
-      <div className="flex h-dvh flex-col overflow-hidden">
+      <div className="paper-section paper-section--hero reveal-section flex min-h-dvh snap-start flex-col overflow-hidden">
         <section
           className="wedding-hero-paper relative z-10 flex h-[45dvh] shrink-0 items-start justify-center px-5 pb-12 pt-[calc(env(safe-area-inset-top)+3.1rem)]"
           style={{
@@ -298,8 +375,10 @@ export default function WeddingHeroSection() {
         <CouplePhotoSection />
       </div>
 
-      <WeddingDetailSection title="Itinerario" tone="warm" />
-      <WeddingDetailSection title="Lugar del evento" tone="paper" />
+      <TearDivider variant="one" />
+      <ConfirmationSection />
+      <TearDivider variant="two" />
+      <LocationSection />
     </motion.section>
   );
 }

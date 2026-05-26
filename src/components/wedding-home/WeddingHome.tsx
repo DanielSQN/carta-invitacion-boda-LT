@@ -66,7 +66,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     <main
       className={
         showWeddingHero
-          ? "relative min-h-dvh overflow-x-hidden bg-paper text-olive"
+          ? "relative min-h-dvh snap-y snap-mandatory overflow-x-hidden bg-paper text-olive"
           : "relative h-dvh overflow-hidden bg-paper text-olive"
       }
     >
