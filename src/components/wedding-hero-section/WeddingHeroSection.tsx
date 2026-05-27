@@ -222,7 +222,7 @@ function ScrollHint() {
 function CouplePhotoSection() {
   return (
     <motion.section
-      className="wedding-photo-section relative z-10 -mt-6 h-[calc(56dvh+1.5rem)] min-h-0 overflow-hidden bg-[#f6ead7]"
+      className="wedding-photo-section relative z-10 -mt-6 h-[calc(56svh+1.5rem)] min-h-0 overflow-hidden bg-[#f6ead7]"
       initial={{ opacity: 0, scale: 1.035 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.05, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
@@ -281,7 +281,7 @@ function BotanicalDecorations() {
 
 function ConfirmationSection() {
   return (
-    <section className="paper-section paper-section--warm reveal-section snap-start" aria-labelledby="confirmation-section-title">
+    <section className="paper-section paper-section--warm reveal-section" aria-labelledby="confirmation-section-title">
       <BotanicalDecorations />
       <div className="paper-section-frame" aria-hidden="true" />
       <div className="paper-section-content confirmation-content">
@@ -347,7 +347,7 @@ function LocationSection() {
   ];
 
   return (
-    <section className="paper-section paper-section--paper reveal-section snap-start" aria-labelledby="location-section-title">
+    <section className="paper-section paper-section--paper reveal-section" aria-labelledby="location-section-title">
       <BotanicalDecorations />
       <div className="paper-section-content location-content">
         <div className="reveal-item section-heart-knot" aria-hidden="true">
@@ -432,9 +432,9 @@ export default function WeddingHeroSection() {
       transition={{ duration: 1.05, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
-      <div className="paper-section paper-section--hero reveal-section relative flex h-dvh snap-start flex-col overflow-hidden">
+      <div className="paper-section paper-section--hero reveal-section relative flex h-[100svh] flex-col overflow-hidden">
         <section
-          className="wedding-hero-paper relative z-20 flex h-[44dvh] shrink-0 items-start justify-center px-5 pb-6 pt-[calc(env(safe-area-inset-top)+2.4rem)]"
+          className="wedding-hero-paper relative z-20 flex h-[44svh] shrink-0 items-start justify-center px-5 pb-6 pt-[calc(env(safe-area-inset-top)+3.2rem)]"
         >
           <FloralTopDecorations />
           <motion.div initial="hidden" animate="visible" className="wedding-hero-content relative z-[30] w-full">

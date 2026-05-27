@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DecorativeText from "./DecorativeText";
 import Envelope from "./Envelope";
 import FloralCorners from "./FloralCorners";
@@ -16,6 +16,8 @@ const preloadedInvitationAssets = [
   "/images/florals/floral-bottom-right.webp?v=20260526-performance-1",
   "/images/venues/ceremony-venue.webp?v=20260526-performance-1",
   "/images/venues/reception-venue.webp?v=20260526-performance-1",
+  "/images/ui/music-on.webp?v=20260526-audio-2",
+  "/images/ui/music-muted.webp?v=20260526-audio-2",
   "/images/paper/tear-1.webp",
   "/images/paper/tear-2.webp",
 ];
@@ -46,6 +48,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [showWeddingHero, setShowWeddingHero] = useState(false);
   const [guestName, setGuestName] = useState(initialGuestName);
+  const [hasMusicStarted, setHasMusicStarted] = useState(false);
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -85,15 +90,53 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
       setIsEnvelopeOpen(true);
+
+      const audio = audioRef.current;
+
+      if (audio) {
+        audio.volume = 0.58;
+        audio
+          .play()
+          .then(() => {
+            setHasMusicStarted(true);
+            setIsMusicPlaying(true);
+          })
+          .catch(() => {
+            setHasMusicStarted(true);
+            setIsMusicPlaying(false);
+          });
+      }
     }
+  };
+
+  const toggleMusic = () => {
+    const audio = audioRef.current;
+
+    if (!audio) {
+      return;
+    }
+
+    if (audio.paused) {
+      audio
+        .play()
+        .then(() => {
+          setHasMusicStarted(true);
+          setIsMusicPlaying(true);
+        })
+        .catch(() => setIsMusicPlaying(false));
+      return;
+    }
+
+    audio.pause();
+    setIsMusicPlaying(false);
   };
 
   return (
     <main
       className={
         showWeddingHero
-          ? "relative min-h-dvh snap-y snap-mandatory overflow-x-hidden bg-paper text-olive"
-          : "relative h-dvh overflow-hidden bg-paper text-olive"
+          ? "relative min-h-svh overflow-x-hidden bg-paper text-olive"
+          : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
       <div className="absolute inset-0 z-[1] bg-paper-texture" aria-hidden="true">
@@ -107,12 +150,38 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         />
       </div>
       <FloralCorners />
+      <audio ref={audioRef} src="/audio/song1.mp3" preload="auto" loop />
+
+      <AnimatePresence>
+        {hasMusicStarted ? (
+          <motion.button
+            key="music-control"
+            type="button"
+            className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-soft-gold/45 bg-transparent p-0 shadow-[0_0.85rem_1.8rem_rgba(35,30,22,0.22)] outline-none"
+            onClick={toggleMusic}
+            initial={{ opacity: 0, y: 18, scale: 0.86 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.88 }}
+            transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
+            aria-label={isMusicPlaying ? "Pausar musica" : "Reproducir musica"}
+            aria-pressed={isMusicPlaying}
+          >
+            <Image
+              src={isMusicPlaying ? "/images/ui/music-on.webp?v=20260526-audio-2" : "/images/ui/music-muted.webp?v=20260526-audio-2"}
+              alt=""
+              fill
+              sizes="64px"
+              className="object-contain"
+            />
+          </motion.button>
+        ) : null}
+      </AnimatePresence>
 
       <AnimatePresence>
         {!showWeddingHero ? (
           <motion.section
             key="home"
-            className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-dvh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
+            className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
             exit={{ opacity: 0, y: -34, scale: 0.94, filter: "blur(3px)" }}
             transition={{ duration: 0.88, ease: [0.22, 1, 0.36, 1] }}
           >
