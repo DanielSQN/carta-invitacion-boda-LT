@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const assetVersion = "20260525-assets-refresh-2";
+const assetVersion = "20260526-performance-1";
 
 type WaxSealProps = {
   isOpen: boolean;
@@ -22,12 +22,11 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
     >
       <Image
         className="object-contain drop-shadow-[0_14px_18px_rgba(76,48,18,0.28)]"
-        src={`/images/ui/wax-seal.png?v=${assetVersion}`}
+        src={`/images/ui/wax-seal.webp?v=${assetVersion}`}
         alt=""
         fill
         sizes="108px"
         priority
-        unoptimized
       />
       <span className="sr-only">L&amp;T</span>
     </motion.div>

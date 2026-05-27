@@ -84,9 +84,14 @@ button {
 .floral-corner {
   position: absolute;
   height: auto;
-  object-fit: contain;
   opacity: 0.94;
   user-select: none;
+}
+
+.floral-corner img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .floral-corner-top {
@@ -262,6 +267,51 @@ button {
   transform-style: preserve-3d;
 }
 
+.wedding-hero-paper {
+  overflow: visible;
+}
+
+.wedding-photo-section::before,
+.wedding-photo-section::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.wedding-photo-section::before {
+  z-index: 8;
+  background:
+    linear-gradient(to bottom, rgba(246, 234, 215, 0.04) 0%, rgba(246, 234, 215, 0.02) 26%, rgba(35, 40, 28, 0.48) 100%),
+    linear-gradient(90deg, rgba(246, 234, 215, 0.36), transparent 18%, transparent 82%, rgba(246, 234, 215, 0.32));
+}
+
+.wedding-photo-section::after {
+  z-index: 9;
+  background: url("/images/paper/paper-texture.webp?v=20260526-performance-1") center / cover no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.08;
+}
+
+.photo-image-top-fade {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, 0.18) 1.1rem,
+    rgba(0, 0, 0, 0.58) 3.2rem,
+    rgba(0, 0, 0, 0.9) 5.3rem,
+    #000 7rem
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(0, 0, 0, 0.18) 1.1rem,
+    rgba(0, 0, 0, 0.58) 3.2rem,
+    rgba(0, 0, 0, 0.9) 5.3rem,
+    #000 7rem
+  );
+}
+
 .paper-stack {
   isolation: isolate;
 }
@@ -280,11 +330,14 @@ button {
 
 .paper-section--hero {
   background:
-    radial-gradient(circle at 32% 16%, rgba(255, 250, 236, 0.16), transparent 18rem),
-    linear-gradient(rgba(246, 234, 215, 0.3), rgba(246, 234, 215, 0.24)),
-    url("/images/paper/paper-texture-old.webp") center / cover no-repeat,
+    radial-gradient(circle at 32% 16%, rgba(255, 250, 236, 0.32), transparent 18rem),
+    linear-gradient(rgba(246, 234, 215, 0.96), rgba(246, 234, 215, 0.96)),
     #f6ead7;
-  background-blend-mode: soft-light, normal, multiply, normal;
+  background-blend-mode: soft-light, normal, normal;
+}
+
+.paper-section--hero::after {
+  display: none;
 }
 
 .paper-section--warm {
@@ -336,6 +389,39 @@ button {
   min-height: 100dvh;
   padding: calc(env(safe-area-inset-top) + 4rem) 2rem calc(env(safe-area-inset-bottom) + 4rem);
   text-align: center;
+}
+
+.paper-section-frame {
+  position: absolute;
+  inset: clamp(1.2rem, 5vw, 2rem);
+  z-index: 2;
+  border: 1px solid rgba(139, 100, 41, 0.32);
+  pointer-events: none;
+}
+
+.paper-section-frame::before,
+.paper-section-frame::after {
+  position: absolute;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-color: rgba(139, 100, 41, 0.36);
+  content: "";
+}
+
+.paper-section-frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-top-left-radius: 1rem;
+}
+
+.paper-section-frame::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  border-bottom-right-radius: 1rem;
 }
 
 .paper-eyebrow {
@@ -393,38 +479,218 @@ button {
   color: var(--olive);
 }
 
+.confirmation-content {
+  padding-right: clamp(1.8rem, 7vw, 2.4rem);
+  padding-left: clamp(1.8rem, 7vw, 2.4rem);
+}
+
+.section-heart-knot,
+.section-heart-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(15rem, 70vw);
+  color: var(--soft-gold);
+  gap: 0.65rem;
+}
+
+.section-heart-knot span:first-child,
+.section-heart-knot span:last-child,
+.section-heart-rule span:first-child,
+.section-heart-rule span:last-child {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, transparent, rgba(184, 143, 71, 0.74));
+}
+
+.section-heart-knot span:last-child,
+.section-heart-rule span:last-child {
+  background: linear-gradient(90deg, rgba(184, 143, 71, 0.74), transparent);
+}
+
+.section-heart-knot span:nth-child(2),
+.section-heart-rule span:nth-child(2) {
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.confirmation-title {
+  margin-top: 1.55rem;
+  color: var(--olive);
+  text-align: center;
+}
+
+.confirmation-title span {
+  display: block;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.75rem, 8vw, 2.55rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.confirmation-title strong {
+  display: block;
+  margin-top: 0.2rem;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(4.35rem, 21vw, 6.4rem);
+  font-weight: 400;
+  line-height: 0.78;
+}
+
+.confirmation-copy {
+  max-width: 24rem;
+  margin-top: 1.35rem;
+  color: rgba(63, 79, 60, 0.9);
+  font-size: clamp(1.12rem, 5vw, 1.42rem);
+  font-weight: 600;
+  line-height: 1.48;
+}
+
+.confirmation-copy span {
+  color: var(--gold-deep);
+  letter-spacing: 0.08em;
+}
+
+.confirmation-action {
+  min-width: min(20rem, 82vw);
+  min-height: 3.25rem;
+  border-radius: 0.45rem;
+  font-size: clamp(0.82rem, 3.7vw, 1rem);
+  letter-spacing: 0.12em;
+}
+
+.location-content {
+  justify-content: flex-start;
+  padding: calc(env(safe-area-inset-top) + 3.2rem) 1rem calc(env(safe-area-inset-bottom) + 2.7rem);
+}
+
+.location-title {
+  margin-top: 1.15rem;
+  color: var(--olive);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.05rem, 9vw, 3.05rem);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.location-copy {
+  margin-top: 0.9rem;
+  color: rgba(63, 79, 60, 0.86);
+  font-size: clamp(1rem, 4.4vw, 1.2rem);
+  font-weight: 600;
+}
+
 .event-card-grid {
   display: grid;
-  width: min(100%, 21rem);
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  width: min(100%, 24.5rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.35rem;
 }
 
 .event-card {
-  min-height: 10.6rem;
-  padding: 1rem 0.75rem;
-  border: 1px solid rgba(139, 100, 41, 0.18);
-  background: rgba(255, 250, 240, 0.36);
-  box-shadow: inset 0 0 2rem rgba(255, 255, 255, 0.22);
+  position: relative;
+  min-height: 22rem;
+  padding: 2.4rem 0.65rem 0.75rem;
+  border: 1px solid rgba(139, 100, 41, 0.3);
+  border-radius: 0.5rem;
+  background: rgba(255, 250, 240, 0.48);
+  box-shadow:
+    inset 0 0 2rem rgba(255, 255, 255, 0.24),
+    0 0.85rem 1.6rem rgba(44, 34, 25, 0.12);
 }
 
 .event-card h3 {
-  margin-top: 0.8rem;
+  margin: 0;
   color: var(--olive);
   font-family: var(--font-display), Georgia, serif;
-  font-size: 0.78rem;
+  font-size: clamp(0.95rem, 4.3vw, 1.32rem);
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .event-card p {
-  margin-top: 0.42rem;
+  margin-top: 0.22rem;
   color: rgba(44, 37, 33, 0.72);
-  font-size: 0.85rem;
+  font-size: clamp(0.78rem, 3.5vw, 0.95rem);
   font-weight: 600;
   line-height: 1.15;
+}
+
+.event-card-icon {
+  position: absolute;
+  top: -1.55rem;
+  left: 50%;
+  display: grid;
+  width: 3.55rem;
+  height: 3.55rem;
+  place-items: center;
+  border: 1px solid rgba(139, 100, 41, 0.18);
+  border-radius: 999px;
+  background: rgba(246, 234, 215, 0.92);
+  box-shadow: 0 0.45rem 0.9rem rgba(44, 34, 25, 0.14);
+  transform: translateX(-50%);
+}
+
+.event-card-rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76%;
+  margin: 0.45rem auto 0.55rem;
+  color: var(--soft-gold);
+  gap: 0.35rem;
+}
+
+.event-card-rule span:first-child,
+.event-card-rule span:last-child {
+  height: 1px;
+  flex: 1;
+  background: rgba(184, 143, 71, 0.54);
+}
+
+.event-card-rule span:nth-child(2) {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.event-card .event-time {
+  margin-top: 0;
+  color: var(--gold-deep);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(0.95rem, 4vw, 1.12rem);
+}
+
+.event-image-frame {
+  position: relative;
+  aspect-ratio: 1.42 / 1;
+  width: 100%;
+  margin-top: 0.8rem;
+  overflow: hidden;
+  border-radius: 0.45rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 248, 235, 0.45);
+}
+
+.event-image-frame img {
+  object-fit: cover;
+}
+
+.event-card-action {
+  width: min(100%, 10.5rem);
+  min-height: 2.45rem;
+  margin-top: 0.72rem;
+  padding: 0.58rem 0.7rem;
+  border-radius: 0.45rem;
+  background: linear-gradient(135deg, rgba(63, 79, 60, 0.94), rgba(44, 52, 38, 0.9));
+  color: #fff8eb;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
 }
 
 .tear-divider {
@@ -479,31 +745,31 @@ button {
 }
 
 .section-flower {
-  opacity: 0.74;
+  opacity: 0.86;
   filter: saturate(0.9) sepia(0.05);
 }
 
 .section-flower--top {
-  top: clamp(-1.7rem, -4vw, -0.8rem);
-  right: clamp(-2.2rem, -7vw, -0.75rem);
-  width: clamp(12rem, 52vw, 16.5rem);
-  max-width: 62vw;
+  top: clamp(-1.35rem, -3.2vw, -0.55rem);
+  right: clamp(-1.45rem, -4.8vw, -0.45rem);
+  width: clamp(13rem, 58vw, 18rem);
+  max-width: 68vw;
   transform: rotate(2deg);
 }
 
 .section-flower--bottom-left {
-  bottom: clamp(-2.6rem, -8vw, -1.2rem);
-  left: clamp(-2.6rem, -8vw, -1rem);
-  width: clamp(11rem, 50vw, 15.5rem);
-  max-width: 60vw;
+  bottom: clamp(-2.15rem, -6vw, -0.9rem);
+  left: clamp(-2rem, -6vw, -0.75rem);
+  width: clamp(12rem, 55vw, 17rem);
+  max-width: 66vw;
   transform: rotate(-7deg);
 }
 
 .section-flower--bottom-right {
-  right: clamp(-2.4rem, -8vw, -0.9rem);
-  bottom: clamp(-2.2rem, -7vw, -0.8rem);
-  width: clamp(8rem, 36vw, 12rem);
-  max-width: 46vw;
+  right: clamp(-1.9rem, -6vw, -0.7rem);
+  bottom: clamp(-1.75rem, -5.5vw, -0.55rem);
+  width: clamp(9rem, 42vw, 13.5rem);
+  max-width: 52vw;
   transform: rotate(4deg);
 }
 
@@ -551,13 +817,13 @@ button {
 
 @media (max-height: 700px) {
   .wedding-hero-paper {
-    height: 45dvh;
-    padding-top: calc(env(safe-area-inset-top) + 2.65rem);
-    padding-bottom: 2.85rem;
+    height: 44dvh;
+    padding-top: calc(env(safe-area-inset-top) + 1.85rem);
+    padding-bottom: 1.25rem;
   }
 
   .wedding-hero-content {
-    transform: scale(0.88);
+    transform: scale(0.9);
     transform-origin: top center;
   }
 
@@ -591,36 +857,106 @@ button {
     font-size: clamp(1.72rem, 9.7vw, 2.05rem);
   }
 
-  .wedding-info-block {
-    margin-top: 0.12rem;
-    gap: 0.75rem;
+  .wedding-countdown-block {
+    margin-top: 0.45rem;
   }
 
-  .wedding-info-icon {
+  .wedding-countdown-copy {
+    font-size: 0.68rem;
+  }
+
+  .wedding-countdown-block > div {
+    margin-top: 0.55rem;
+    gap: 0.35rem;
+  }
+
+  .wedding-countdown-icon {
     width: 1rem;
     height: 1rem;
-    margin-bottom: 0.12rem;
+    margin-bottom: 0.18rem;
   }
 
-  .wedding-place-name,
-  .wedding-place-city,
-  .wedding-count-copy {
-    font-size: 0.65rem;
+  .wedding-countdown-value {
+    font-size: 1.22rem;
   }
 
-  .wedding-count-number {
-    font-size: 1.6rem;
+  .wedding-countdown-label {
+    font-size: 0.46rem;
   }
 
-  .wedding-info-separator {
-    height: 3.2rem;
+  .confirmation-title {
+    margin-top: 1rem;
+  }
+
+  .confirmation-title span {
+    font-size: clamp(1.45rem, 6.8vw, 1.9rem);
+  }
+
+  .confirmation-title strong {
+    font-size: clamp(3.6rem, 17vw, 4.75rem);
+  }
+
+  .confirmation-copy {
+    margin-top: 0.95rem;
+    font-size: clamp(0.96rem, 4.35vw, 1.12rem);
+    line-height: 1.34;
+  }
+
+  .confirmation-action {
+    min-height: 2.85rem;
+    margin-top: 1.1rem;
+  }
+
+  .location-content {
+    padding-top: calc(env(safe-area-inset-top) + 2.4rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 2rem);
+  }
+
+  .location-title {
+    margin-top: 0.7rem;
+    font-size: clamp(1.62rem, 7.8vw, 2.25rem);
+  }
+
+  .location-copy {
+    margin-top: 0.55rem;
+    font-size: 0.92rem;
+  }
+
+  .event-card-grid {
+    margin-top: 1.1rem;
+  }
+
+  .event-card {
+    min-height: 18.6rem;
+    padding-top: 2.05rem;
+  }
+
+  .event-card-icon {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .event-image-frame {
+    margin-top: 0.62rem;
+  }
+}
+
+@media (max-width: 374px) {
+  .event-card-grid {
+    width: min(100%, 19.5rem);
+    grid-template-columns: 1fr;
+    gap: 1.9rem;
+  }
+
+  .event-card {
+    min-height: auto;
   }
 }
 
 @media (min-height: 760px) {
   .wedding-hero-paper {
-    height: 45dvh;
-    padding-top: calc(env(safe-area-inset-top) + 3.15rem);
+    height: 44dvh;
+    padding-top: calc(env(safe-area-inset-top) + 2.55rem);
   }
 
   .wedding-hero-content {

@@ -9,6 +9,17 @@ import FloralCorners from "./FloralCorners";
 import Verse from "./Verse";
 import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 
+const preloadedInvitationAssets = [
+  "/images/couple/couple-photo.webp?v=20260526-performance-1",
+  "/images/florals/floral-top.webp?v=20260526-performance-1",
+  "/images/florals/floral-bottom.webp?v=20260526-performance-1",
+  "/images/florals/floral-bottom-right.webp?v=20260526-performance-1",
+  "/images/venues/ceremony-venue.webp?v=20260526-performance-1",
+  "/images/venues/reception-venue.webp?v=20260526-performance-1",
+  "/images/paper/tear-1.webp",
+  "/images/paper/tear-2.webp",
+];
+
 function normalizeGuestName(value: string) {
   let normalized = value;
 
@@ -45,6 +56,21 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       queueMicrotask(() => setGuestName(name));
     }
   }, [initialGuestName]);
+
+  useEffect(() => {
+    const images = preloadedInvitationAssets.map((src) => {
+      const image = new window.Image();
+      image.decoding = "async";
+      image.src = src;
+      return image;
+    });
+
+    return () => {
+      images.forEach((image) => {
+        image.src = "";
+      });
+    };
+  }, []);
 
   useEffect(() => {
     if (!isEnvelopeOpen) {
@@ -104,7 +130,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
                     initial={{ opacity: 0, x: "7%", y: 12, rotate: -7 }}
                     animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
                     exit={{ opacity: 0, y: -8 }}
-                    transition={{ delay: 1.5, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ delay: 1.18, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
                     aria-label="Clic para abrir"
                   >
                     <span>Clic para abrir</span>

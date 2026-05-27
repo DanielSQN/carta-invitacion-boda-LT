@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import WaxSeal from "./WaxSeal";
 
-const assetVersion = "20260525-assets-refresh-2";
+const assetVersion = "20260526-performance-1";
 
 type EnvelopeProps = {
   isOpen: boolean;
@@ -45,7 +45,7 @@ export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
         <div className="absolute inset-0 z-[5]">
           <Image
             className="object-contain drop-shadow-[0_24px_28px_rgba(77,58,35,0.22)]"
-            src={`/images/ui/envelope.png?v=${assetVersion}`}
+            src={`/images/ui/envelope.webp?v=${assetVersion}`}
             alt=""
             fill
             sizes="(max-width: 430px) 86vw, 385px"
