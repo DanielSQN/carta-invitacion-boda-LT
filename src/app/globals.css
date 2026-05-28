@@ -358,19 +358,19 @@ button {
 }
 
 .hero {
-  --hero-width: min(100vw, 430px);
   position: relative;
-  min-height: 230svh;
-  overflow: visible;
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
   isolation: isolate;
-  background: transparent;
+  background: #07111f;
   color: #f3ede3;
 }
 
 .hero-sticky {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 1;
+  width: 100%;
   height: 100svh;
   overflow: hidden;
   isolation: isolate;
@@ -598,6 +598,7 @@ button {
 }
 
 .fixed-hero-scroll-indicator {
+  display: none;
   position: fixed;
   inset-inline: 0;
   bottom: calc(env(safe-area-inset-bottom) + 1.55rem);

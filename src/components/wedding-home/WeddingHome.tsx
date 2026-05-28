@@ -42,16 +42,6 @@ function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
   );
 }
 
-function FixedScrollArrow() {
-  return (
-    <svg className="hero-scroll-arrow" viewBox="0 0 34 48" fill="none" aria-hidden="true" focusable="false">
-      <path d="M17 4V39" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-      <path d="M7 29L17 39L27 29" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M10 4H24" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" opacity="0.5" />
-    </svg>
-  );
-}
-
 function normalizeGuestName(value: string) {
   let normalized = value;
 
@@ -212,22 +202,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           >
             <MusicToggleIcon isPlaying={isMusicPlaying} />
           </motion.button>
-        ) : null}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showWeddingHero ? (
-          <motion.div
-            key="fixed-scroll-indicator"
-            className="fixed-hero-scroll-indicator"
-            aria-hidden="true"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <FixedScrollArrow />
-          </motion.div>
         ) : null}
       </AnimatePresence>
 

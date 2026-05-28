@@ -1,18 +1,8 @@
 "use client";
 
-import Lenis from "@studio-freight/lenis";
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Church, MessageCircle, Navigation, Wine } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
-import CelebrationSection from "../CelebrationSection";
-import CountdownSection from "../CountdownSection";
-
-gsap.registerPlugin(ScrollTrigger);
-
-const assetVersion = "20260526-performance-1";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (
@@ -47,10 +37,10 @@ function HeroSection() {
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
-      gsap.set(imageRef.current, { scale: reduceMotion ? 1 : 1.25, force3D: true });
-      gsap.set(overlayRef.current, { opacity: reduceMotion ? 0.18 : 0 });
-      gsap.set(glowRef.current, { opacity: reduceMotion ? 0.72 : 0 });
-      gsap.set(fadeRef.current, { opacity: reduceMotion ? 1 : 0 });
+      gsap.set(imageRef.current, { scale: 1, force3D: true });
+      gsap.set(overlayRef.current, { opacity: reduceMotion ? 0.28 : 0 });
+      gsap.set(glowRef.current, { opacity: reduceMotion ? 0.42 : 0 });
+      gsap.set(fadeRef.current, { opacity: reduceMotion ? 0.92 : 0 });
       gsap.set(contentRef.current, { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 40 });
 
       if (luisaRef.current) luisaRef.current.textContent = reduceMotion ? "LUISA" : "";
@@ -64,42 +54,6 @@ function HeroSection() {
         gsap.set(cursorRef.current, { opacity: 0 });
         return undefined;
       }
-
-      const lenis = new Lenis({
-        lerp: 0.075,
-        wheelMultiplier: 0.85,
-        smoothWheel: true,
-      });
-
-      const updateScrollTrigger = () => ScrollTrigger.update();
-      lenis.on("scroll", updateScrollTrigger);
-
-      const tick = (time: number) => lenis.raf(time * 1000);
-      gsap.ticker.add(tick);
-
-      const heroLayers = [
-        imageRef.current,
-        overlayRef.current,
-        contentRef.current,
-        glowRef.current,
-        fadeRef.current,
-      ];
-
-      ScrollTrigger.create({
-        trigger: heroRef.current,
-        start: "top top",
-        end: "bottom top",
-        scrub: true,
-        invalidateOnRefresh: true,
-        animation: gsap
-          .timeline()
-          .fromTo(imageRef.current, { scale: 1.25 }, { scale: 1, ease: "none", force3D: true, immediateRender: false }, 0)
-          .fromTo(overlayRef.current, { opacity: 0.28 }, { opacity: 0.14, ease: "none", immediateRender: false }, 0)
-          .fromTo(fadeRef.current, { opacity: 0.92 }, { opacity: 0.52, ease: "none", immediateRender: false }, 0)
-          .fromTo(glowRef.current, { opacity: 0.42 }, { opacity: 0.18, ease: "none", immediateRender: false }, 0),
-        onEnter: () => gsap.set(heroLayers, { visibility: "visible" }),
-        onEnterBack: () => gsap.set(heroLayers, { visibility: "visible" }),
-      });
 
       gsap
         .timeline({ delay: 0.06 })
@@ -137,12 +91,6 @@ function HeroSection() {
         .add(typeText(jhonnatanRef.current, "JHONNATAN", 1.15), ">+0.14")
         .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.78, ease: "power2.out" }, ">+0.18")
         .to(cursorRef.current, { opacity: 0.18, duration: 0.72, repeat: -1, yoyo: true, ease: "sine.inOut" }, ">");
-
-      return () => {
-        gsap.ticker.remove(tick);
-        lenis.off("scroll", updateScrollTrigger);
-        lenis.destroy();
-      };
     }, heroRef);
 
     return () => ctx.revert();
@@ -189,201 +137,16 @@ function HeroSection() {
   );
 }
 
-function TearDivider({ variant }: { variant: "one" | "two" }) {
-  return <div className={`tear-divider tear-divider--${variant}`} aria-hidden="true" />;
-}
-
-function BotanicalDecorations() {
-  return (
-    <>
-      <Image
-        src={`/images/florals/floral-top.webp?v=${assetVersion}`}
-        alt=""
-        width={360}
-        height={240}
-        className="flowers section-flower section-flower--top reveal-item"
-        aria-hidden="true"
-      />
-      <Image
-        src={`/images/florals/floral-bottom.webp?v=${assetVersion}`}
-        alt=""
-        width={320}
-        height={260}
-        className="flowers section-flower section-flower--bottom-left reveal-item"
-        aria-hidden="true"
-      />
-      <Image
-        src={`/images/florals/floral-bottom-right.webp?v=${assetVersion}`}
-        alt=""
-        width={280}
-        height={220}
-        className="flowers section-flower section-flower--bottom-right reveal-item"
-        aria-hidden="true"
-      />
-    </>
-  );
-}
-
-function ConfirmationSection() {
-  return (
-    <section className="paper-section paper-section--warm reveal-section" aria-labelledby="confirmation-section-title">
-      <BotanicalDecorations />
-      <div className="paper-section-frame" aria-hidden="true" />
-      <div className="paper-section-content confirmation-content">
-        <div className="reveal-item section-heart-knot" aria-hidden="true">
-          <span />
-          <span>♡</span>
-          <span />
-        </div>
-
-        <h2 id="confirmation-section-title" className="reveal-item confirmation-title">
-          <span>Confirma tu</span>
-          <strong>Asistencia</strong>
-        </h2>
-
-        <div className="reveal-item section-heart-rule" aria-hidden="true">
-          <span />
-          <span>♡</span>
-          <span />
-        </div>
-
-        <p className="reveal-item confirmation-copy">
-          Tu presencia es muy importante para nosotros.
-          <br />
-          Por favor confirma tu asistencia antes del
-          <br />
-          <span>10 de agosto de 2026.</span>
-        </p>
-
-        <a
-          className="reveal-item paper-action confirmation-action"
-          href="https://wa.me/?text=Confirmo%20mi%20asistencia%20a%20la%20boda%20de%20Luisa%20y%20Tattan"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <MessageCircle className="size-4" strokeWidth={1.8} />
-          Confirmar asistencia
-        </a>
-      </div>
-    </section>
-  );
-}
-
-function LocationSection() {
-  const eventCards = [
-    {
-      title: "Ceremonia",
-      time: "3:00 P. M.",
-      place: "El lugar de su presencia",
-      city: "Bogota, Colombia",
-      image: `/images/venues/ceremony-venue.webp?v=${assetVersion}`,
-      icon: Church,
-      mapQuery: "El lugar de su presencia Bogota",
-    },
-    {
-      title: "Recepcion",
-      time: "4:30 P. M.",
-      place: "Celebracion",
-      city: "Bogota, Colombia",
-      image: `/images/venues/reception-venue.webp?v=${assetVersion}`,
-      icon: Wine,
-      mapQuery: "Bogota Colombia wedding reception venue",
-    },
-  ];
-
-  return (
-    <section className="paper-section paper-section--paper reveal-section" aria-labelledby="location-section-title">
-      <BotanicalDecorations />
-      <div className="paper-section-content location-content">
-        <div className="reveal-item section-heart-knot" aria-hidden="true">
-          <span />
-          <span>♡</span>
-          <span />
-        </div>
-
-        <h2 id="location-section-title" className="reveal-item location-title">
-          Lugar del evento
-        </h2>
-
-        <div className="reveal-item section-heart-rule" aria-hidden="true">
-          <span />
-          <span>♡</span>
-          <span />
-        </div>
-
-        <p className="reveal-item location-copy">Informacion de ceremonia y recepcion.</p>
-
-        <div className="event-card-grid">
-          {eventCards.map(({ title, time, place, city, image, icon: Icon, mapQuery }) => (
-            <article key={title} className="reveal-item event-card">
-              <div className="event-card-icon">
-                <Icon className="size-8 text-soft-gold" strokeWidth={1.35} />
-              </div>
-              <h3>{title}</h3>
-              <div className="event-card-rule" aria-hidden="true">
-                <span />
-                <span>♡</span>
-                <span />
-              </div>
-              <p className="event-time">{time}</p>
-              <p>{place}</p>
-              <p>{city}</p>
-              <div className="event-image-frame">
-                <Image src={image} alt={`${title} de la boda`} fill sizes="(max-width: 430px) 86vw, 185px" />
-              </div>
-              <a
-                className="paper-action paper-action--light event-card-action"
-                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Navigation className="size-4" strokeWidth={1.8} />
-                Ver ubicacion
-              </a>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function WeddingHeroSection() {
-  useEffect(() => {
-    const sections = document.querySelectorAll(".reveal-section");
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          entry.target.classList.toggle("is-visible", entry.isIntersecting);
-        }
-      },
-      {
-        threshold: 0.38,
-        rootMargin: "-8% 0px -8% 0px",
-      },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <motion.section
-      className="paper-stack relative z-[8] mx-auto w-full max-w-[430px] overflow-visible bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
+      className="paper-stack relative z-[8] mx-auto h-svh w-full overflow-hidden bg-[#07111f] text-olive"
       initial={{ opacity: 0, scale: 0.985 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.2, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
       <HeroSection />
-      <CountdownSection />
-      <CelebrationSection />
-      <TearDivider variant="one" />
-      <ConfirmationSection />
-      <TearDivider variant="two" />
-      <LocationSection />
     </motion.section>
   );
 }
