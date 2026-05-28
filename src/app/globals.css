@@ -711,7 +711,7 @@ button {
 
 .countdown-bg {
   z-index: 1;
-  inset: -7svh 0;
+  /* inset: -7svh; */
   overflow: hidden;
   transform: translate3d(0, 0, 0);
   will-change: transform;
@@ -722,6 +722,8 @@ button {
   object-fit: cover;
   object-position: 50% 32%;
   transform: translateZ(0);
+  inset: 150px 10px 3px 10px;
+  
 }
 
 .countdown-overlay {
@@ -971,7 +973,7 @@ button {
   }
 
   .countdown-bg-image {
-    object-position: 50% 30%;
+    object-position: 50% 0%;
   }
 
   .countdown-layout {
