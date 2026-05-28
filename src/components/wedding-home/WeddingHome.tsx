@@ -151,67 +151,65 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     setIsMusicPlaying(false);
   };
 
+  const musicControl = (
+    <AnimatePresence>
+      {hasMusicStarted ? (
+        <motion.button
+          key="music-control"
+          type="button"
+          className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-[#f3ede3] shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
+          onClick={toggleMusic}
+          initial={{ opacity: 0, y: 18, scale: 0.86 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.88 }}
+          transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
+          aria-label={isMusicPlaying ? "Pausar musica" : "Reproducir musica"}
+          aria-pressed={isMusicPlaying}
+        >
+          <MusicToggleIcon isPlaying={isMusicPlaying} />
+        </motion.button>
+      ) : null}
+    </AnimatePresence>
+  );
+
   return (
-    <main
-      className={
-        showWeddingHero
-          ? "relative min-h-svh bg-paper text-olive"
-          : "relative h-svh overflow-hidden bg-paper text-olive"
-      }
-    >
-      <div className="absolute inset-0 z-[1] bg-paper-texture" aria-hidden="true">
-        <Image
-          src="/images/paper/paper-texture.webp?v=20260525-wedding-home"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-70 mix-blend-multiply"
-        />
-      </div>
-      <FloralCorners />
+    <main className="relative h-svh overflow-hidden bg-paper text-olive">
       <audio ref={audioRef} src="/audio/song1.mp3" preload="auto" loop />
+      {musicControl}
 
-      <AnimatePresence>
-        {isEnvelopeOpen && !showWeddingHero ? (
-          <motion.div
-            key="envelope-flash"
-            className="envelope-to-hero-flash"
-            aria-hidden="true"
-            initial={{ opacity: 0, scale: 0.16 }}
-            animate={{ opacity: [0, 0.28, 0.08], scale: [0.2, 1.05, 1.52] }}
-            exit={{ opacity: 0, scale: 1.8 }}
-            transition={{ duration: 1.34, ease: [0.16, 1, 0.3, 1], times: [0, 0.48, 1] }}
-          />
-        ) : null}
-      </AnimatePresence>
+      {showWeddingHero ? (
+        <WeddingHeroSection />
+      ) : (
+        <>
+          <div className="absolute inset-0 z-[1] bg-paper-texture" aria-hidden="true">
+            <Image
+              src="/images/paper/paper-texture.webp?v=20260525-wedding-home"
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover opacity-70 mix-blend-multiply"
+            />
+          </div>
+          <FloralCorners />
 
-      <AnimatePresence>
-        {hasMusicStarted ? (
-          <motion.button
-            key="music-control"
-            type="button"
-            className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-[#f3ede3] shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
-            onClick={toggleMusic}
-            initial={{ opacity: 0, y: 18, scale: 0.86 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.88 }}
-            transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
-            aria-label={isMusicPlaying ? "Pausar musica" : "Reproducir musica"}
-            aria-pressed={isMusicPlaying}
-          >
-            <MusicToggleIcon isPlaying={isMusicPlaying} />
-          </motion.button>
-        ) : null}
-      </AnimatePresence>
+          <AnimatePresence>
+            {isEnvelopeOpen ? (
+              <motion.div
+                key="envelope-flash"
+                className="envelope-to-hero-flash"
+                aria-hidden="true"
+                initial={{ opacity: 0, scale: 0.16 }}
+                animate={{ opacity: [0, 0.28, 0.08], scale: [0.2, 1.05, 1.52] }}
+                exit={{ opacity: 0, scale: 1.8 }}
+                transition={{ duration: 1.34, ease: [0.16, 1, 0.3, 1], times: [0, 0.48, 1] }}
+              />
+            ) : null}
+          </AnimatePresence>
 
-      <AnimatePresence>
-        {!showWeddingHero ? (
           <motion.section
             key="home"
             className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
-            exit={{ opacity: 0, scale: 1.03, filter: "brightness(1.08) blur(5px)" }}
-            transition={{ duration: 1.12, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="invitation-hero-stack">
               <DecorativeText guestName={guestName} />
@@ -238,10 +236,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
             <Verse />
           </motion.section>
-        ) : (
-          <WeddingHeroSection key="wedding-hero" />
-        )}
-      </AnimatePresence>
+        </>
+      )}
     </main>
   );
 }
