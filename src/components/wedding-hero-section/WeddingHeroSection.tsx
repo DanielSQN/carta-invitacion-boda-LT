@@ -1,246 +1,191 @@
 "use client";
 
+import Lenis from "@studio-freight/lenis";
 import { motion } from "framer-motion";
-import {
-  CalendarDays,
-  ChevronsDown,
-  Church,
-  Clock3,
-  Hourglass,
-  MessageCircle,
-  Navigation,
-  TimerReset,
-  Wine,
-} from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Church, MessageCircle, Navigation, Wine } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import CelebrationSection from "../CelebrationSection";
+import CountdownSection from "../CountdownSection";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const assetVersion = "20260526-performance-1";
-const weddingDate = new Date("2026-09-26T00:00:00-05:00");
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 18, scale: 0.985 },
-  visible: { opacity: 1, y: 0, scale: 1 },
-};
-
-const smoothTransition = {
-  duration: 0.78,
-  ease: [0.22, 1, 0.36, 1] as const,
-};
-
-type CountdownTime = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
-
-function getCountdownTime(): CountdownTime {
-  const totalSeconds = Math.max(Math.floor((weddingDate.getTime() - Date.now()) / 1000), 0);
-  const days = Math.floor(totalSeconds / 86400);
-  const hours = Math.floor((totalSeconds % 86400) / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  return { days, hours, minutes, seconds };
-}
-
-function LTLogo() {
+function EditorialRule({ className = "" }: { className?: string }) {
   return (
-    <motion.p
-      className="wedding-hero-logo mx-auto mt-2 font-display text-[0.94rem] font-semibold uppercase tracking-[0.18em] text-[#9a7132]"
-      variants={fadeUp}
-      transition={{ ...smoothTransition, delay: 0.44 }}
-    >
-      LUISA &amp; TATTAN
-    </motion.p>
+    <svg className={`hero-rule-svg ${className}`} viewBox="0 0 214 20" fill="none" aria-hidden="true" focusable="false">
+      <path d="M4 10H86" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" />
+      <path d="M128 10H210" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" />
+      <path
+        d="M107 14.8C101.8 11.1 98.8 8.1 99.7 5.3C100.5 2.9 103.8 2.5 107 6.2C110.2 2.5 113.5 2.9 114.3 5.3C115.2 8.1 112.2 11.1 107 14.8Z"
+        stroke="currentColor"
+        strokeWidth="0.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
 
-function FloralTopDecorations() {
-  return (
-    <motion.div
-      className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[19dvh] min-h-24 overflow-hidden"
-      aria-hidden="true"
-      initial="hidden"
-      animate="visible"
-      variants={{
-        hidden: { opacity: 0 },
-        visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.22 } },
-      }}
-    >
-      <motion.div
-        className="absolute -left-3 -top-4 w-48 origin-top-left rotate-[-6deg]"
-        variants={{
-          hidden: { opacity: 0, x: -18, y: -14, scale: 0.94 },
-          visible: { opacity: 1, x: 0, y: 0, scale: 1, transition: { ...smoothTransition, duration: 0.95 } },
-        }}
-      >
-        <Image
-          src={`/images/florals/floral-top.webp?v=${assetVersion}`}
-          alt=""
-          width={360}
-          height={240}
-          priority
-          className="w-full scale-x-[-1] object-contain opacity-95"
-        />
-      </motion.div>
-      <motion.div
-        className="absolute -right-3 -top-4 w-48 origin-top-right rotate-[6deg]"
-        variants={{
-          hidden: { opacity: 0, x: 18, y: -14, scale: 0.94 },
-          visible: { opacity: 1, x: 0, y: 0, scale: 1, transition: { ...smoothTransition, duration: 0.95 } },
-        }}
-      >
-        <Image
-          src={`/images/florals/floral-top.webp?v=${assetVersion}`}
-          alt=""
-          width={360}
-          height={240}
-          priority
-          className="w-full object-contain opacity-94"
-        />
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function DecorativeHeartRule() {
-  return (
-    <div className="mx-auto flex w-full max-w-[285px] items-center justify-center gap-3 text-soft-gold" aria-hidden="true">
-      <span className="h-px flex-1 bg-gradient-to-r from-transparent via-soft-gold/80 to-soft-gold" />
-      <span className="grid size-6 place-items-center">
-        <span className="font-serif text-lg leading-none">♡</span>
-      </span>
-      <span className="h-px flex-1 bg-gradient-to-l from-transparent via-soft-gold/80 to-soft-gold" />
-    </div>
-  );
-}
-
-function WeddingTitleBlock() {
-  return (
-    <div className="relative z-[4] text-center">
-      <motion.h1
-        id="wedding-hero-title"
-        className="wedding-hero-title whitespace-nowrap font-script text-[clamp(3.35rem,15.8vw,5.35rem)] leading-[0.84] text-olive drop-shadow-[0_2px_0_rgba(255,252,244,0.72)]"
-        variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.36 }}
-      >
-        Nuestra Boda
-      </motion.h1>
-
-      <LTLogo />
-
-      <motion.div
-        className="wedding-heart-rule mt-5"
-        variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.56 }}
-      >
-        <DecorativeHeartRule />
-      </motion.div>
-
-      <motion.div
-        className="wedding-date-block mt-5 text-center"
-        variants={fadeUp}
-        transition={{ ...smoothTransition, delay: 0.66 }}
-      >
-        <p className="wedding-hero-date whitespace-nowrap font-display text-[clamp(2rem,9.8vw,3.1rem)] font-medium leading-none tracking-[0.04em] text-olive">
-          26 <span className="text-soft-gold">·</span> 09 <span className="text-soft-gold">·</span> 26
-        </p>
-      </motion.div>
-    </div>
-  );
-}
-
-function WeddingCountdownBlock() {
-  const [countdown, setCountdown] = useState<CountdownTime>(() => getCountdownTime());
+function HeroSection() {
+  const heroRef = useRef<HTMLElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLParagraphElement>(null);
+  const luisaRef = useRef<HTMLSpanElement>(null);
+  const ampRef = useRef<HTMLSpanElement>(null);
+  const jhonnatanRef = useRef<HTMLSpanElement>(null);
+  const cursorRef = useRef<HTMLSpanElement>(null);
+  const dateRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
-    const updateCountdown = () => setCountdown(getCountdownTime());
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ctx = gsap.context(() => {
+      gsap.set(imageRef.current, { scale: reduceMotion ? 1 : 1.25, force3D: true });
+      gsap.set(overlayRef.current, { opacity: reduceMotion ? 0.18 : 0 });
+      gsap.set(glowRef.current, { opacity: reduceMotion ? 0.72 : 0 });
+      gsap.set(fadeRef.current, { opacity: reduceMotion ? 1 : 0 });
+      gsap.set(contentRef.current, { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 40 });
 
-    updateCountdown();
-    const interval = window.setInterval(updateCountdown, 1000);
+      if (luisaRef.current) luisaRef.current.textContent = reduceMotion ? "LUISA" : "";
+      if (jhonnatanRef.current) jhonnatanRef.current.textContent = reduceMotion ? "JHONNATAN" : "";
 
-    return () => window.clearInterval(interval);
+      if (reduceMotion) {
+        gsap.set([introRef.current, ampRef.current, dateRef.current], {
+          opacity: 1,
+          y: 0,
+        });
+        gsap.set(cursorRef.current, { opacity: 0 });
+        return undefined;
+      }
+
+      const lenis = new Lenis({
+        lerp: 0.075,
+        wheelMultiplier: 0.85,
+        smoothWheel: true,
+      });
+
+      const updateScrollTrigger = () => ScrollTrigger.update();
+      lenis.on("scroll", updateScrollTrigger);
+
+      const tick = (time: number) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+
+      const heroLayers = [
+        imageRef.current,
+        overlayRef.current,
+        contentRef.current,
+        glowRef.current,
+        fadeRef.current,
+      ];
+
+      ScrollTrigger.create({
+        trigger: heroRef.current,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+        invalidateOnRefresh: true,
+        animation: gsap
+          .timeline()
+          .fromTo(imageRef.current, { scale: 1.25 }, { scale: 1, ease: "none", force3D: true, immediateRender: false }, 0)
+          .fromTo(overlayRef.current, { opacity: 0.28 }, { opacity: 0.14, ease: "none", immediateRender: false }, 0)
+          .fromTo(fadeRef.current, { opacity: 0.92 }, { opacity: 0.52, ease: "none", immediateRender: false }, 0)
+          .fromTo(glowRef.current, { opacity: 0.42 }, { opacity: 0.18, ease: "none", immediateRender: false }, 0),
+        onEnter: () => gsap.set(heroLayers, { visibility: "visible" }),
+        onEnterBack: () => gsap.set(heroLayers, { visibility: "visible" }),
+      });
+
+      gsap
+        .timeline({ delay: 0.06 })
+        .to(overlayRef.current, { opacity: 0.28, duration: 1.35, ease: "sine.out" }, 0.12)
+        .to(glowRef.current, { opacity: 0.42, duration: 1.45, ease: "sine.out" }, 0.3)
+        .to(fadeRef.current, { opacity: 0.92, duration: 1.65, ease: "sine.out" }, 0.44)
+        .to(contentRef.current, { opacity: 1, y: 0, duration: 1.35, ease: "power3.out" }, 0.28);
+
+      const typeText = (element: HTMLSpanElement | null, text: string, duration: number) => {
+        if (!element) return gsap.timeline();
+
+        const proxy = { count: 0 };
+        return gsap.to(proxy, {
+          count: text.length,
+          duration,
+          ease: "none",
+          onStart: () => {
+            element.textContent = "";
+          },
+          onUpdate: () => {
+            element.textContent = text.slice(0, Math.round(proxy.count));
+          },
+          onComplete: () => {
+            element.textContent = text;
+          },
+        });
+      };
+
+      gsap
+        .timeline({ delay: 0.45 })
+        .fromTo(introRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.72, ease: "power2.out" })
+        .set(cursorRef.current, { opacity: 1 }, ">-0.08")
+        .add(typeText(luisaRef.current, "LUISA", 0.82), ">")
+        .fromTo(ampRef.current, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.48, ease: "power2.out" }, ">+0.16")
+        .add(typeText(jhonnatanRef.current, "JHONNATAN", 1.15), ">+0.14")
+        .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.78, ease: "power2.out" }, ">+0.18")
+        .to(cursorRef.current, { opacity: 0.18, duration: 0.72, repeat: -1, yoyo: true, ease: "sine.inOut" }, ">");
+
+      return () => {
+        gsap.ticker.remove(tick);
+        lenis.off("scroll", updateScrollTrigger);
+        lenis.destroy();
+      };
+    }, heroRef);
+
+    return () => ctx.revert();
   }, []);
 
-  const items = [
-    { label: "DIAS", value: countdown.days, icon: CalendarDays },
-    { label: "HORAS", value: countdown.hours, icon: Clock3 },
-    { label: "MINUTOS", value: countdown.minutes, icon: Hourglass },
-    { label: "SEGUNDOS", value: countdown.seconds, icon: TimerReset },
-  ];
-
   return (
-    <motion.div
-      className="wedding-countdown-block relative z-[4] mx-auto mt-4 w-full max-w-[350px] text-center"
-      variants={fadeUp}
-      transition={{ ...smoothTransition, delay: 0.76 }}
-    >
-      <p className="wedding-countdown-copy font-serif text-[0.78rem] leading-none text-olive/78">
-        Faltan para nuestra boda
-      </p>
+    <section ref={heroRef} className="hero" aria-labelledby="wedding-hero-title">
+      <div className="hero-sticky">
+        <div ref={imageRef} className="hero-image" aria-hidden="true" />
+        <div ref={overlayRef} className="hero-overlay" aria-hidden="true" />
+        <div ref={glowRef} className="hero-glow" aria-hidden="true" />
+        <div ref={fadeRef} className="hero-fade" aria-hidden="true" />
 
-      <div className="mt-3 grid grid-cols-4 items-start gap-2">
-        {items.map(({ label, value, icon: Icon }) => (
-          <div key={label} className="wedding-countdown-item min-w-0 text-center">
-            <Icon className="wedding-countdown-icon mx-auto mb-1 size-5 text-soft-gold" strokeWidth={1.45} />
-            <p className="wedding-countdown-value font-display text-[1.55rem] font-semibold leading-none text-olive">
-              {String(value).padStart(2, "0")}
-            </p>
-            <p className="wedding-countdown-label mt-0.5 text-[0.55rem] font-semibold leading-none tracking-[0.08em] text-[#9a7132]">
-              {label}
-            </p>
-          </div>
-        ))}
+        <div ref={contentRef} className="hero-content">
+          <p ref={introRef} className="hero-kicker">
+            <EditorialRule />
+            <span>Nos Casamos</span>
+            <EditorialRule className="hero-rule-svg--reverse" />
+          </p>
+
+          <h1 id="wedding-hero-title" className="hero-title" aria-label="Luisa y Jhonnatan">
+            <span className="hero-name-slot hero-name-slot--luisa">
+              <span ref={luisaRef} />
+            </span>
+            <span className="hero-title-middle">
+              <EditorialRule className="hero-amp-rule" />
+              <span ref={ampRef} className="hero-amp">
+                &amp;
+              </span>
+              <EditorialRule className="hero-amp-rule hero-rule-svg--reverse" />
+            </span>
+            <span className="hero-name-slot hero-name-slot--jhonnatan">
+              <span ref={jhonnatanRef} />
+              <span ref={cursorRef} className="hero-type-cursor" aria-hidden="true" />
+            </span>
+          </h1>
+
+          <p ref={dateRef} className="hero-date">
+            26 <span>09</span> 2026
+          </p>
+        </div>
       </div>
-    </motion.div>
-  );
-}
-function ScrollHint() {
-  return (
-    <motion.div
-      className="absolute inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+0.35rem)] z-20 grid place-items-center text-center text-[#fff8eb]"
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ ...smoothTransition, delay: 1.22 }}
-    >
-      <p className="font-script text-[1.65rem] leading-none opacity-90 drop-shadow-[0_2px_12px_rgba(0,0,0,0.42)]">
-        Desliza para continuar
-      </p>
-      <motion.div
-        className="mt-2 text-soft-gold drop-shadow-[0_2px_10px_rgba(0,0,0,0.36)]"
-        animate={{ y: [0, 7, 0], opacity: [0.72, 1, 0.72] }}
-        transition={{ duration: 1.85, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <ChevronsDown className="size-8" strokeWidth={1.9} />
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function CouplePhotoSection() {
-  return (
-    <motion.section
-      className="wedding-photo-section relative z-10 -mt-6 h-[calc(56svh+1.5rem)] min-h-0 overflow-hidden bg-[#f6ead7]"
-      initial={{ opacity: 0, scale: 1.035 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 1.05, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
-      aria-label="Foto de la pareja"
-    >
-      <div className="photo-image-top-fade absolute inset-0">
-        <Image
-          src={`/images/couple/couple-photo.webp?v=${assetVersion}`}
-          alt="Luisa y Tattan"
-          fill
-          priority
-          sizes="(max-width: 430px) 100vw, 430px"
-          className="object-cover object-[52%_28%] saturate-[0.9] sepia-[0.12]"
-        />
-      </div>
-      <div className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-gradient-to-t from-black/58 via-black/18 to-transparent" />
-      <ScrollHint />
-    </motion.section>
+    </section>
   );
 }
 
@@ -336,7 +281,7 @@ function LocationSection() {
       mapQuery: "El lugar de su presencia Bogota",
     },
     {
-      title: "Recepción",
+      title: "Recepcion",
       time: "4:30 P. M.",
       place: "Celebracion",
       city: "Bogota, Colombia",
@@ -366,7 +311,7 @@ function LocationSection() {
           <span />
         </div>
 
-        <p className="reveal-item location-copy">Información de ceremonia y recepción.</p>
+        <p className="reveal-item location-copy">Informacion de ceremonia y recepcion.</p>
 
         <div className="event-card-grid">
           {eventCards.map(({ title, time, place, city, image, icon: Icon, mapQuery }) => (
@@ -393,7 +338,7 @@ function LocationSection() {
                 rel="noreferrer"
               >
                 <Navigation className="size-4" strokeWidth={1.8} />
-                Ver ubicación
+                Ver ubicacion
               </a>
             </article>
           ))}
@@ -426,26 +371,15 @@ export default function WeddingHeroSection() {
 
   return (
     <motion.section
-      className="paper-stack relative z-[8] mx-auto w-full max-w-[430px] overflow-hidden bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
-      initial={{ opacity: 0, y: 72, scale: 0.975 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 1.05, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+      className="paper-stack relative z-[8] mx-auto w-full max-w-[430px] overflow-visible bg-[#f6ead7] text-olive shadow-[0_0_45px_rgba(77,58,35,0.16)]"
+      initial={{ opacity: 0, scale: 0.985 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1.2, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
-      <div className="paper-section paper-section--hero reveal-section relative flex h-[100svh] flex-col overflow-hidden">
-        <section
-          className="wedding-hero-paper relative z-20 flex h-[44svh] shrink-0 items-start justify-center px-5 pb-6 pt-[calc(env(safe-area-inset-top)+3.2rem)]"
-        >
-          <FloralTopDecorations />
-          <motion.div initial="hidden" animate="visible" className="wedding-hero-content relative z-[30] w-full">
-            <WeddingTitleBlock />
-            <WeddingCountdownBlock />
-          </motion.div>
-        </section>
-
-        <CouplePhotoSection />
-      </div>
-
+      <HeroSection />
+      <CountdownSection />
+      <CelebrationSection />
       <TearDivider variant="one" />
       <ConfirmationSection />
       <TearDivider variant="two" />

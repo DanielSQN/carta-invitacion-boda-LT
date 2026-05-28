@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const assetVersion = "20260526-performance-1";
+const assetVersion = "20260528-wax-update";
 
 type WaxSealProps = {
   isOpen: boolean;

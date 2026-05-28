@@ -11,16 +11,46 @@ import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 
 const preloadedInvitationAssets = [
   "/images/couple/couple-photo.webp?v=20260526-performance-1",
+  "/images/couple/_DSC0953.webp",
   "/images/florals/floral-top.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom-right.webp?v=20260526-performance-1",
   "/images/venues/ceremony-venue.webp?v=20260526-performance-1",
   "/images/venues/reception-venue.webp?v=20260526-performance-1",
+  "/images/venues/hacienda_SH.webp",
   "/images/ui/music-on.webp?v=20260526-audio-2",
   "/images/ui/music-muted.webp?v=20260526-audio-2",
+  "/images/ui/wax-seal.webp?v=20260528-wax-update",
   "/images/paper/tear-1.webp",
   "/images/paper/tear-2.webp",
 ];
+
+function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
+  return (
+    <svg className="music-toggle-svg" viewBox="0 0 58 58" fill="none" aria-hidden="true" focusable="false">
+      <circle cx="29" cy="29" r="26.5" stroke="currentColor" strokeWidth="0.9" opacity="0.78" />
+      <circle cx="29" cy="29" r="19" stroke="currentColor" strokeWidth="0.65" opacity="0.28" />
+      {isPlaying ? (
+        <>
+          <path d="M23 19V39" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+          <path d="M35 19V39" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+        </>
+      ) : (
+        <path d="M24.5 18.8L38.6 29L24.5 39.2V18.8Z" fill="currentColor" />
+      )}
+    </svg>
+  );
+}
+
+function FixedScrollArrow() {
+  return (
+    <svg className="hero-scroll-arrow" viewBox="0 0 34 48" fill="none" aria-hidden="true" focusable="false">
+      <path d="M17 4V39" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+      <path d="M7 29L17 39L27 29" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10 4H24" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" opacity="0.5" />
+    </svg>
+  );
+}
 
 function normalizeGuestName(value: string) {
   let normalized = value;
@@ -82,7 +112,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    const timer = window.setTimeout(() => setShowWeddingHero(true), 980);
+    const timer = window.setTimeout(() => setShowWeddingHero(true), 1320);
 
     return () => window.clearTimeout(timer);
   }, [isEnvelopeOpen]);
@@ -135,7 +165,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     <main
       className={
         showWeddingHero
-          ? "relative min-h-svh overflow-x-hidden bg-paper text-olive"
+          ? "relative min-h-svh bg-paper text-olive"
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
@@ -153,11 +183,25 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       <audio ref={audioRef} src="/audio/song1.mp3" preload="auto" loop />
 
       <AnimatePresence>
+        {isEnvelopeOpen && !showWeddingHero ? (
+          <motion.div
+            key="envelope-flash"
+            className="envelope-to-hero-flash"
+            aria-hidden="true"
+            initial={{ opacity: 0, scale: 0.16 }}
+            animate={{ opacity: [0, 0.28, 0.08], scale: [0.2, 1.05, 1.52] }}
+            exit={{ opacity: 0, scale: 1.8 }}
+            transition={{ duration: 1.34, ease: [0.16, 1, 0.3, 1], times: [0, 0.48, 1] }}
+          />
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {hasMusicStarted ? (
           <motion.button
             key="music-control"
             type="button"
-            className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-soft-gold/45 bg-transparent p-0 shadow-[0_0.85rem_1.8rem_rgba(35,30,22,0.22)] outline-none"
+            className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-[#f3ede3] shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
             onClick={toggleMusic}
             initial={{ opacity: 0, y: 18, scale: 0.86 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -166,14 +210,24 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             aria-label={isMusicPlaying ? "Pausar musica" : "Reproducir musica"}
             aria-pressed={isMusicPlaying}
           >
-            <Image
-              src={isMusicPlaying ? "/images/ui/music-on.webp?v=20260526-audio-2" : "/images/ui/music-muted.webp?v=20260526-audio-2"}
-              alt=""
-              fill
-              sizes="64px"
-              className="object-contain"
-            />
+            <MusicToggleIcon isPlaying={isMusicPlaying} />
           </motion.button>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showWeddingHero ? (
+          <motion.div
+            key="fixed-scroll-indicator"
+            className="fixed-hero-scroll-indicator"
+            aria-hidden="true"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <FixedScrollArrow />
+          </motion.div>
         ) : null}
       </AnimatePresence>
 
@@ -182,8 +236,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           <motion.section
             key="home"
             className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
-            exit={{ opacity: 0, y: -34, scale: 0.94, filter: "blur(3px)" }}
-            transition={{ duration: 0.88, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, scale: 1.03, filter: "brightness(1.08) blur(5px)" }}
+            transition={{ duration: 1.12, ease: [0.16, 1, 0.3, 1] }}
           >
             <div className="invitation-hero-stack">
               <DecorativeText guestName={guestName} />
