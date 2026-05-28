@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
+import CelebrationSection from "../CelebrationSection";
+import CountdownSection from "../CountdownSection";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (
@@ -129,7 +131,7 @@ function HeroSection() {
           </h1>
 
           <p ref={dateRef} className="hero-date">
-            26 <span>09</span> 2026
+            26 <span>SEP</span> 2026
           </p>
         </div>
       </div>
@@ -139,14 +141,16 @@ function HeroSection() {
 
 export default function WeddingHeroSection() {
   return (
-    <motion.section
-      className="paper-stack relative z-[8] mx-auto h-svh w-full overflow-hidden bg-[#07111f] text-olive"
+    <motion.div
+      className="paper-stack relative z-[8] mx-auto w-full bg-[#07111f] text-olive"
       initial={{ opacity: 0, scale: 0.985 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.2, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
       <HeroSection />
-    </motion.section>
+      <CountdownSection />
+      <CelebrationSection />
+    </motion.div>
   );
 }

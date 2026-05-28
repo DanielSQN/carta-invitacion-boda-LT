@@ -42,6 +42,16 @@ function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
   );
 }
 
+function SwipeDownIcon() {
+  return (
+    <svg className="fixed-swipe-down-svg" viewBox="0 0 42 62" fill="none" aria-hidden="true" focusable="false">
+      <path d="M21 5V48" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round" />
+      <path d="M12.5 39.5L21 48L29.5 39.5" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13.5 5H28.5" stroke="currentColor" strokeWidth="0.85" strokeLinecap="round" opacity="0.42" />
+    </svg>
+  );
+}
+
 function normalizeGuestName(value: string) {
   let normalized = value;
 
@@ -172,10 +182,34 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     </AnimatePresence>
   );
 
+  const swipeDownControl = (
+    <AnimatePresence>
+      {showWeddingHero ? (
+        <motion.div
+          key="swipe-down"
+          className="fixed-swipe-down"
+          initial={{ opacity: 0, y: 18, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.94 }}
+          transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <SwipeDownIcon />
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
+
   return (
-    <main className="relative h-svh overflow-hidden bg-paper text-olive">
+    <main
+      className={
+        showWeddingHero
+          ? "details-scroll relative h-svh overflow-x-hidden overflow-y-auto bg-[#07111f] text-olive"
+          : "relative h-svh overflow-hidden bg-paper text-olive"
+      }
+    >
       <audio ref={audioRef} src="/audio/song1.mp3" preload="auto" loop />
       {musicControl}
+      {swipeDownControl}
 
       {showWeddingHero ? (
         <WeddingHeroSection />

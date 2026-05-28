@@ -48,6 +48,8 @@ export default function CelebrationSection() {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scroller = sectionRef.current?.closest(".details-scroll") as HTMLElement | null;
+    const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
       if (reduceMotion) {
@@ -65,6 +67,7 @@ export default function CelebrationSection() {
             trigger: sectionRef.current,
             start: "top 75%",
             toggleActions: "play none none reverse",
+            ...triggerDefaults,
           },
         })
         .fromTo(titleRef.current, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0)
@@ -88,6 +91,7 @@ export default function CelebrationSection() {
           trigger: sectionRef.current,
           start: "top 75%",
           toggleActions: "play none none reverse",
+          ...triggerDefaults,
         },
       });
     }, sectionRef);

@@ -364,6 +364,17 @@ button {
   isolation: isolate;
 }
 
+.details-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+
+.details-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 .hero {
   position: relative;
   width: 100%;
@@ -474,7 +485,10 @@ button {
   letter-spacing: 0.32em;
   line-height: 1;
   text-transform: uppercase;
-  text-shadow: 0 0.75rem 1.65rem rgba(0, 0, 0, 0.32);
+  text-shadow:
+    0 0.75rem 1.65rem rgba(0, 0, 0, 0.36),
+    0 0 0.72rem rgba(140, 182, 209, 0.34),
+    0 0 1.4rem rgba(243, 237, 227, 0.16);
 }
 
 .hero-rule-svg {
@@ -501,8 +515,10 @@ button {
   letter-spacing: 0.08em;
   line-height: 0.9;
   text-shadow:
-    0 1.2rem 2.4rem rgba(0, 0, 0, 0.38),
-    0 0 1px rgba(243, 237, 227, 0.36);
+    0 1.2rem 2.4rem rgba(0, 0, 0, 0.42),
+    0 0 0.9rem rgba(243, 237, 227, 0.18),
+    0 0 1.65rem rgba(140, 182, 209, 0.2),
+    0 0 1px rgba(243, 237, 227, 0.42);
 }
 
 .hero-name-slot {
@@ -539,6 +555,9 @@ button {
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1;
+  text-shadow:
+    0 0 0.9rem rgba(243, 237, 227, 0.22),
+    0 0 1.4rem rgba(140, 182, 209, 0.26);
 }
 
 .hero-amp-rule {
@@ -563,11 +582,17 @@ button {
   font-weight: 600;
   letter-spacing: 0.48em;
   text-indent: 0.48em;
-  text-shadow: 0 0.8rem 1.4rem rgba(0, 0, 0, 0.3);
+  text-shadow:
+    0 0.8rem 1.4rem rgba(0, 0, 0, 0.34),
+    0 0 0.75rem rgba(243, 237, 227, 0.18),
+    0 0 1.25rem rgba(140, 182, 209, 0.22);
 }
 
 .hero-date span {
-  color: #b9cbdd;
+  color: #8cb6d1;
+  text-shadow:
+    0 0 0.7rem rgba(140, 182, 209, 0.58),
+    0 0 1.45rem rgba(140, 182, 209, 0.34);
 }
 
 .hero-music-button {
@@ -621,6 +646,28 @@ button {
   will-change: transform, opacity;
 }
 
+.fixed-swipe-down {
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(env(safe-area-inset-bottom) + 1.05rem);
+  z-index: 79;
+  display: grid;
+  place-items: center;
+  color: rgba(243, 237, 227, 0.82);
+  pointer-events: none;
+  filter:
+    drop-shadow(0 0.18rem 0.3rem rgba(7, 17, 31, 0.9))
+    drop-shadow(0 0 0.9rem rgba(7, 17, 31, 0.78))
+    drop-shadow(0 0 1.4rem rgba(140, 182, 209, 0.34));
+}
+
+.fixed-swipe-down-svg {
+  width: 2.25rem;
+  height: 3.25rem;
+  animation: hero-scroll-breathe 2.2s ease-in-out infinite;
+  shape-rendering: geometricPrecision;
+}
+
 .hero-scroll-arrow {
   width: 2.15rem;
   height: 3rem;
@@ -645,81 +692,138 @@ button {
 
 .countdown-section {
   position: relative;
-  display: grid;
-  min-height: 155svh;
-  overflow: visible;
+  min-height: 100svh;
+  height: 100svh;
+  overflow: hidden;
   isolation: isolate;
   background: #071827;
   color: #f3ede3;
+  contain: layout paint;
 }
 
 .countdown-bg,
 .countdown-overlay,
-.countdown-quote-panel,
-.countdown-content {
-  grid-area: 1 / 1;
-  position: sticky;
-  top: 0;
-  min-height: 100svh;
+.countdown-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .countdown-bg {
   z-index: 1;
+  inset: -7svh 0;
   overflow: hidden;
+  transform: translate3d(0, 0, 0);
   will-change: transform;
+  backface-visibility: hidden;
 }
 
 .countdown-bg-image {
   object-fit: cover;
-  object-position: 52% 42%;
+  object-position: 50% 32%;
+  transform: translateZ(0);
 }
 
 .countdown-overlay {
   z-index: 2;
-  pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(7, 24, 39, 0.52), rgba(7, 24, 39, 0.28) 42%, rgba(7, 24, 39, 0.72)),
-    radial-gradient(circle at 50% 52%, rgba(10, 28, 46, 0.14), rgba(7, 24, 39, 0.62) 76%);
+    linear-gradient(180deg, rgba(7, 24, 39, 0.58) 0%, rgba(7, 24, 39, 0.32) 38%, rgba(7, 24, 39, 0.72) 100%),
+    radial-gradient(circle at 50% 50%, rgba(10, 28, 46, 0.1) 0%, rgba(7, 24, 39, 0.54) 78%);
+}
+
+.countdown-vignette {
+  z-index: 3;
+  background:
+    linear-gradient(90deg, rgba(7, 24, 39, 0.52), transparent 24%, transparent 76%, rgba(7, 24, 39, 0.5)),
+    linear-gradient(180deg, rgba(7, 24, 39, 0.42), transparent 30%, rgba(7, 24, 39, 0.62));
+}
+
+.countdown-layout {
+  position: relative;
+  z-index: 4;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-rows: auto minmax(0, 1fr);
+  padding: 0 0 calc(env(safe-area-inset-bottom) + 1.45rem);
 }
 
 .countdown-quote-panel {
-  z-index: 4;
-  min-height: auto;
-  align-self: start;
-  padding: calc(env(safe-area-inset-top) + 1.25rem) 1.25rem 1.75rem;
+  justify-self: stretch;
+  width: 100%;
+  padding: calc(env(safe-area-inset-top) + 0.85rem) 0 0.85rem;
   color: #071827;
   text-align: center;
   background:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.62), transparent 58%),
-    linear-gradient(180deg, rgba(253, 248, 238, 0.97), rgba(243, 237, 227, 0.94));
-  box-shadow: 0 1rem 2rem rgba(7, 24, 39, 0.18);
-  clip-path: ellipse(84% 100% at 50% 0%);
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.58), transparent 58%),
+    linear-gradient(180deg, rgba(253, 248, 238, 0.98), rgba(243, 237, 227, 0.96));
+  box-shadow: 0 1rem 2.2rem rgba(7, 24, 39, 0.24);
+  overflow: hidden;
 }
 
-.countdown-quote-panel p {
-  max-width: 18rem;
+.countdown-quote-copy {
+  display: block;
+  width: 100%;
   margin: 0 auto;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1rem, 4.8vw, 1.28rem);
-  font-weight: 600;
-  line-height: 1.2;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.countdown-heart {
-  width: 1.2rem;
-  height: 1.05rem;
-  margin-top: 0.7rem;
+.countdown-quote-copy > span {
+  display: inline-flex;
+  width: max-content;
+  min-width: 200%;
+  align-items: center;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(0.92rem, 3.7vw, 1.16rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  will-change: transform, opacity;
+}
+
+.countdown-quote-copy > span > span {
+  display: inline-flex;
+  min-width: 50%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding-inline: clamp(1.5rem, 7vw, 3rem);
+}
+
+.countdown-marquee-heart {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: block;
+  width: 1rem;
+  height: 0.88rem;
+  flex: 0 0 auto;
   color: #b9965a;
+  opacity: 0.9;
+  transform: translate3d(50%, -50%, 0);
+}
+
+.countdown-marquee-heart path {
+  stroke-width: 1.9;
+}
+
+.countdown-marquee-yes {
+  color: #b9965a;
+  text-shadow:
+    0 0 0.48rem rgba(185, 150, 90, 0.56),
+    0 0 1.05rem rgba(185, 150, 90, 0.32);
 }
 
 .countdown-content {
-  z-index: 5;
+  position: relative;
   display: flex;
-  min-height: 100svh;
+  min-height: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: calc(env(safe-area-inset-top) + 8rem) 1.2rem calc(env(safe-area-inset-bottom) + 5.8rem);
+  padding: clamp(0.85rem, 3.6svh, 1.8rem) clamp(1rem, 4vw, 3rem) clamp(1.2rem, 5svh, 2.9rem);
   text-align: center;
 }
 
@@ -728,10 +832,11 @@ button {
   top: 50%;
   left: 50%;
   z-index: -1;
-  width: min(88vw, 21rem);
+  width: clamp(18rem, 88vw, 24rem);
   aspect-ratio: 1;
-  transform: translate(-50%, -47%);
+  transform: translate3d(-50%, -50%, 0);
   pointer-events: none;
+  will-change: opacity, transform;
 }
 
 .countdown-orbits {
@@ -748,69 +853,70 @@ button {
 }
 
 .countdown-orbit--blue {
-  stroke: rgba(140, 182, 209, 0.42);
+  stroke: rgba(140, 182, 209, 0.44);
   stroke-width: 1;
-  stroke-dasharray: 2 9;
+  stroke-dasharray: 2 10;
 }
 
 .countdown-orbit--slate {
-  stroke: rgba(127, 157, 187, 0.34);
+  stroke: rgba(127, 157, 187, 0.36);
   stroke-width: 0.85;
 }
 
 .countdown-orbit--gold {
-  stroke: rgba(185, 150, 90, 0.38);
+  stroke: rgba(185, 150, 90, 0.42);
   stroke-width: 0.9;
-  stroke-dasharray: 18 10;
+  stroke-dasharray: 20 12;
 }
 
 .countdown-title-block h2 {
   margin: 0;
   color: #f3ede3;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(3rem, 16vw, 5.4rem);
+  font-size: clamp(3.2rem, 16vw, 5.9rem);
   font-weight: 500;
   letter-spacing: 0.02em;
-  line-height: 0.9;
-  text-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.34);
+  line-height: 0.88;
+  text-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.36);
 }
 
 .countdown-title-block span {
   display: block;
-  width: 4.2rem;
+  width: clamp(4rem, 18vw, 7rem);
   height: 1px;
-  margin: 1rem auto 1.45rem;
+  margin: clamp(0.8rem, 2.8svh, 1.35rem) auto clamp(1rem, 3.3svh, 1.7rem);
   background: linear-gradient(90deg, transparent, #8cb6d1, transparent);
   box-shadow: 0 0 1rem rgba(140, 182, 209, 0.42);
 }
 
 .countdown-grid {
   display: grid;
-  width: min(100%, 21rem);
+  width: min(100%, 22rem);
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid rgba(127, 157, 187, 0.28);
-  background: rgba(7, 24, 39, 0.38);
+  border: 1px solid rgba(127, 157, 187, 0.32);
+  background: rgba(7, 24, 39, 0.5);
   box-shadow:
     inset 0 0 2rem rgba(140, 182, 209, 0.08),
-    0 1rem 2.4rem rgba(0, 0, 0, 0.18);
+    0 1rem 2.4rem rgba(0, 0, 0, 0.22);
 }
 
 .countdown-unit {
   min-width: 0;
-  padding: 0.92rem 0.35rem 0.82rem;
+  padding: clamp(0.78rem, 2.7svh, 1rem) 0.28rem clamp(0.7rem, 2.4svh, 0.9rem);
 }
 
 .countdown-unit + .countdown-unit {
-  border-left: 1px solid rgba(127, 157, 187, 0.28);
+  border-left: 1px solid rgba(127, 157, 187, 0.32);
 }
 
 .countdown-unit strong {
   display: block;
   color: #8cb6d1;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.78rem, 8.6vw, 2.72rem);
+  font-size: clamp(1.75rem, 8.2vw, 2.9rem);
   font-weight: 600;
   line-height: 0.92;
+  text-shadow: 0 0.7rem 1.4rem rgba(0, 0, 0, 0.24);
 }
 
 .countdown-unit span {
@@ -818,24 +924,28 @@ button {
   margin-top: 0.48rem;
   color: #7f9dbb;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.55rem, 2.55vw, 0.72rem);
+  font-size: clamp(0.5rem, 2.35vw, 0.74rem);
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.15em;
+}
+
+.countdown-meta {
+  margin-top: clamp(1.1rem, 3.8svh, 1.9rem);
 }
 
 .countdown-date {
-  margin: 1.4rem 0 0;
+  margin: 0;
   color: #f3ede3;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.88rem, 3.7vw, 1.05rem);
+  font-size: clamp(0.86rem, 3.5vw, 1.12rem);
   font-weight: 600;
-  letter-spacing: 0.36em;
-  text-indent: 0.36em;
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
 }
 
 .countdown-place {
-  margin-top: 1.05rem;
-  color: rgba(243, 237, 227, 0.88);
+  margin-top: clamp(0.8rem, 2.8svh, 1.22rem);
+  color: rgba(243, 237, 227, 0.9);
   font-family: var(--font-display), Georgia, serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -843,7 +953,7 @@ button {
 
 .countdown-place p {
   margin: 0;
-  font-size: clamp(0.82rem, 3.45vw, 1rem);
+  font-size: clamp(0.76rem, 3vw, 1.03rem);
   font-weight: 700;
 }
 
@@ -851,8 +961,129 @@ button {
   display: block;
   margin-top: 0.28rem;
   color: #7f9dbb;
-  font-size: 0.75rem;
+  font-size: clamp(0.68rem, 2.6vw, 0.82rem);
   font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .countdown-bg {
+    inset: -8svh 0;
+  }
+
+  .countdown-bg-image {
+    object-position: 50% 30%;
+  }
+
+  .countdown-layout {
+    padding: 0 0 calc(env(safe-area-inset-bottom) + 2rem);
+  }
+
+  .countdown-quote-panel {
+    padding: calc(env(safe-area-inset-top) + 1rem) 0 1rem;
+  }
+
+  .countdown-quote-copy > span {
+    font-size: clamp(1rem, 2.4vw, 1.3rem);
+  }
+
+  .countdown-content {
+    padding-top: clamp(1.5rem, 4svh, 3rem);
+  }
+
+  .countdown-orbit-wrap {
+    width: clamp(25rem, 62vw, 34rem);
+  }
+
+  .countdown-grid {
+    width: min(100%, 34rem);
+  }
+
+  .countdown-unit {
+    padding: 1.18rem 0.7rem 1.05rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .countdown-section {
+    min-height: 100svh;
+  }
+
+  .countdown-bg-image {
+    object-position: 50% 28%;
+  }
+
+  .countdown-layout {
+    grid-template-rows: auto minmax(0, 1fr);
+    padding: 0 0 calc(env(safe-area-inset-bottom) + 2.45rem);
+  }
+
+  .countdown-quote-panel {
+    padding: calc(env(safe-area-inset-top) + 1.05rem) 0 1.05rem;
+  }
+
+  .countdown-quote-copy > span {
+    font-size: clamp(1.08rem, 1.35vw, 1.38rem);
+  }
+
+  .countdown-content {
+    padding-top: clamp(1.7rem, 4svh, 3.2rem);
+  }
+
+  .countdown-orbit-wrap {
+    width: clamp(34rem, 48vw, 47rem);
+  }
+
+  .countdown-title-block h2 {
+    font-size: clamp(5.2rem, 7.2vw, 8rem);
+  }
+
+  .countdown-title-block span {
+    margin: 1.4rem auto 2.15rem;
+  }
+
+  .countdown-grid {
+    width: min(100%, 46rem);
+  }
+
+  .countdown-unit {
+    padding: 1.45rem 1.1rem 1.25rem;
+  }
+
+  .countdown-unit strong {
+    font-size: clamp(3rem, 4.4vw, 4.7rem);
+  }
+
+  .countdown-unit span {
+    margin-top: 0.7rem;
+    font-size: clamp(0.7rem, 0.85vw, 0.86rem);
+    letter-spacing: 0.2em;
+  }
+
+  .countdown-date {
+    font-size: clamp(1.04rem, 1.25vw, 1.34rem);
+  }
+
+  .countdown-place p {
+    font-size: clamp(0.96rem, 1.12vw, 1.22rem);
+  }
+}
+
+@media (min-width: 1440px) {
+  .countdown-bg-image {
+    object-position: 50% 26%;
+  }
+
+  .countdown-layout {
+    padding-inline: clamp(5rem, 9vw, 10rem);
+  }
+
+  .countdown-orbit-wrap {
+    width: min(52vw, 54rem);
+  }
+
+  .countdown-grid {
+    width: min(100%, 52rem);
+  }
 }
 
 .celebration-section {
@@ -1755,8 +1986,10 @@ button {
   .hero-content,
   .hero-music-button,
   .hero-scroll-indicator,
-  .fixed-hero-scroll-indicator {
+  .fixed-hero-scroll-indicator,
+  .fixed-swipe-down-svg {
     transition: none !important;
+    animation: none !important;
   }
 
   .reveal-item,
