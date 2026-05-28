@@ -35,7 +35,7 @@
 
 html {
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
   background: var(--paper);
   /* overscroll-behavior: none; */
 }
@@ -44,7 +44,7 @@ body {
   width: 100%;
   min-height: 100%;
   margin: 0;
-  overflow: hidden;
+  /* overflow: hidden; */
   background: var(--paper);
   color: var(--foreground);
   font-family: var(--font-cormorant), Georgia, serif;
