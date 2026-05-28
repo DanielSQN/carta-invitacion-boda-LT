@@ -10,11 +10,13 @@
   --paper-warm: #eedfc8;
   --ink: #2c2521;
   --muted: #6e625c;
-  --olive: #3f4f3c;
+  /* --olive: #3f4f3c; */
+  --olive: #0d477e;
   --olive-soft: #6f7a66;
   --soft-gold: #b88f47;
   --gold-deep: #8b6429;
   --tear-height: clamp(3.8rem, 8vh, 5.2rem);
+  --blue-theme: #081929
 }
 
 @theme inline {
@@ -170,7 +172,8 @@ button {
 
 .decorative-label {
   margin-left: clamp(0.75rem, 8vw, 2.45rem);
-  color: rgba(63, 79, 60, 0.82);
+  /* color: rgba(63, 79, 60, 0.82); */
+  color: rgba(19, 54, 124, 0.82);
   font-size: clamp(1.25rem, min(6.8vw, 3.7dvh), 2.15rem);
   font-weight: 400;
 }
