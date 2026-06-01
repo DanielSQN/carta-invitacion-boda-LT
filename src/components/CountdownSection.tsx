@@ -16,6 +16,13 @@ type CountdownTime = {
   seconds: number;
 };
 
+const initialCountdown: CountdownTime = {
+  days: 0,
+  hours: 0,
+  minutes: 0,
+  seconds: 0,
+};
+
 function getCountdownTime(): CountdownTime {
   const totalSeconds = Math.max(Math.floor((weddingDate.getTime() - Date.now()) / 1000), 0);
 
@@ -51,6 +58,18 @@ function OrbitRings() {
       <circle className="countdown-orbit countdown-orbit--blue" cx="180" cy="180" r="156" />
       <circle className="countdown-orbit countdown-orbit--slate" cx="180" cy="180" r="134" />
       <circle className="countdown-orbit countdown-orbit--gold" cx="180" cy="180" r="112" />
+      <circle className="countdown-orbit-dot countdown-orbit-dot--top" cx="180" cy="44" r="4.5" />
+      <circle className="countdown-orbit-dot countdown-orbit-dot--right" cx="316" cy="180" r="3.6" />
+      <circle className="countdown-orbit-dot countdown-orbit-dot--bottom" cx="180" cy="316" r="4.5" />
+      <circle className="countdown-orbit-dot countdown-orbit-dot--left" cx="44" cy="180" r="3.6" />
+      <path
+        className="countdown-orbit-heart countdown-orbit-heart--top-right"
+        d="M255 89C248.9 84.55 245.7 81.1 246.5 77.85C247.25 74.9 251.05 74.25 255 78.4C258.95 74.25 262.75 74.9 263.5 77.85C264.3 81.1 261.1 84.55 255 89Z"
+      />
+      <path
+        className="countdown-orbit-heart countdown-orbit-heart--bottom-left"
+        d="M105 276C98.9 271.55 95.7 268.1 96.5 264.85C97.25 261.9 101.05 261.25 105 265.4C108.95 261.25 112.75 261.9 113.5 264.85C114.3 268.1 111.1 271.55 105 276Z"
+      />
     </svg>
   );
 }
@@ -64,12 +83,16 @@ export default function CountdownSection() {
   const ringsRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const [countdown, setCountdown] = useState<CountdownTime>(() => getCountdownTime());
+  const [countdown, setCountdown] = useState<CountdownTime>(initialCountdown);
 
   useEffect(() => {
+    const initialTimer = window.setTimeout(() => setCountdown(getCountdownTime()), 0);
     const interval = window.setInterval(() => setCountdown(getCountdownTime()), 1000);
 
-    return () => window.clearInterval(interval);
+    return () => {
+      window.clearTimeout(initialTimer);
+      window.clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {

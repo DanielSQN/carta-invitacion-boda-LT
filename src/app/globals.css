@@ -220,7 +220,7 @@ button {
 }
 
 .envelope-button {
-  width: min(96vw, 430px);
+  width: min(92vw, 430px);
 }
 
 .wax-seal {
@@ -409,8 +409,8 @@ button {
 
 .hero-image {
   z-index: 1;
-  background-image: url("/images/couple/_DSC1252.webp?v=20260601-assets-1");
-  background-position: 52% 25%;
+  background-image: url("/images/couple/couple-photo.webp?v=20260601-assets-2");
+  background-position: 52% 28%;
   background-size: cover;
   background-repeat: no-repeat;
   transform-origin: center center;
@@ -506,15 +506,15 @@ button {
 
 .hero-title {
   display: grid;
-  width: min(100%, 24rem);
+  width: min(100%, 26rem);
   margin: 0;
   place-items: center;
   color: #f3ede3;
-  font-family: var(--font-playfair), Georgia, serif;
-  font-size: clamp(2.32rem, 11.4vw, 4.1rem);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  line-height: 0.9;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(4rem, 18vw, 7.2rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.74;
   text-shadow:
     0 1.2rem 2.4rem rgba(0, 0, 0, 0.42),
     0 0 0.9rem rgba(243, 237, 227, 0.18),
@@ -531,11 +531,11 @@ button {
 }
 
 .hero-name-slot--luisa {
-  min-width: 5.15ch;
+  min-width: 3.8ch;
 }
 
 .hero-name-slot--jhonnatan {
-  min-width: 9.25ch;
+  min-width: 6.4ch;
 }
 
 .hero-title-middle {
@@ -730,15 +730,15 @@ button {
 .countdown-overlay {
   z-index: 2;
   background:
-    linear-gradient(180deg, rgba(7, 24, 39, 0.58) 0%, rgba(7, 24, 39, 0.32) 38%, rgba(7, 24, 39, 0.72) 100%),
-    radial-gradient(circle at 50% 50%, rgba(10, 28, 46, 0.1) 0%, rgba(7, 24, 39, 0.54) 78%);
+    linear-gradient(180deg, rgba(7, 24, 39, 0.34) 0%, rgba(7, 24, 39, 0.14) 38%, rgba(7, 24, 39, 0.48) 100%),
+    radial-gradient(circle at 50% 50%, rgba(10, 28, 46, 0.04) 0%, rgba(7, 24, 39, 0.28) 78%);
 }
 
 .countdown-vignette {
   z-index: 3;
   background:
-    linear-gradient(90deg, rgba(7, 24, 39, 0.52), transparent 24%, transparent 76%, rgba(7, 24, 39, 0.5)),
-    linear-gradient(180deg, rgba(7, 24, 39, 0.42), transparent 30%, rgba(7, 24, 39, 0.62));
+    linear-gradient(90deg, rgba(7, 24, 39, 0.34), transparent 24%, transparent 76%, rgba(7, 24, 39, 0.32)),
+    linear-gradient(180deg, rgba(7, 24, 39, 0.24), transparent 30%, rgba(7, 24, 39, 0.38));
 }
 
 .countdown-layout {
@@ -856,31 +856,53 @@ button {
 }
 
 .countdown-orbit--blue {
-  stroke: rgba(140, 182, 209, 0.44);
-  stroke-width: 1;
+  stroke: rgba(140, 182, 209, 0.54);
+  stroke-width: 1.8;
   stroke-dasharray: 2 10;
 }
 
 .countdown-orbit--slate {
-  stroke: rgba(127, 157, 187, 0.36);
-  stroke-width: 0.85;
+  stroke: rgba(127, 157, 187, 0.46);
+  stroke-width: 1.45;
 }
 
 .countdown-orbit--gold {
-  stroke: rgba(185, 150, 90, 0.42);
-  stroke-width: 0.9;
+  stroke: rgba(185, 150, 90, 0.5);
+  stroke-width: 1.55;
   stroke-dasharray: 20 12;
+}
+
+.countdown-orbit-dot {
+  fill: rgba(243, 237, 227, 0.64);
+  filter: drop-shadow(0 0 0.65rem rgba(140, 182, 209, 0.28));
+}
+
+.countdown-orbit-heart {
+  fill: none;
+  stroke: rgba(185, 150, 90, 0.66);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  filter: drop-shadow(0 0 0.7rem rgba(185, 150, 90, 0.24));
 }
 
 .countdown-title-block h2 {
   margin: 0;
-  color: #f3ede3;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(3.2rem, 16vw, 5.9rem);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  color: #fffaf1;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(4.6rem, 21vw, 7.2rem);
+  font-weight: 400;
+  letter-spacing: 0;
   line-height: 0.88;
-  text-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.36);
+  text-shadow:
+    0 1rem 2rem rgba(0, 0, 0, 0.36),
+    0 0 1.15rem rgba(20, 55, 86, 0.74),
+    0 0.2rem 0.55rem rgba(7, 24, 39, 0.82),
+    0 0 0.18rem rgba(243, 237, 227, 0.36);
+}
+
+.countdown-section .countdown-title-block h2 {
+  color: #fffaf1;
 }
 
 .countdown-title-block span {
@@ -896,29 +918,32 @@ button {
   display: grid;
   width: min(100%, 22rem);
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  border: 1px solid rgba(127, 157, 187, 0.32);
-  background: rgba(7, 24, 39, 0.5);
-  box-shadow:
-    inset 0 0 2rem rgba(140, 182, 209, 0.08),
-    0 1rem 2.4rem rgba(0, 0, 0, 0.22);
+  gap: clamp(0.42rem, 2vw, 0.7rem);
 }
 
 .countdown-unit {
   min-width: 0;
+  border: 0;
+  background: rgba(7, 24, 39, 0.34);
+  box-shadow:
+    inset 0 0 1.4rem rgba(140, 182, 209, 0.07),
+    0 0.85rem 1.6rem rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   padding: clamp(0.78rem, 2.7svh, 1rem) 0.28rem clamp(0.7rem, 2.4svh, 0.9rem);
 }
 
 .countdown-unit + .countdown-unit {
-  border-left: 1px solid rgba(127, 157, 187, 0.32);
+  border-left: 0;
 }
 
 .countdown-unit strong {
   display: block;
-  color: #8cb6d1;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.75rem, 8.2vw, 2.9rem);
-  font-weight: 600;
-  line-height: 0.92;
+  color: #fffaf1;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(2.5rem, 11vw, 4.05rem);
+  font-weight: 400;
+  line-height: 0.76;
   text-shadow: 0 0.7rem 1.4rem rgba(0, 0, 0, 0.24);
 }
 
@@ -933,12 +958,13 @@ button {
 }
 
 .countdown-meta {
-  margin-top: clamp(1.1rem, 3.8svh, 1.9rem);
+  display: block;
+  margin-top: clamp(1.05rem, 3.2svh, 1.6rem);
 }
 
 .countdown-date {
   margin: 0;
-  color: #f3ede3;
+  color: rgba(243, 237, 227, 0.94);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(0.86rem, 3.5vw, 1.12rem);
   font-weight: 600;
@@ -947,11 +973,16 @@ button {
 }
 
 .countdown-place {
+  display: none;
   margin-top: clamp(0.8rem, 2.8svh, 1.22rem);
   color: rgba(243, 237, 227, 0.9);
   font-family: var(--font-display), Georgia, serif;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.countdown-section .countdown-place {
+  display: none;
 }
 
 .countdown-place p {
@@ -1120,10 +1151,10 @@ button {
 .celebration-heading h2 {
   margin: 0;
   color: #f3ede3;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2.85rem, 13vw, 5.6rem);
-  font-weight: 500;
-  line-height: 0.95;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(4rem, 18vw, 6.8rem);
+  font-weight: 400;
+  line-height: 0.88;
 }
 
 .celebration-rule-wrap {
@@ -1480,12 +1511,12 @@ button {
 
 .confirmation-title span {
   display: block;
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
   font-size: clamp(1.75rem, 8vw, 2.55rem);
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  line-height: 1;
-  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.94;
+  text-transform: none;
 }
 
 .confirmation-title strong {
@@ -1528,12 +1559,12 @@ button {
 .location-title {
   margin-top: 1.15rem;
   color: var(--olive);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(2.05rem, 9vw, 3.05rem);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  line-height: 1;
-  text-transform: uppercase;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(3.6rem, 16vw, 5.4rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 0.9;
+  text-transform: none;
 }
 
 .location-copy {
@@ -1938,7 +1969,7 @@ button {
   }
 
   .envelope-button {
-    width: min(96vw, 390px);
+    width: min(92vw, 380px);
   }
 
   .wedding-envelope-stage {

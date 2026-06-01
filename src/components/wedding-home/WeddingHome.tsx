@@ -10,7 +10,7 @@ import Verse from "./Verse";
 import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 
 const preloadedInvitationAssets = [
-  "/images/couple/_DSC1252.webp?v=20260601-assets-1",
+  "/images/couple/couple-photo.webp?v=20260601-assets-2",
   "/images/couple/_DSC0723.webp?v=20260601-assets-1",
   "/images/florals/floral-top.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom.webp?v=20260526-performance-1",
