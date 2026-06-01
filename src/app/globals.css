@@ -224,9 +224,9 @@ button {
 }
 
 .wax-seal {
-  top: 65%;
-  width: clamp(78px, 27vw, 112px);
-  max-width: 32%;
+  top: 69%;
+  width: clamp(68px, 22vw, 94px);
+  max-width: 25%;
 }
 
 .open-cta {
@@ -409,8 +409,8 @@ button {
 
 .hero-image {
   z-index: 1;
-  background-image: url("/images/couple/couple-photo.webp?v=20260526-performance-1");
-  background-position: 52% 28%;
+  background-image: url("/images/couple/_DSC1252.webp?v=20260601-assets-1");
+  background-position: 52% 25%;
   background-size: cover;
   background-repeat: no-repeat;
   transform-origin: center center;
@@ -1947,9 +1947,9 @@ button {
   }
 
   .wax-seal {
-    top: 65%;
-    width: clamp(76px, 27vw, 98px);
-    max-width: 32%;
+    top: 69%;
+    width: clamp(64px, 21vw, 84px);
+    max-width: 24%;
   }
 
   .open-cta {

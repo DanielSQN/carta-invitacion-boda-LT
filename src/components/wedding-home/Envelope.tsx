@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import WaxSeal from "./WaxSeal";
 
-const assetVersion = "20260526-performance-1";
+const assetVersion = "20260601-assets-1";
 
 type EnvelopeProps = {
   isOpen: boolean;
@@ -23,7 +23,7 @@ export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
       whileTap={isOpen ? undefined : { scale: 0.985 }}
     >
       <motion.div
-        className="envelope-float relative aspect-[1.52/1] w-full"
+        className="envelope-float relative aspect-[1186/829] w-full"
         animate={isOpen ? { y: -34, scale: 1.08 } : { y: [0, -5, 0] }}
         transition={
           isOpen

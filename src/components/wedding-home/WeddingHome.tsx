@@ -10,17 +10,16 @@ import Verse from "./Verse";
 import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 
 const preloadedInvitationAssets = [
-  "/images/couple/couple-photo.webp?v=20260526-performance-1",
-  "/images/couple/_DSC0953.webp",
+  "/images/couple/_DSC1252.webp?v=20260601-assets-1",
+  "/images/couple/_DSC0723.webp?v=20260601-assets-1",
   "/images/florals/floral-top.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom-right.webp?v=20260526-performance-1",
   "/images/venues/ceremony-venue.webp?v=20260526-performance-1",
   "/images/venues/reception-venue.webp?v=20260526-performance-1",
   "/images/venues/hacienda_SH.webp",
-  "/images/ui/music-on.webp?v=20260526-audio-2",
-  "/images/ui/music-muted.webp?v=20260526-audio-2",
-  "/images/ui/wax-seal.webp?v=20260528-wax-update",
+  "/images/ui/envelope.webp?v=20260601-assets-1",
+  "/images/ui/wax-seal.webp?v=20260601-assets-1",
   "/images/paper/tear-1.webp",
   "/images/paper/tear-2.webp",
 ];

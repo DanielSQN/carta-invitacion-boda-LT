@@ -149,7 +149,7 @@ export default function CountdownSection() {
     <section ref={sectionRef} className="countdown-section" aria-labelledby="countdown-title">
       <div ref={imageRef} className="countdown-bg" aria-hidden="true">
         <Image
-          src="/images/couple/_DSC0953.webp"
+          src="/images/couple/_DSC0723.webp?v=20260601-assets-1"
           alt=""
           fill
           sizes="100vw"
