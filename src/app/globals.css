@@ -1448,7 +1448,7 @@ button {
   position: relative;
   display: grid;
   width: min(100%, 22.5rem);
-  gap: clamp(0.88rem, 3.85svh, 1.38rem);
+  gap: clamp(1.05rem, 4.35svh, 1.62rem);
   margin: 0 auto;
   padding: 0.15rem 0;
 }
@@ -1511,14 +1511,14 @@ button {
   display: block;
   color: #d6b274;
   font-family: var(--font-great-vibes), "Brush Script MT", cursive;
-  font-size: clamp(1.12rem, 5.1vw, 1.58rem);
-  font-weight: 400;
+  font-size: clamp(1.28rem, 5.85vw, 1.82rem);
+  font-weight: 600;
   letter-spacing: 0;
   line-height: 0.95;
   text-shadow:
-    0 0.45rem 0.9rem rgba(7, 24, 39, 0.48),
+    0 0.52rem 1rem rgba(7, 24, 39, 0.52),
     0 0 0.38rem rgba(20, 55, 86, 0.72),
-    0 0 0.78rem rgba(140, 182, 209, 0.48),
+    0 0 0.86rem rgba(140, 182, 209, 0.52),
     0 0 0.42rem rgba(255, 250, 241, 0.26);
 }
 
@@ -1537,7 +1537,7 @@ button {
   margin: 0;
   color: #fffaf1;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.92rem, 4vw, 1.18rem);
+  font-size: clamp(1rem, 4.35vw, 1.34rem);
   font-weight: 700;
   line-height: 1.08;
   text-shadow:
