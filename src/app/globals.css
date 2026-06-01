@@ -924,12 +924,12 @@ button {
 .countdown-unit {
   min-width: 0;
   border: 0;
-  background: rgba(7, 24, 39, 0.34);
+  background: rgba(48, 65, 78, 0.34);
   box-shadow:
     inset 0 0 1.4rem rgba(140, 182, 209, 0.07),
     0 0.85rem 1.6rem rgba(0, 0, 0, 0.16);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(8px) saturate(1.05);
+  -webkit-backdrop-filter: blur(8px) saturate(1.05);
   padding: clamp(0.78rem, 2.7svh, 1rem) 0.28rem clamp(0.7rem, 2.4svh, 0.9rem);
 }
 
@@ -1945,6 +1945,23 @@ button {
   }
 }
 
+@media (max-width: 430px) {
+  .wedding-envelope-stage {
+    transform: translateX(clamp(-0.7rem, -2.8vw, -0.48rem));
+  }
+
+  .countdown-unit {
+    background:
+      linear-gradient(180deg, rgba(92, 108, 119, 0.34), rgba(35, 52, 65, 0.32)),
+      rgba(60, 76, 88, 0.28);
+    box-shadow:
+      inset 0 0 1rem rgba(140, 182, 209, 0.08),
+      0 0.75rem 1.35rem rgba(0, 0, 0, 0.14);
+    backdrop-filter: blur(5px) saturate(1.04);
+    -webkit-backdrop-filter: blur(5px) saturate(1.04);
+  }
+}
+
 @media (max-height: 720px) {
   .wedding-home-scene {
     padding-top: calc(var(--safe-top) + clamp(0.7rem, 2.6dvh, 1.15rem));
@@ -1974,7 +1991,7 @@ button {
 
   .wedding-envelope-stage {
     margin-top: clamp(0.95rem, 2.5dvh, 1.45rem);
-    transform: translateX(clamp(-1rem, -4.8vw, -0.55rem));
+    transform: translateX(clamp(-0.7rem, -2.8vw, -0.48rem));
   }
 
   .wax-seal {
