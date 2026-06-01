@@ -153,9 +153,8 @@ button {
   z-index: 65;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 45%, rgba(255, 251, 242, 0.34) 0%, rgba(243, 237, 227, 0.2) 18%, rgba(127, 157, 187, 0.1) 38%, transparent 66%),
-    radial-gradient(circle at 50% 48%, rgba(255, 255, 255, 0.16), transparent 36%);
-  mix-blend-mode: soft-light;
+    radial-gradient(circle at 50% 45%, rgba(140, 182, 209, 0.34) 0%, rgba(20, 55, 86, 0.42) 34%, transparent 68%),
+    linear-gradient(180deg, rgba(7, 24, 39, 0.7), rgba(8, 35, 62, 0.86));
   transform-origin: 50% 45%;
   will-change: opacity, transform;
 }
@@ -477,7 +476,7 @@ button {
   align-items: center;
   width: min(100%, 21rem);
   margin: 0 0 1.15rem;
-  color: #f3ede3;
+  color: #8cb6d1;
   gap: 0.7rem;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(0.72rem, 3vw, 0.84rem);
@@ -486,9 +485,9 @@ button {
   line-height: 1;
   text-transform: uppercase;
   text-shadow:
-    0 0.75rem 1.65rem rgba(0, 0, 0, 0.36),
-    0 0 0.72rem rgba(140, 182, 209, 0.34),
-    0 0 1.4rem rgba(243, 237, 227, 0.16);
+    0 0.72rem 1.35rem rgba(7, 24, 39, 0.44),
+    0 0 0.42rem rgba(255, 250, 241, 0.58),
+    0 0 1.15rem rgba(255, 250, 241, 0.26);
 }
 
 .hero-rule-svg {
@@ -516,8 +515,8 @@ button {
   line-height: 0.74;
   text-shadow:
     0 1.2rem 2.4rem rgba(0, 0, 0, 0.42),
-    0 0 0.9rem rgba(243, 237, 227, 0.18),
-    0 0 1.65rem rgba(140, 182, 209, 0.2),
+    0 0 0.85rem rgba(20, 55, 86, 0.76),
+    0 0 1.6rem rgba(140, 182, 209, 0.34),
     0 0 1px rgba(243, 237, 227, 0.42);
 }
 
@@ -548,7 +547,7 @@ button {
 }
 
 .hero-amp {
-  color: #f3ede3;
+  color: #8cb6d1;
   font-family: var(--font-cormorant), Georgia, serif;
   font-size: clamp(1.55rem, 7vw, 2.28rem);
   font-style: italic;
@@ -556,8 +555,9 @@ button {
   letter-spacing: 0;
   line-height: 1;
   text-shadow:
-    0 0 0.9rem rgba(243, 237, 227, 0.22),
-    0 0 1.4rem rgba(140, 182, 209, 0.26);
+    0 0 0.48rem rgba(255, 250, 241, 0.64),
+    0 0 1.15rem rgba(255, 250, 241, 0.26),
+    0 0.62rem 1.15rem rgba(7, 24, 39, 0.42);
 }
 
 .hero-amp-rule {
@@ -1389,7 +1389,7 @@ button {
   min-height: 100svh;
   width: min(100%, 58rem);
   align-content: center;
-  gap: clamp(1.1rem, 4svh, 1.8rem);
+  gap: clamp(0.95rem, 3.5svh, 1.55rem);
   margin: 0 auto;
   padding: calc(env(safe-area-inset-top) + 4.2rem) clamp(1.25rem, 5vw, 3rem) calc(env(safe-area-inset-bottom) + 4.4rem);
   text-align: center;
@@ -1399,7 +1399,7 @@ button {
   margin: 0;
   color: #fffaf1;
   font-family: var(--font-great-vibes), "Brush Script MT", cursive;
-  font-size: clamp(4rem, 18vw, 7rem);
+  font-size: clamp(3.85rem, 17vw, 6.8rem);
   font-weight: 400;
   line-height: 0.88;
   text-shadow:
@@ -1410,7 +1410,7 @@ button {
 
 .story-heading p {
   max-width: 21rem;
-  margin: 0.8rem auto 0;
+  margin: 0.65rem auto 0;
   color: rgba(243, 237, 227, 0.9);
   font-size: clamp(1rem, 4.3vw, 1.22rem);
   font-weight: 600;
@@ -1421,17 +1421,17 @@ button {
 .story-timeline {
   position: relative;
   display: grid;
-  width: min(100%, 28rem);
-  gap: clamp(1.35rem, 5.5svh, 2rem);
+  width: min(100%, 25rem);
+  gap: clamp(1.15rem, 4.7svh, 1.75rem);
   margin: 0 auto;
   padding: 0.15rem 0;
 }
 
 .story-line {
   position: absolute;
-  top: 1.7rem;
-  bottom: 1.7rem;
-  left: clamp(1.85rem, 9vw, 2.2rem);
+  top: 1.42rem;
+  bottom: 1.42rem;
+  left: clamp(1.62rem, 7.4vw, 1.88rem);
   z-index: -1;
   width: 1px;
   background: rgba(185, 150, 90, 0.25);
@@ -1448,16 +1448,16 @@ button {
 
 .story-item {
   display: grid;
-  grid-template-columns: clamp(3.8rem, 18vw, 4.45rem) minmax(0, 1fr);
+  grid-template-columns: clamp(3.2rem, 14vw, 3.75rem) minmax(0, 1fr);
   align-items: start;
-  gap: clamp(0.95rem, 4vw, 1.25rem);
+  gap: clamp(0.82rem, 3.5vw, 1.08rem);
   text-align: left;
 }
 
 .story-icon-wrap {
   position: relative;
   display: grid;
-  width: clamp(3.55rem, 16vw, 4.25rem);
+  width: clamp(3.05rem, 13vw, 3.55rem);
   aspect-ratio: 1;
   place-items: center;
   overflow: hidden;
@@ -1465,9 +1465,9 @@ button {
   border-radius: 999px;
   background: rgba(255, 250, 241, 0.12);
   box-shadow:
-    inset 0 0 1.1rem rgba(255, 250, 241, 0.08),
-    0 0.8rem 1.6rem rgba(0, 0, 0, 0.18),
-    0 0 1rem rgba(140, 182, 209, 0.16);
+    inset 0 0 0.95rem rgba(255, 250, 241, 0.08),
+    0 0.62rem 1.28rem rgba(0, 0, 0, 0.18),
+    0 0 0.85rem rgba(140, 182, 209, 0.16);
   color: #fffaf1;
   backdrop-filter: blur(7px) saturate(1.08);
   -webkit-backdrop-filter: blur(7px) saturate(1.08);
@@ -1485,10 +1485,11 @@ button {
   content: "";
 }
 
-.story-icon {
+.story-icon-image {
   position: relative;
-  width: 58%;
-  height: 58%;
+  width: 55%;
+  height: 55%;
+  object-fit: contain;
   filter:
     drop-shadow(0 0.16rem 0.28rem rgba(7, 24, 39, 0.76))
     drop-shadow(0 0 0.48rem rgba(140, 182, 209, 0.28));
@@ -1503,7 +1504,7 @@ button {
   display: block;
   color: #8cb6d1;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.38rem, 7vw, 2.1rem);
+  font-size: clamp(1.2rem, 5.8vw, 1.78rem);
   font-weight: 800;
   letter-spacing: 0.04em;
   line-height: 1;
@@ -1514,9 +1515,9 @@ button {
 
 .story-flourish {
   display: block;
-  width: clamp(2.2rem, 12vw, 3.3rem);
-  height: 0.55rem;
-  margin: 0.28rem 0 0.4rem;
+  width: clamp(1.85rem, 9vw, 2.75rem);
+  height: 0.45rem;
+  margin: 0.22rem 0 0.32rem;
   background:
     radial-gradient(circle at 50% 50%, rgba(185, 150, 90, 0.78) 0 0.12rem, transparent 0.14rem),
     linear-gradient(90deg, transparent, rgba(185, 150, 90, 0.72), transparent);
@@ -1527,7 +1528,7 @@ button {
   margin: 0;
   color: #fffaf1;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.18rem, 5.3vw, 1.6rem);
+  font-size: clamp(1.02rem, 4.45vw, 1.36rem);
   font-weight: 700;
   line-height: 1.08;
   text-shadow:
@@ -1541,7 +1542,7 @@ button {
   }
 
   .story-line {
-    left: 2.12rem;
+    left: 1.76rem;
   }
 }
 

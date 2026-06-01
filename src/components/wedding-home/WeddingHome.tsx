@@ -12,6 +12,10 @@ import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 const preloadedInvitationAssets = [
   "/images/couple/couple-photo.webp?v=20260601-assets-2",
   "/images/couple/_DSC0723.webp?v=20260601-assets-1",
+  "/images/story/001-heart.webp",
+  "/images/story/002-wedding-rings.webp",
+  "/images/story/003-heart-1.webp",
+  "/images/story/004-correo.webp",
   "/images/florals/floral-top.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom.webp?v=20260526-performance-1",
   "/images/florals/floral-bottom-right.webp?v=20260526-performance-1",
@@ -109,7 +113,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    const timer = window.setTimeout(() => setShowWeddingHero(true), 1320);
+    const timer = window.setTimeout(() => setShowWeddingHero(true), 1580);
 
     return () => window.clearTimeout(timer);
   }, [isEnvelopeOpen]);
@@ -259,10 +263,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
                 key="envelope-flash"
                 className="envelope-to-hero-flash"
                 aria-hidden="true"
-                initial={{ opacity: 0, scale: 0.16 }}
-                animate={{ opacity: [0, 0.28, 0.08], scale: [0.2, 1.05, 1.52] }}
-                exit={{ opacity: 0, scale: 1.8 }}
-                transition={{ duration: 1.34, ease: [0.16, 1, 0.3, 1], times: [0, 0.48, 1] }}
+                initial={{ opacity: 0, scale: 0.2 }}
+                animate={{ opacity: [0, 0.18, 0.48, 0.72], scale: [0.2, 0.95, 1.18, 1.42] }}
+                exit={{ opacity: 0, scale: 1.62 }}
+                transition={{ duration: 1.52, ease: [0.16, 1, 0.3, 1], times: [0, 0.42, 0.72, 1] }}
               />
             ) : null}
           </AnimatePresence>
