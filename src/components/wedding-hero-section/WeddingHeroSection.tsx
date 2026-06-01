@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
+import OurStorySection from "../OurStorySection";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (
@@ -38,6 +39,9 @@ function HeroSection() {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scroller = heroRef.current?.closest(".details-scroll") as HTMLElement | null;
+    const triggerDefaults = scroller ? { scroller } : {};
+
     const ctx = gsap.context(() => {
       gsap.set(imageRef.current, { scale: 1, force3D: true });
       gsap.set(overlayRef.current, { opacity: reduceMotion ? 0.28 : 0 });
@@ -93,6 +97,20 @@ function HeroSection() {
         .add(typeText(jhonnatanRef.current, "Jhonnatan", 1.15), ">+0.14")
         .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.78, ease: "power2.out" }, ">+0.18")
         .to(cursorRef.current, { opacity: 0.18, duration: 0.72, repeat: -1, yoyo: true, ease: "sine.inOut" }, ">");
+
+      gsap.to(imageRef.current, {
+        yPercent: 5,
+        scale: 1.03,
+        ease: "none",
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.75,
+          invalidateOnRefresh: true,
+          ...triggerDefaults,
+        },
+      });
     }, heroRef);
 
     return () => ctx.revert();
@@ -151,6 +169,7 @@ export default function WeddingHeroSection() {
       <HeroSection />
       <CountdownSection />
       <CelebrationSection />
+      <OurStorySection />
     </motion.div>
   );
 }

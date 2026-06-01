@@ -27,15 +27,13 @@ const preloadedInvitationAssets = [
 function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
   return (
     <svg className="music-toggle-svg" viewBox="0 0 58 58" fill="none" aria-hidden="true" focusable="false">
-      <circle cx="29" cy="29" r="26.5" stroke="currentColor" strokeWidth="0.9" opacity="0.78" />
-      <circle cx="29" cy="29" r="19" stroke="currentColor" strokeWidth="0.65" opacity="0.28" />
       {isPlaying ? (
         <>
-          <path d="M23 19V39" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-          <path d="M35 19V39" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+          <path d="M23.5 18.5V39.5" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
+          <path d="M34.5 18.5V39.5" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
         </>
       ) : (
-        <path d="M24.5 18.8L38.6 29L24.5 39.2V18.8Z" fill="currentColor" />
+        <path d="M24 18.2L39.2 29L24 39.8V18.2Z" fill="currentColor" />
       )}
     </svg>
   );

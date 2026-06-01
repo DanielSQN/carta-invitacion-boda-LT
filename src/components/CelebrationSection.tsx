@@ -96,6 +96,20 @@ export default function CelebrationSection() {
         .fromTo(infoRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.88, ease: "power2.out" }, 0.34)
         .fromTo(actionsRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.68, ease: "power2.out" }, 0.54);
 
+      gsap.to(imageRef.current, {
+        yPercent: 4,
+        scale: 1.01,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.75,
+          invalidateOnRefresh: true,
+          ...triggerDefaults,
+        },
+      });
+
       const rulePaths = gsap.utils.toArray<SVGPathElement>(".celebration-rule path");
       rulePaths.forEach((path) => {
         const length = path.getTotalLength();
@@ -155,7 +169,7 @@ export default function CelebrationSection() {
             <div className="celebration-place">
               <span>Lugar</span>
               <strong>Hacienda Santa Elena</strong>
-              <em>Cota</em>
+              <em>Cota, Cundinamarca</em>
             </div>
 
             <div ref={actionsRef} className="celebration-location-card">
@@ -168,7 +182,7 @@ export default function CelebrationSection() {
                   rel="noopener noreferrer"
                 >
                   <GoogleMapsIcon />
-                  Google Maps
+                  Maps
                 </a>
                 <a
                   className="celebration-map-button celebration-map-button--waze"
