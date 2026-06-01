@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import gsap from "gsap";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import DecorativeText from "./DecorativeText";
@@ -82,6 +83,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const homeSceneRef = useRef<HTMLElement>(null);
+  const transitionCardRef = useRef<HTMLDivElement>(null);
+  const transitionWashRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -113,9 +117,52 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    const timer = window.setTimeout(() => setShowWeddingHero(true), 1580);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    return () => window.clearTimeout(timer);
+    if (reduceMotion) {
+      const timer = window.setTimeout(() => setShowWeddingHero(true), 460);
+      return () => window.clearTimeout(timer);
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(transitionCardRef.current, {
+        autoAlpha: 0,
+        borderRadius: "0.24rem",
+        height: "min(43vw, 186px)",
+        left: "50%",
+        padding: "0.44rem",
+        scale: 0.74,
+        top: "48%",
+        width: "min(62vw, 265px)",
+        xPercent: -50,
+        yPercent: -50,
+      });
+      gsap.set(transitionWashRef.current, { autoAlpha: 0 });
+
+      gsap
+        .timeline({
+          defaults: { ease: "power3.inOut" },
+          onComplete: () => setShowWeddingHero(true),
+        })
+        .to(homeSceneRef.current, { duration: 0.46, opacity: 0.92, scale: 0.986 }, 0)
+        .to(transitionCardRef.current, { autoAlpha: 1, duration: 0.28, scale: 1 }, 0.28)
+        .to(homeSceneRef.current, { duration: 0.64, opacity: 0, y: -18 }, 0.78)
+        .to(
+          transitionCardRef.current,
+          {
+            borderRadius: 0,
+            duration: 1.18,
+            height: "100svh",
+            padding: 0,
+            top: "50%",
+            width: "100vw",
+          },
+          0.52,
+        )
+        .to(transitionWashRef.current, { autoAlpha: 0.58, duration: 0.82, ease: "sine.inOut" }, 1.02);
+    });
+
+    return () => ctx.revert();
   }, [isEnvelopeOpen]);
 
   useEffect(() => {
@@ -257,21 +304,24 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           </div>
           <FloralCorners />
 
-          <AnimatePresence>
-            {isEnvelopeOpen ? (
-              <motion.div
-                key="envelope-flash"
-                className="envelope-to-hero-flash"
-                aria-hidden="true"
-                initial={{ opacity: 0, scale: 0.2 }}
-                animate={{ opacity: [0, 0.18, 0.48, 0.72], scale: [0.2, 0.95, 1.18, 1.42] }}
-                exit={{ opacity: 0, scale: 1.62 }}
-                transition={{ duration: 1.52, ease: [0.16, 1, 0.3, 1], times: [0, 0.42, 0.72, 1] }}
-              />
-            ) : null}
-          </AnimatePresence>
+          {isEnvelopeOpen ? (
+            <div ref={transitionCardRef} className="hero-transition-card" aria-hidden="true">
+              <div className="hero-transition-photo">
+                <Image
+                  src="/images/couple/couple-photo.webp?v=20260601-assets-2"
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  className="object-cover object-center"
+                  priority
+                />
+              </div>
+              <div ref={transitionWashRef} className="hero-transition-blue-wash" />
+            </div>
+          ) : null}
 
           <motion.section
+            ref={homeSceneRef}
             key="home"
             className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
           >
