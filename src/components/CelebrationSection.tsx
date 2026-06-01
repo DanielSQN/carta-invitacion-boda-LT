@@ -23,17 +23,37 @@ function HeartRule() {
   );
 }
 
-function PinIcon() {
+function GoogleMapsIcon() {
   return (
-    <svg className="celebration-pin" viewBox="0 0 26 26" fill="none" aria-hidden="true" focusable="false">
+    <svg className="celebration-brand-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
       <path
-        d="M13 23C17.65 18.28 20 14.48 20 10.7C20 6.84 16.86 4 13 4C9.14 4 6 6.84 6 10.7C6 14.48 8.35 18.28 13 23Z"
-        stroke="currentColor"
+        d="M16 2.8C10.68 2.8 6.38 7.08 6.38 12.35c0 6.63 7.45 15.1 9.05 16.84a0.77 0.77 0 0 0 1.14 0c1.6-1.74 9.05-10.21 9.05-16.84C25.62 7.08 21.32 2.8 16 2.8Z"
+        fill="#34A853"
+      />
+      <path d="M16 2.8c5.32 0 9.62 4.28 9.62 9.55 0 2.34-.93 5.02-2.14 7.55L16 12.35V2.8Z" fill="#4285F4" />
+      <path d="M8.52 19.9c-1.21-2.53-2.14-5.21-2.14-7.55 0-3.54 1.93-6.63 4.8-8.28L16 12.35 8.52 19.9Z" fill="#FBBC04" />
+      <path d="M16 29.45c-1.22-1.33-5.82-6.56-7.48-9.55L16 12.35l7.48 7.55c-1.66 2.99-6.26 8.22-7.48 9.55Z" fill="#EA4335" />
+      <circle cx="16" cy="12.35" r="3.28" fill="#fff" />
+    </svg>
+  );
+}
+
+function WazeIcon() {
+  return (
+    <svg className="celebration-brand-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+      <path
+        d="M23.7 21.9c2.4-1.8 3.9-4.5 3.9-7.6 0-5.6-5-10.1-11.2-10.1S5.2 8.7 5.2 14.3c0 1.1.2 2.2.6 3.2-1.3.8-2.6 1.1-3.4 1.1.5 1.8 1.8 3.2 3.5 3.9 1.2.5 2.5.5 3.7.2 1.9 1.1 4.2 1.7 6.8 1.7.9 0 1.8-.1 2.6-.3"
+        fill="#8BE8FF"
+        stroke="#17384A"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.2"
+        strokeWidth="1.35"
       />
-      <circle cx="13" cy="10.8" r="2.4" stroke="currentColor" strokeWidth="1.05" />
+      <circle cx="11.9" cy="14" r="1.2" fill="#17384A" />
+      <circle cx="20.4" cy="14" r="1.2" fill="#17384A" />
+      <path d="M13.8 18.1c1.4 1 3.1 1 4.5 0" stroke="#17384A" strokeLinecap="round" strokeWidth="1.25" />
+      <circle cx="10.1" cy="25.3" r="2.1" fill="#17384A" />
+      <circle cx="22.1" cy="25.3" r="2.1" fill="#17384A" />
     </svg>
   );
 }
@@ -44,7 +64,7 @@ export default function CelebrationSection() {
   const ruleRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLAnchorElement>(null);
+  const actionsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -53,7 +73,7 @@ export default function CelebrationSection() {
 
     const ctx = gsap.context(() => {
       if (reduceMotion) {
-        gsap.set([titleRef.current, ruleRef.current, infoRef.current, imageRef.current, buttonRef.current], {
+        gsap.set([titleRef.current, ruleRef.current, infoRef.current, imageRef.current, actionsRef.current], {
           opacity: 1,
           y: 0,
           scale: 1,
@@ -70,11 +90,11 @@ export default function CelebrationSection() {
             ...triggerDefaults,
           },
         })
-        .fromTo(titleRef.current, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0)
-        .fromTo(ruleRef.current, { opacity: 0 }, { opacity: 1, duration: 0.78, ease: "power2.out" }, 0.14)
-        .fromTo(imageRef.current, { opacity: 0, scale: 1.05 }, { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }, 0.22)
-        .fromTo(infoRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.88, ease: "power2.out" }, 0.32)
-        .fromTo(buttonRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.68, ease: "power2.out" }, 0.52);
+        .fromTo(imageRef.current, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.1, ease: "power2.out" }, 0)
+        .fromTo(titleRef.current, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0.12)
+        .fromTo(ruleRef.current, { opacity: 0 }, { opacity: 1, duration: 0.78, ease: "power2.out" }, 0.22)
+        .fromTo(infoRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.88, ease: "power2.out" }, 0.34)
+        .fromTo(actionsRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.68, ease: "power2.out" }, 0.54);
 
       const rulePaths = gsap.utils.toArray<SVGPathElement>(".celebration-rule path");
       rulePaths.forEach((path) => {
@@ -101,9 +121,20 @@ export default function CelebrationSection() {
 
   return (
     <section ref={sectionRef} className="celebration-section" aria-labelledby="celebration-title">
+      <div ref={imageRef} className="celebration-bg" aria-hidden="true">
+        <Image
+          src="/images/venues/lugar-celebracion.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          className="celebration-bg-image"
+        />
+      </div>
+      <div className="celebration-bg-overlay" aria-hidden="true" />
+
       <div className="celebration-inner">
         <div ref={titleRef} className="celebration-heading">
-          <p>Acompáñanos a celebrar este día tan especial</p>
+          <p>Acompañanos a celebrar este día tan especial</p>
           <h2 id="celebration-title">Celebración</h2>
         </div>
 
@@ -112,33 +143,44 @@ export default function CelebrationSection() {
         </div>
 
         <div className="celebration-layout">
-          <div ref={imageRef} className="celebration-image-card">
-            <Image
-              src="/images/venues/hacienda_SH.webp"
-              alt="Hacienda Santa Elena"
-              fill
-              sizes="(max-width: 720px) 88vw, 360px"
-              className="celebration-image"
-            />
-          </div>
-
           <div ref={infoRef} className="celebration-info-card">
-            <p className="celebration-date">26 · SEP · 2026</p>
-            <p className="celebration-time">XX:XX P.M.</p>
-            <div className="celebration-place">
-              <strong>Hacienda Santa Elena</strong>
-              <span>Cota</span>
+            <div className="celebration-detail-row">
+              <span>Fecha</span>
+              <strong>26 · SEP · 2026</strong>
             </div>
-            <a
-              ref={buttonRef}
-              className="celebration-map-button"
-              href="https://maps.app.goo.gl/yYX8tQsJdW1rckqX7"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <PinIcon />
-              Ver ubicación
-            </a>
+            <div className="celebration-detail-row">
+              <span>Hora</span>
+              <strong>XX:XX P.M.</strong>
+            </div>
+            <div className="celebration-place">
+              <span>Lugar</span>
+              <strong>Hacienda Santa Elena</strong>
+              <em>Cota</em>
+            </div>
+
+            <div ref={actionsRef} className="celebration-location-card">
+              <h3>Ver ubicación</h3>
+              <div className="celebration-location-actions">
+                <a
+                  className="celebration-map-button celebration-map-button--maps"
+                  href="https://maps.app.goo.gl/yYX8tQsJdW1rckqX7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <GoogleMapsIcon />
+                  Google Maps
+                </a>
+                <a
+                  className="celebration-map-button celebration-map-button--waze"
+                  href="https://waze.com/ul?q=Hacienda%20Santa%20Elena%20Cota&navigate=yes"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <WazeIcon />
+                  Waze
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
