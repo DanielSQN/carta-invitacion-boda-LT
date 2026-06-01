@@ -114,6 +114,35 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     return () => window.clearTimeout(timer);
   }, [isEnvelopeOpen]);
 
+  useEffect(() => {
+    const pauseAudio = () => {
+      const audio = audioRef.current;
+
+      if (!audio || audio.paused) {
+        return;
+      }
+
+      audio.pause();
+      setIsMusicPlaying(false);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        pauseAudio();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", pauseAudio);
+    window.addEventListener("blur", pauseAudio);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", pauseAudio);
+      window.removeEventListener("blur", pauseAudio);
+    };
+  }, []);
+
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
       setIsEnvelopeOpen(true);
