@@ -13,6 +13,8 @@ import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 const preloadedInvitationAssets = [
   "/images/couple/couple-photo.webp?v=20260601-assets-2",
   "/images/couple/_DSC0723.webp?v=20260601-assets-1",
+  "/images/couple/_DSC1252.webp",
+  "/images/details/dress-code.webp",
   "/images/story/001-heart.webp",
   "/images/story/002-wedding-rings.webp",
   "/images/story/003-heart-1.webp",
@@ -192,7 +194,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             cardGeometry.centeredTop = (viewportHeight - centeredHeight) / 2;
 
             gsap.set(transitionCardRef.current, {
-              autoAlpha: 0.62,
+              autoAlpha: 1,
               height: measuredRect.height,
               left: measuredRect.left,
               rotation: -7,
@@ -204,14 +206,12 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
               x: 0,
               y: 0,
             });
-            gsap.set(envelopeLetterRef.current, { opacity: 0.62 });
+            gsap.set(envelopeLetterRef.current, { opacity: 1 });
           },
           [],
           1.48,
         )
-        .to(transitionCardRef.current, { autoAlpha: 0.78, duration: 0.34, ease: "sine.inOut" }, 1.48)
-        .to(transitionCardRef.current, { autoAlpha: 1, duration: 0.58, ease: "sine.out" }, 1.82)
-        .to(envelopeLetterRef.current, { autoAlpha: 0, duration: 0.42, ease: "sine.inOut" }, 1.62)
+        .to(envelopeLetterRef.current, { autoAlpha: 0, duration: 0.04, ease: "sine.out" }, 1.5)
         .to(
           transitionCardRef.current,
           {

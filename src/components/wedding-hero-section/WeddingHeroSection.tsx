@@ -5,6 +5,8 @@ import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
+import DetailsSection from "../DetailsSection";
+import DressCodeSection from "../DressCodeSection";
 import OurStorySection from "../OurStorySection";
 
 function EditorialRule({ className = "" }: { className?: string }) {
@@ -170,6 +172,8 @@ export default function WeddingHeroSection() {
       <CountdownSection />
       <CelebrationSection />
       <OurStorySection />
+      <DressCodeSection />
+      <DetailsSection />
     </motion.div>
   );
 }
