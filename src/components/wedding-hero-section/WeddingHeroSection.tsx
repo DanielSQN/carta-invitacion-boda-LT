@@ -161,9 +161,9 @@ export default function WeddingHeroSection() {
   return (
     <motion.div
       className="paper-stack relative z-[8] mx-auto w-full bg-[#07111f] text-olive"
-      initial={{ opacity: 0, scale: 0.985 }}
+      initial={{ opacity: 1, scale: 1 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 1.2, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
       <HeroSection />

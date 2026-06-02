@@ -152,10 +152,8 @@ button {
   z-index: 65;
   overflow: hidden;
   pointer-events: none;
-  background: #fff9eb;
-  box-shadow:
-    0 1.4rem 3rem rgba(7, 24, 39, 0.32),
-    0 0 0 1px rgba(185, 150, 90, 0.18);
+  background: #071827;
+  box-shadow: 0 1.4rem 3rem rgba(7, 24, 39, 0.32);
   will-change: opacity, transform, width, height, top;
 }
 
@@ -167,8 +165,11 @@ button {
 
 .hero-transition-photo {
   overflow: hidden;
-  border: 1px solid rgba(185, 150, 90, 0.18);
-  background: #f7edd8;
+  background: #071827;
+}
+
+.hero-transition-image {
+  object-position: 52% 28%;
 }
 
 .hero-transition-blue-wash {

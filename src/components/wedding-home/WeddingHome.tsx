@@ -79,11 +79,13 @@ type WeddingHomeProps = {
 export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [showWeddingHero, setShowWeddingHero] = useState(false);
+  const [isHeroTransitioning, setIsHeroTransitioning] = useState(false);
   const [guestName, setGuestName] = useState(initialGuestName);
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const homeSceneRef = useRef<HTMLElement>(null);
+  const envelopeLetterRef = useRef<HTMLDivElement>(null);
   const transitionCardRef = useRef<HTMLDivElement>(null);
   const transitionWashRef = useRef<HTMLDivElement>(null);
 
@@ -120,46 +122,134 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion) {
-      const timer = window.setTimeout(() => setShowWeddingHero(true), 460);
+      const timer = window.setTimeout(() => {
+        setShowWeddingHero(true);
+        setIsHeroTransitioning(false);
+      }, 460);
       return () => window.clearTimeout(timer);
     }
 
     const ctx = gsap.context(() => {
+      const cardGeometry = {
+        centeredHeight: 0,
+        centeredLeft: 0,
+        centeredTop: 0,
+        centeredWidth: 0,
+      };
+
       gsap.set(transitionCardRef.current, {
         autoAlpha: 0,
-        borderRadius: "0.24rem",
-        height: "min(43vw, 186px)",
-        left: "50%",
-        padding: "0.44rem",
-        scale: 0.74,
-        top: "48%",
-        width: "min(62vw, 265px)",
-        xPercent: -50,
-        yPercent: -50,
+        borderRadius: "0.16rem",
+        height: 1,
+        left: 0,
+        padding: 0,
+        rotation: -7,
+        scale: 1,
+        top: 0,
+        transformOrigin: "50% 50%",
+        width: 1,
+        x: 0,
+        y: 0,
       });
       gsap.set(transitionWashRef.current, { autoAlpha: 0 });
 
       gsap
         .timeline({
           defaults: { ease: "power3.inOut" },
-          onComplete: () => setShowWeddingHero(true),
+          onComplete: () => {
+            setShowWeddingHero(true);
+
+            window.setTimeout(() => {
+              gsap.to(transitionCardRef.current, {
+                autoAlpha: 0,
+                duration: 0.72,
+                ease: "sine.out",
+                onComplete: () => setIsHeroTransitioning(false),
+              });
+            }, 160);
+          },
         })
-        .to(homeSceneRef.current, { duration: 0.46, opacity: 0.92, scale: 0.986 }, 0)
-        .to(transitionCardRef.current, { autoAlpha: 1, duration: 0.28, scale: 1 }, 0.28)
-        .to(homeSceneRef.current, { duration: 0.64, opacity: 0, y: -18 }, 0.78)
+        .to(homeSceneRef.current, { duration: 0.42, opacity: 0.98, scale: 0.996 }, 0)
+        .call(
+          () => {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const startRect = envelopeLetterRef.current?.getBoundingClientRect();
+            const measuredRect = startRect?.width && startRect?.height
+              ? startRect
+              : {
+                  height: Math.min(viewportWidth * 0.43, 186),
+                  left: viewportWidth * 0.19,
+                  top: viewportHeight * 0.39,
+                  width: Math.min(viewportWidth * 0.62, 265),
+                };
+            const centeredWidth = Math.min(viewportWidth * 0.78, 335);
+            const centeredHeight = centeredWidth * (measuredRect.height / measuredRect.width);
+
+            cardGeometry.centeredWidth = centeredWidth;
+            cardGeometry.centeredHeight = centeredHeight;
+            cardGeometry.centeredLeft = (viewportWidth - centeredWidth) / 2;
+            cardGeometry.centeredTop = (viewportHeight - centeredHeight) / 2;
+
+            gsap.set(transitionCardRef.current, {
+              autoAlpha: 0.62,
+              height: measuredRect.height,
+              left: measuredRect.left,
+              rotation: -7,
+              scale: 1,
+              scaleX: 1,
+              scaleY: 1,
+              top: measuredRect.top,
+              width: measuredRect.width,
+              x: 0,
+              y: 0,
+            });
+            gsap.set(envelopeLetterRef.current, { opacity: 0.62 });
+          },
+          [],
+          1.48,
+        )
+        .to(transitionCardRef.current, { autoAlpha: 0.78, duration: 0.34, ease: "sine.inOut" }, 1.48)
+        .to(transitionCardRef.current, { autoAlpha: 1, duration: 0.58, ease: "sine.out" }, 1.82)
+        .to(envelopeLetterRef.current, { autoAlpha: 0, duration: 0.42, ease: "sine.inOut" }, 1.62)
+        .to(
+          transitionCardRef.current,
+          {
+            duration: 0.72,
+            height: () => cardGeometry.centeredHeight,
+            left: () => cardGeometry.centeredLeft,
+            rotation: 0,
+            scale: 1,
+            scaleX: 1,
+            scaleY: 1,
+            top: () => cardGeometry.centeredTop,
+            width: () => cardGeometry.centeredWidth,
+            x: 0,
+            y: 0,
+          },
+          1.72,
+        )
+        .to(homeSceneRef.current, { duration: 0.72, opacity: 0, y: -14 }, 1.72)
         .to(
           transitionCardRef.current,
           {
             borderRadius: 0,
-            duration: 1.18,
+            duration: 1.14,
             height: "100svh",
+            left: 0,
             padding: 0,
-            top: "50%",
+            rotation: 0,
+            scale: 1,
+            scaleX: 1,
+            scaleY: 1,
+            top: 0,
             width: "100vw",
+            x: 0,
+            y: 0,
           },
-          0.52,
+          2.32,
         )
-        .to(transitionWashRef.current, { autoAlpha: 0.58, duration: 0.82, ease: "sine.inOut" }, 1.02);
+        .to(transitionWashRef.current, { autoAlpha: 0.54, duration: 0.78, ease: "sine.inOut" }, 2.62);
     });
 
     return () => ctx.revert();
@@ -196,6 +286,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
+      setIsHeroTransitioning(true);
       setIsEnvelopeOpen(true);
 
       const audio = audioRef.current;
@@ -304,22 +395,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           </div>
           <FloralCorners />
 
-          {isEnvelopeOpen ? (
-            <div ref={transitionCardRef} className="hero-transition-card" aria-hidden="true">
-              <div className="hero-transition-photo">
-                <Image
-                  src="/images/couple/couple-photo.webp?v=20260601-assets-2"
-                  alt=""
-                  fill
-                  sizes="100vw"
-                  className="object-cover object-center"
-                  priority
-                />
-              </div>
-              <div ref={transitionWashRef} className="hero-transition-blue-wash" />
-            </div>
-          ) : null}
-
           <motion.section
             ref={homeSceneRef}
             key="home"
@@ -329,7 +404,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
               <DecorativeText guestName={guestName} />
 
               <div className="wedding-envelope-stage relative z-[5] grid w-full place-items-center">
-                <Envelope isOpen={isEnvelopeOpen} onOpen={openInvitation} />
+                <Envelope isOpen={isEnvelopeOpen} letterRef={envelopeLetterRef} onOpen={openInvitation} />
 
                 {!isEnvelopeOpen ? (
                   <motion.button
@@ -352,6 +427,23 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           </motion.section>
         </>
       )}
+
+      {isHeroTransitioning ? (
+        <div ref={transitionCardRef} className="hero-transition-card" aria-hidden="true">
+          <div className="hero-transition-photo">
+            <Image
+              src="/images/couple/couple-photo.webp?v=20260601-assets-2"
+              alt=""
+              fill
+              sizes="100vw"
+              className="hero-transition-image object-cover"
+              priority
+            />
+          </div>
+          <div ref={transitionWashRef} className="hero-transition-blue-wash" />
+        </div>
+      ) : null}
+
     </main>
   );
 }

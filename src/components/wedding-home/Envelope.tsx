@@ -1,15 +1,17 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
+import type { RefObject } from "react";
 import WaxSeal from "./WaxSeal";
 
 const assetVersion = "20260601-assets-1";
 
 type EnvelopeProps = {
   isOpen: boolean;
+  letterRef?: RefObject<HTMLDivElement | null>;
   onOpen: () => void;
 };
 
-export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
+export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
   return (
     <motion.button
       type="button"
@@ -34,20 +36,22 @@ export default function Envelope({ isOpen, onOpen }: EnvelopeProps) {
         <div className="absolute inset-x-[5%] bottom-[-10%] h-[34%] rounded-[50%] bg-stone-900/20 blur-2xl" />
 
         <motion.div
-          className="envelope-letter-insert absolute left-1/2 top-[8%] z-[4] h-[78%] w-[77%] -translate-x-1/2 overflow-hidden rounded-sm border border-soft-gold/25 bg-[#fff9eb] p-[4.2%] shadow-[0_20px_42px_rgba(77,58,35,0.16)]"
+          ref={letterRef}
+          className="envelope-letter-insert absolute left-1/2 top-[8%] z-[4] h-[78%] w-[77%] -translate-x-1/2 overflow-hidden rounded-sm shadow-[0_20px_42px_rgba(77,58,35,0.16)]"
           initial={false}
-          animate={isOpen ? { y: -46, scaleY: 1.18, opacity: 1 } : { y: 18, scaleY: 0.68, opacity: 1 }}
-          transition={{ duration: 0.85, delay: isOpen ? 0.34 : 0, ease: [0.22, 1, 0.36, 1] }}
+          animate={isOpen ? { y: -178, scale: 1.04, scaleY: 1, opacity: 0.62 } : { y: 18, scale: 1, scaleY: 0.68, opacity: 1 }}
+          transition={{ duration: 1.18, delay: isOpen ? 0.26 : 0, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="relative h-full w-full overflow-hidden rounded-[0.16rem] border border-soft-gold/18 bg-[#f7edd8]">
+          <div className="relative h-full w-full overflow-hidden rounded-sm">
             <Image
               src="/images/couple/couple-photo.webp?v=20260601-assets-2"
               alt=""
               fill
               sizes="(max-width: 430px) 58vw, 245px"
-              className="object-cover object-center"
+              className="hero-transition-image object-cover"
             />
           </div>
+          <div className="envelope-letter-wash hero-transition-blue-wash" aria-hidden="true" />
         </motion.div>
 
         <div className="absolute inset-0 z-[5]">
