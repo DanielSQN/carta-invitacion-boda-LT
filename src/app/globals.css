@@ -2085,11 +2085,15 @@ button {
 }
 
 .attendance-section {
-  padding-bottom: clamp(5rem, 22vw, 8rem);
+  display: grid;
+  min-height: auto;
+  align-content: start;
+  padding-bottom: 0;
 }
 
 .attendance-inner {
-  padding-bottom: clamp(2rem, 8vw, 4rem);
+  padding-top: calc(env(safe-area-inset-top) + clamp(2.8rem, 10vw, 4rem));
+  padding-bottom: clamp(1.1rem, 4vw, 2rem);
 }
 
 .attendance-form {
@@ -2235,10 +2239,12 @@ button {
 }
 
 .attendance-footer-envelope {
-  position: absolute;
-  inset-inline: 0;
-  bottom: clamp(-4.4rem, -14vw, -2.6rem);
+  position: relative;
+  align-self: end;
   z-index: 2;
+  width: 100%;
+  margin-top: auto;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -2246,18 +2252,25 @@ button {
   display: block;
   width: 100%;
   height: auto;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center bottom;
+}
+
+@media (max-width: 430px) {
+  .attendance-inner {
+    padding-right: clamp(1rem, 4vw, 1.25rem);
+    padding-left: clamp(1rem, 4vw, 1.25rem);
+  }
+
+  .attendance-footer-envelope {
+    margin-top: clamp(1.2rem, 5vw, 2rem);
+  }
 }
 
 @media (min-width: 760px) {
   .memories-photo-frame {
     aspect-ratio: 16 / 10;
     width: min(100%, 36rem);
-  }
-
-  .attendance-name-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

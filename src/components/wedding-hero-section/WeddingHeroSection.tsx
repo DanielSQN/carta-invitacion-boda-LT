@@ -385,7 +385,7 @@ function AttendanceSection() {
           src="/images/ui/footer-envelope.webp"
           alt=""
           width={900}
-          height={420}
+          height={640}
           sizes="100vw"
         />
       </div>
