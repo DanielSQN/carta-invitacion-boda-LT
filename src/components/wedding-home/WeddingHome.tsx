@@ -13,7 +13,9 @@ import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 const preloadedInvitationAssets = [
   "/images/couple/couple-photo.webp?v=20260601-assets-2",
   "/images/couple/_DSC0723.webp?v=20260601-assets-1",
+  "/images/couple/_DSC0953.webp",
   "/images/couple/_DSC1252.webp",
+  "/images/details/background-dress-code.webp",
   "/images/details/dress-code.webp",
   "/images/story/001-heart.webp",
   "/images/story/002-wedding-rings.webp",
@@ -27,6 +29,7 @@ const preloadedInvitationAssets = [
   "/images/venues/hacienda_SH.webp",
   "/images/ui/envelope.webp?v=20260601-assets-1",
   "/images/ui/wax-seal.webp?v=20260601-assets-1",
+  "/images/ui/footer-envelope.webp",
   "/images/paper/tear-1.webp",
   "/images/paper/tear-2.webp",
 ];
@@ -53,6 +56,15 @@ function SwipeDownIcon() {
       <path d="M12.5 39.5L21 48L29.5 39.5" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M13.5 5H28.5" stroke="currentColor" strokeWidth="0.85" strokeLinecap="round" opacity="0.42" />
     </svg>
+  );
+}
+
+function SwipeDownPrompt() {
+  return (
+    <div className="fixed-swipe-down-content">
+      <SwipeDownIcon />
+      <span>Confirmar asistencia</span>
+    </div>
   );
 }
 
@@ -335,7 +347,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         <motion.button
           key="music-control"
           type="button"
-          className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-[#f3ede3] shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
+          className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-white shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
           onClick={toggleMusic}
           initial={{ opacity: 0, y: 18, scale: 0.86 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -361,7 +373,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           exit={{ opacity: 0, y: 10, scale: 0.94 }}
           transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
         >
-          <SwipeDownIcon />
+          <SwipeDownPrompt />
         </motion.div>
       ) : null}
     </AnimatePresence>

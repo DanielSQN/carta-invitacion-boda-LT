@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { type FormEvent, type TouchEvent, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
 import DetailsSection from "../DetailsSection";
@@ -159,6 +160,239 @@ function HeroSection() {
   );
 }
 
+const memoryPhotos = [
+  {
+    src: "/images/couple/_DSC0723.webp?v=20260601-assets-1",
+    alt: "Luisa y Jhonnatan sonriendo juntos",
+  },
+  {
+    src: "/images/couple/_DSC0953.webp",
+    alt: "Recuerdo de Luisa y Jhonnatan",
+  },
+  {
+    src: "/images/couple/_DSC1252.webp",
+    alt: "Luisa y Jhonnatan en una foto especial",
+  },
+  {
+    src: "/images/couple/couple-photo.webp?v=20260601-assets-2",
+    alt: "Foto de la pareja",
+  },
+];
+
+function useRevealSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        section.classList.toggle("is-visible", entry.isIntersecting);
+      },
+      {
+        threshold: 0.22,
+        rootMargin: "-10% 0px -10% 0px",
+      },
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return sectionRef;
+}
+
+function MemoriesSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const sectionRef = useRevealSection();
+  const touchStartXRef = useRef<number | null>(null);
+  const currentPhoto = memoryPhotos[currentIndex];
+
+  const goToPrevious = () => {
+    setCurrentIndex((index) => (index === 0 ? memoryPhotos.length - 1 : index - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((index) => (index === memoryPhotos.length - 1 ? 0 : index + 1));
+  };
+
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartXRef.current;
+    const endX = event.changedTouches[0]?.clientX;
+
+    touchStartXRef.current = null;
+
+    if (startX === null || endX === undefined) {
+      return;
+    }
+
+    const deltaX = endX - startX;
+
+    if (Math.abs(deltaX) < 42) {
+      return;
+    }
+
+    if (deltaX > 0) {
+      goToPrevious();
+      return;
+    }
+
+    goToNext();
+  };
+
+  return (
+    <section ref={sectionRef} className="memories-section finale-section" aria-labelledby="memories-title">
+      <div className="finale-section-bg" aria-hidden="true" />
+      <div className="finale-inner">
+        <div className="finale-heading finale-reveal">
+          <span>Recuerdos</span>
+          <h2 id="memories-title">Algunos recuerdos</h2>
+          <p>Momentos que guardamos con amor y que nos trajeron hasta este dia.</p>
+        </div>
+
+        <div className="memories-carousel finale-reveal">
+          <div className="memories-photo-frame">
+            <div className="memories-touch-area" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+              <Image
+                key={currentPhoto.src}
+                src={currentPhoto.src}
+                alt={currentPhoto.alt}
+                fill
+                sizes="(max-width: 760px) 88vw, 34rem"
+                className="memories-photo"
+              />
+            </div>
+          </div>
+
+          <div className="memories-controls" aria-label="Controles del carrusel">
+            <button type="button" onClick={goToPrevious} aria-label="Foto anterior">
+              ‹
+            </button>
+            <div className="memories-dots" aria-hidden="true">
+              {memoryPhotos.map((photo, index) => (
+                <span key={photo.src} className={index === currentIndex ? "is-active" : ""} />
+              ))}
+            </div>
+            <button type="button" onClick={goToNext} aria-label="Siguiente foto">
+              ›
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AttendanceSection() {
+  const [guestCount, setGuestCount] = useState(1);
+  const [guestNames, setGuestNames] = useState([""]);
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const sectionRef = useRevealSection();
+
+  const updateGuestCount = (value: number) => {
+    const nextValue = Math.min(Math.max(value, 1), 6);
+    setGuestCount(nextValue);
+    setGuestNames((names) =>
+      Array.from({ length: nextValue }, (_, index) => names[index] ?? ""),
+    );
+    setIsConfirmed(false);
+  };
+
+  const updateGuestName = (index: number, value: string) => {
+    setGuestNames((names) => names.map((name, nameIndex) => (nameIndex === index ? value : name)));
+    setIsConfirmed(false);
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsConfirmed(true);
+  };
+
+  return (
+    <section ref={sectionRef} className="attendance-section finale-section" aria-labelledby="attendance-title">
+      <div className="finale-section-bg finale-section-bg--attendance" aria-hidden="true" />
+      <div className="finale-inner attendance-inner">
+        <div className="finale-heading finale-reveal">
+          <span>RSVP</span>
+          <h2 id="attendance-title">Confirmar tu asistencia</h2>
+          <p>Ayudanos a preparar cada detalle con amor.</p>
+        </div>
+
+        <form className="attendance-form finale-reveal" onSubmit={handleSubmit}>
+          <div className="attendance-quantity-field">
+            <span>Cantidad de asistentes</span>
+            <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
+              <button
+                type="button"
+                onClick={() => updateGuestCount(guestCount - 1)}
+                disabled={guestCount <= 1}
+                aria-label="Disminuir cantidad de asistentes"
+              >
+                −
+              </button>
+              <output aria-live="polite" aria-label={`${guestCount} asistentes`}>
+                {guestCount}
+              </output>
+              <button
+                type="button"
+                onClick={() => updateGuestCount(guestCount + 1)}
+                disabled={guestCount >= 6}
+                aria-label="Aumentar cantidad de asistentes"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <div className="attendance-name-grid">
+            {guestNames.map((name, index) => (
+              <label key={index} className="attendance-field">
+                <span>{guestCount === 1 ? "Nombre" : `Nombre ${index + 1}`}</span>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(event) => updateGuestName(index, event.target.value)}
+                  placeholder="Nombre completo"
+                  required
+                />
+              </label>
+            ))}
+          </div>
+
+          <button className="attendance-submit" type="submit">
+            Confirmar
+          </button>
+
+          {isConfirmed ? (
+            <p className="attendance-confirmed" role="status">
+              Gracias, tu confirmacion quedo registrada visualmente.
+            </p>
+          ) : null}
+        </form>
+      </div>
+
+      <div className="attendance-footer-envelope" aria-hidden="true">
+        <Image
+          src="/images/ui/footer-envelope.webp"
+          alt=""
+          width={900}
+          height={420}
+          sizes="100vw"
+        />
+      </div>
+    </section>
+  );
+}
+
 export default function WeddingHeroSection() {
   return (
     <motion.div
@@ -174,6 +408,8 @@ export default function WeddingHeroSection() {
       <OurStorySection />
       <DressCodeSection />
       <DetailsSection />
+      <MemoriesSection />
+      <AttendanceSection />
     </motion.div>
   );
 }
