@@ -1795,17 +1795,16 @@ button {
 
 .story-year {
   display: block;
-  color: #5f8fb4;
+  color: #c79a4a;
   font-family: var(--font-great-vibes), "Brush Script MT", cursive;
   font-size: clamp(1.28rem, 5.85vw, 1.82rem);
   font-weight: 600;
   letter-spacing: 0;
   line-height: 0.95;
   text-shadow:
-    0 0.52rem 1rem rgba(7, 24, 39, 0.52),
-    0 0 0.38rem rgba(20, 55, 86, 0.72),
-    0 0 0.86rem rgba(95, 143, 180, 0.52),
-    0 0 0.42rem rgba(255, 250, 241, 0.26);
+    0 0.42rem 0.82rem rgba(0, 0, 0, 0.78),
+    0 0 0.24rem rgba(0, 0, 0, 0.5),
+    0 0 0.42rem rgba(199, 154, 74, 0.22);
 }
 
 .story-flourish {
