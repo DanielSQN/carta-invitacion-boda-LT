@@ -53,28 +53,6 @@ function MarqueeHeart({ className = "" }: { className?: string }) {
   return <HeartIcon className={`countdown-marquee-heart ${className}`} />;
 }
 
-function OrbitRings() {
-  return (
-    <svg className="countdown-orbits" viewBox="0 0 360 360" fill="none" aria-hidden="true" focusable="false">
-      <circle className="countdown-orbit countdown-orbit--blue" cx="180" cy="180" r="156" />
-      <circle className="countdown-orbit countdown-orbit--slate" cx="180" cy="180" r="134" />
-      <circle className="countdown-orbit countdown-orbit--gold" cx="180" cy="180" r="112" />
-      <circle className="countdown-orbit-dot countdown-orbit-dot--top" cx="180" cy="44" r="4.5" />
-      <circle className="countdown-orbit-dot countdown-orbit-dot--right" cx="316" cy="180" r="3.6" />
-      <circle className="countdown-orbit-dot countdown-orbit-dot--bottom" cx="180" cy="316" r="4.5" />
-      <circle className="countdown-orbit-dot countdown-orbit-dot--left" cx="44" cy="180" r="3.6" />
-      <path
-        className="countdown-orbit-heart countdown-orbit-heart--top-right"
-        d="M255 89C248.9 84.55 245.7 81.1 246.5 77.85C247.25 74.9 251.05 74.25 255 78.4C258.95 74.25 262.75 74.9 263.5 77.85C264.3 81.1 261.1 84.55 255 89Z"
-      />
-      <path
-        className="countdown-orbit-heart countdown-orbit-heart--bottom-left"
-        d="M105 276C98.9 271.55 95.7 268.1 96.5 264.85C97.25 261.9 101.05 261.25 105 265.4C108.95 261.25 112.75 261.9 113.5 264.85C114.3 268.1 111.1 271.55 105 276Z"
-      />
-    </svg>
-  );
-}
-
 function GoogleCalendarIcon() {
   return (
     <svg className="countdown-action-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
@@ -93,7 +71,6 @@ export default function CountdownSection() {
   const topRef = useRef<HTMLDivElement>(null);
   const quoteTextRef = useRef<HTMLSpanElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
-  const ringsRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [countdown, setCountdown] = useState<CountdownTime>(initialCountdown);
@@ -117,12 +94,12 @@ export default function CountdownSection() {
       gsap.set(imageRef.current, { yPercent: -4, scale: 1.08, force3D: true });
       gsap.set(topRef.current, { opacity: 1 });
       gsap.set(quoteTextRef.current, { xPercent: 0, opacity: 1 });
-      gsap.set([titleRef.current, ringsRef.current, metaRef.current, ...itemRefs.current], { opacity: 0 });
+      gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], { opacity: 0 });
 
       if (reduceMotion) {
         gsap.set(imageRef.current, { yPercent: 0, scale: 1 });
         gsap.set(quoteTextRef.current, { opacity: 1, xPercent: 0 });
-        gsap.set([titleRef.current, ringsRef.current, metaRef.current, ...itemRefs.current], {
+        gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], {
           opacity: 1,
           y: 0,
           scale: 1,
@@ -141,7 +118,6 @@ export default function CountdownSection() {
         })
         .to(quoteTextRef.current, { xPercent: -50, duration: 14, repeat: -1, ease: "none" }, 0)
         .fromTo(titleRef.current, { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.86, ease: "power2.out" }, 0.22)
-        .fromTo(ringsRef.current, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1.08, ease: "power2.out" }, 0.3)
         .fromTo(
           itemRefs.current,
           { opacity: 0, y: 24 },
@@ -163,10 +139,6 @@ export default function CountdownSection() {
           ...triggerDefaults,
         },
       });
-
-      gsap.to(".countdown-orbit--blue", { rotate: 360, transformOrigin: "50% 50%", duration: 32, repeat: -1, ease: "none" });
-      gsap.to(".countdown-orbit--slate", { rotate: -360, transformOrigin: "50% 50%", duration: 42, repeat: -1, ease: "none" });
-      gsap.to(".countdown-orbit--gold", { rotate: 360, transformOrigin: "50% 50%", duration: 55, repeat: -1, ease: "none" });
 
       ScrollTrigger.refresh();
     }, sectionRef);
@@ -220,10 +192,6 @@ export default function CountdownSection() {
         </div>
 
         <div className="countdown-content">
-          <div ref={ringsRef} className="countdown-orbit-wrap">
-            <OrbitRings />
-          </div>
-
           <div ref={titleRef} className="countdown-title-block">
             <h2 id="countdown-title">Faltan</h2>
             <span aria-hidden="true" />
@@ -238,7 +206,9 @@ export default function CountdownSection() {
                 }}
                 className="countdown-unit"
               >
-                <strong>{String(item.value).padStart(2, "0")}</strong>
+                <strong key={`${item.label}-${item.value}`} className="countdown-unit-value">
+                  {String(item.value).padStart(2, "0")}
+                </strong>
                 <span>{item.label}</span>
               </div>
             ))}
