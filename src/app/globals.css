@@ -92,8 +92,9 @@ button {
 .floral-corner {
   position: absolute;
   height: auto;
-  opacity: 0.94;
+  opacity: 0.66;
   user-select: none;
+  filter: saturate(0.82) sepia(0.04) hue-rotate(172deg) drop-shadow(0 0.8rem 1.4rem rgba(7, 17, 31, 0.08));
 }
 
 .floral-corner img {
@@ -103,21 +104,23 @@ button {
 }
 
 .floral-corner-top {
-  top: clamp(-1.65rem, -2.8dvh, -0.5rem);
-  right: clamp(-2.25rem, -6vw, -0.85rem);
-  width: min(86vw, 43dvh, 390px);
+  top: clamp(-2.1rem, -4dvh, -0.8rem);
+  right: clamp(-2.45rem, -7vw, -0.9rem);
+  width: min(74vw, 36dvh, 320px);
 }
 
 .floral-corner-bottom {
-  bottom: clamp(-2.6rem, -5.2dvh, -1.05rem);
-  left: clamp(-2.8rem, -7vw, -0.9rem);
-  width: min(82vw, 45dvh, 370px);
+  bottom: clamp(-3.6rem, -7dvh, -1.4rem);
+  left: clamp(-3.2rem, -8vw, -1.1rem);
+  width: min(60vw, 36dvh, 280px);
+  transform: rotate(-8deg);
 }
 
 .floral-corner-bottom-right {
-  right: clamp(-3.25rem, -9vw, -1.15rem);
-  bottom: clamp(-4.1rem, -8.5dvh, -1.75rem);
-  width: min(64vw, 34dvh, 285px);
+  right: clamp(-3.1rem, -9vw, -1.15rem);
+  bottom: clamp(-3.8rem, -8dvh, -1.5rem);
+  width: min(42vw, 28dvh, 205px);
+  transform: rotate(9deg);
 }
 
 .music-control-button {
@@ -1051,9 +1054,10 @@ button {
   min-height: 0;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  padding: clamp(1.05rem, 5svh, 2.6rem) clamp(1rem, 4vw, 3rem) clamp(1.2rem, 5svh, 2.9rem);
+  justify-content: center;
+  padding: clamp(0.85rem, 3.6svh, 1.8rem) clamp(1rem, 4vw, 3rem) clamp(1.2rem, 5svh, 2.9rem);
   text-align: center;
+  transform: translateY(clamp(-2.8rem, -7svh, -1.25rem));
 }
 
 .countdown-orbit-wrap {
@@ -1310,7 +1314,8 @@ button {
   }
 
   .countdown-content {
-    padding-top: clamp(1.15rem, 4.2svh, 2.35rem);
+    padding-top: clamp(1.1rem, 3.4svh, 2.2rem);
+    transform: translateY(clamp(-2.4rem, -5svh, -1.2rem));
   }
 
   .countdown-grid {
@@ -1345,7 +1350,8 @@ button {
   }
 
   .countdown-content {
-    padding-top: clamp(1.25rem, 3.4svh, 2.45rem);
+    padding-top: clamp(1.3rem, 3.4svh, 2.5rem);
+    transform: translateY(clamp(-2.2rem, -4.2svh, -1.1rem));
   }
 
   .countdown-title-block h2 {

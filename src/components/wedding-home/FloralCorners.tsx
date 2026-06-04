@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const assetVersion = "20260526-performance-1";
+const assetVersion = "20260604-metal-blue";
 
 export default function FloralCorners() {
   return (
@@ -13,10 +13,10 @@ export default function FloralCorners() {
         transition={{ delay: 0.28, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
-          src={`/images/florals/floral-top.webp?v=${assetVersion}`}
+          src={`/images/florals/generated/blue-breath-corner-top.webp?v=${assetVersion}`}
           alt=""
-          width={640}
-          height={427}
+          width={691}
+          height={760}
           priority
         />
       </motion.div>
@@ -27,10 +27,10 @@ export default function FloralCorners() {
         transition={{ delay: 0.44, duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
-          src={`/images/florals/floral-bottom.webp?v=${assetVersion}`}
+          src={`/images/florals/generated/blue-breath-corner-bottom.webp?v=${assetVersion}`}
           alt=""
-          width={560}
-          height={660}
+          width={507}
+          height={760}
           priority
         />
       </motion.div>
@@ -41,10 +41,10 @@ export default function FloralCorners() {
         transition={{ delay: 0.54, duration: 0.95, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
-          src={`/images/florals/floral-bottom-right.webp?v=${assetVersion}`}
+          src={`/images/florals/generated/blue-breath-sprig.webp?v=${assetVersion}`}
           alt=""
-          width={440}
-          height={660}
+          width={507}
+          height={760}
           priority
         />
       </motion.div>
