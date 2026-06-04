@@ -92,9 +92,9 @@ button {
 .floral-corner {
   position: absolute;
   height: auto;
-  opacity: 0.66;
+  opacity: 0.24;
   user-select: none;
-  filter: saturate(0.82) sepia(0.04) hue-rotate(172deg) drop-shadow(0 0.8rem 1.4rem rgba(7, 17, 31, 0.08));
+  filter: saturate(0.74) sepia(0.04) hue-rotate(172deg) drop-shadow(0 0.8rem 1.4rem rgba(7, 17, 31, 0.05));
 }
 
 .floral-corner img {
@@ -104,21 +104,21 @@ button {
 }
 
 .floral-corner-top {
-  top: clamp(-2.1rem, -4dvh, -0.8rem);
-  right: clamp(-2.45rem, -7vw, -0.9rem);
+  top: clamp(-4.2rem, -8dvh, -1.8rem);
+  right: clamp(-4.6rem, -14vw, -2.1rem);
   width: min(74vw, 36dvh, 320px);
 }
 
 .floral-corner-bottom {
-  bottom: clamp(-3.6rem, -7dvh, -1.4rem);
-  left: clamp(-3.2rem, -8vw, -1.1rem);
+  bottom: clamp(-5.8rem, -11dvh, -2.6rem);
+  left: clamp(-5.2rem, -14vw, -2.35rem);
   width: min(60vw, 36dvh, 280px);
   transform: rotate(-8deg);
 }
 
 .floral-corner-bottom-right {
-  right: clamp(-3.1rem, -9vw, -1.15rem);
-  bottom: clamp(-3.8rem, -8dvh, -1.5rem);
+  right: clamp(-7.4rem, -22vw, -3.6rem);
+  bottom: clamp(-5.2rem, -11dvh, -2.35rem);
   width: min(42vw, 28dvh, 205px);
   transform: rotate(9deg);
 }
@@ -380,6 +380,20 @@ button {
     rgba(0, 0, 0, 0.9) 5.3rem,
     #000 7rem
   );
+}
+
+.wedding-countdown-copy,
+.wedding-countdown-label {
+  color: #254f78;
+  text-shadow:
+    0 0.08rem 0.14rem rgba(255, 250, 241, 0.58),
+    0 0.2rem 0.42rem rgba(37, 79, 120, 0.24);
+}
+
+.wedding-countdown-value {
+  text-shadow:
+    0 0.1rem 0.18rem rgba(255, 250, 241, 0.48),
+    0 0.24rem 0.48rem rgba(37, 79, 120, 0.26);
 }
 
 .paper-stack {
@@ -859,7 +873,7 @@ button {
   position: absolute;
   width: clamp(9rem, 44vw, 17rem);
   height: auto;
-  opacity: 0.18;
+  opacity: 0.24;
   filter: saturate(0.82) sepia(0.08) drop-shadow(0 0.9rem 1.5rem rgba(7, 17, 31, 0.16));
   mix-blend-mode: screen;
   user-select: none;
@@ -898,7 +912,7 @@ button {
 
 .section-frame-decor--story .section-blue-floral,
 .section-frame-decor--countdown .section-blue-floral {
-  opacity: 0.14;
+  opacity: 0.2;
 }
 
 .section-frame-decor--dress .section-blue-floral--corner-bottom {
@@ -911,11 +925,11 @@ button {
 .section-frame-decor--attendance .section-blue-floral--sprig {
   bottom: auto;
   top: clamp(6.5rem, 24vw, 9rem);
-  opacity: 0.14;
+  opacity: 0.2;
 }
 
 .section-frame-decor--attendance .section-blue-floral--corner-bottom {
-  opacity: 0.1;
+  opacity: 0.16;
 }
 
 .countdown-section {
@@ -1201,11 +1215,15 @@ button {
 .countdown-unit span {
   display: block;
   margin-top: 0.34rem;
-  color: #7f9dbb;
+  color: #254f78;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(0.44rem, 2vw, 0.62rem);
   font-weight: 700;
   letter-spacing: 0.15em;
+  text-shadow:
+    0 0.08rem 0.12rem rgba(255, 250, 241, 0.48),
+    0 0.22rem 0.48rem rgba(7, 17, 31, 0.48),
+    0 0 0.55rem rgba(255, 250, 241, 0.2);
 }
 
 .countdown-meta {
@@ -1215,12 +1233,15 @@ button {
 
 .countdown-date {
   margin: 0;
-  color: rgba(243, 237, 227, 0.94);
+  color: rgba(243, 237, 227, 0.96);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(0.86rem, 3.5vw, 1.12rem);
   font-weight: 600;
   letter-spacing: 0.34em;
   text-indent: 0.34em;
+  text-shadow:
+    0 0.18rem 0.36rem rgba(7, 17, 31, 0.78),
+    0 0 0.58rem rgba(37, 79, 120, 0.48);
 }
 
 .countdown-actions {
@@ -2285,7 +2306,9 @@ button {
   overflow: hidden;
   border: clamp(0.42rem, 1.7vw, 0.7rem) solid rgba(255, 254, 248, 0.98);
   border-bottom-width: clamp(0.9rem, 3.8vw, 1.35rem);
-  background: #fffaf1;
+  background:
+    linear-gradient(180deg, rgba(243, 237, 227, 0.72), rgba(95, 143, 180, 0.18)),
+    #e9edf0;
   box-shadow:
     0 1.15rem 2rem rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(7, 24, 39, 0.08);

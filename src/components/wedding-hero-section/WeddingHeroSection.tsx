@@ -275,6 +275,7 @@ function MemoriesSection() {
                 src={photo.src}
                 alt={photo.alt}
                 fill
+                loading="eager"
                 sizes="(max-width: 760px) 46vw, 18rem"
                 className="memories-photo"
               />
