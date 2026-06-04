@@ -104,8 +104,8 @@ button {
 }
 
 .floral-corner-top {
-  top: clamp(-4.2rem, -8dvh, -1.8rem);
-  right: clamp(-4.6rem, -14vw, -2.1rem);
+  top: clamp(-2.8rem, -5.6dvh, -1.05rem);
+  right: clamp(-3rem, -8.5vw, -1.15rem);
   width: min(74vw, 36dvh, 320px);
 }
 
@@ -1215,15 +1215,15 @@ button {
 .countdown-unit span {
   display: block;
   margin-top: 0.34rem;
-  color: #254f78;
+  color: rgba(255, 250, 241, 0.96);
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(0.44rem, 2vw, 0.62rem);
   font-weight: 700;
   letter-spacing: 0.15em;
   text-shadow:
-    0 0.08rem 0.12rem rgba(255, 250, 241, 0.48),
-    0 0.22rem 0.48rem rgba(7, 17, 31, 0.48),
-    0 0 0.55rem rgba(255, 250, 241, 0.2);
+    0 0.1rem 0.16rem rgba(7, 17, 31, 0.82),
+    0 0.26rem 0.52rem rgba(7, 17, 31, 0.58),
+    0 0 0.42rem rgba(255, 250, 241, 0.18);
 }
 
 .countdown-meta {
