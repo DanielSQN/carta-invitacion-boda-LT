@@ -192,7 +192,10 @@ function useRevealSection() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        section.classList.toggle("is-visible", entry.isIntersecting);
+        if (entry.isIntersecting) {
+          section.classList.add("is-visible");
+          observer.disconnect();
+        }
       },
       {
         threshold: 0.22,
@@ -212,9 +215,25 @@ function MemoriesSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const sectionRef = useRevealSection();
   const touchStartXRef = useRef<number | null>(null);
-  const currentPhoto = memoryPhotos[currentIndex];
-  const previousPhoto = memoryPhotos[currentIndex === 0 ? memoryPhotos.length - 1 : currentIndex - 1];
-  const nextPhoto = memoryPhotos[currentIndex === memoryPhotos.length - 1 ? 0 : currentIndex + 1];
+
+  const getMemoryClassName = (index: number) => {
+    const previousIndex = currentIndex === 0 ? memoryPhotos.length - 1 : currentIndex - 1;
+    const nextIndex = currentIndex === memoryPhotos.length - 1 ? 0 : currentIndex + 1;
+
+    if (index === currentIndex) {
+      return "memories-print--center";
+    }
+
+    if (index === previousIndex) {
+      return "memories-print--left";
+    }
+
+    if (index === nextIndex) {
+      return "memories-print--right";
+    }
+
+    return "memories-print--hidden";
+  };
 
   const goToPrevious = () => {
     setCurrentIndex((index) => (index === 0 ? memoryPhotos.length - 1 : index - 1));
@@ -265,22 +284,26 @@ function MemoriesSection() {
 
         <div className="memories-carousel finale-reveal">
           <div className="memories-collage memories-touch-area" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-            {[
-              { photo: previousPhoto, className: "memories-print--left" },
-              { photo: currentPhoto, className: "memories-print--center" },
-              { photo: nextPhoto, className: "memories-print--right" },
-            ].map(({ photo, className }) => (
-              <figure key={`${photo.src}-${className}`} className={`memories-print ${className}`}>
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                loading="eager"
-                sizes="(max-width: 760px) 46vw, 18rem"
-                className="memories-photo"
-              />
-              </figure>
-            ))}
+            {memoryPhotos.map((photo, index) => {
+              const className = getMemoryClassName(index);
+
+              return (
+                <figure
+                  key={photo.src}
+                  className={`memories-print ${className}`}
+                  aria-hidden={className === "memories-print--hidden"}
+                >
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    fill
+                    loading="eager"
+                    sizes="(max-width: 760px) 46vw, 18rem"
+                    className="memories-photo"
+                  />
+                </figure>
+              );
+            })}
           </div>
 
           <div className="memories-controls" aria-label="Controles del carrusel">

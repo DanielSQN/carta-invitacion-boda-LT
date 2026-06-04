@@ -39,7 +39,7 @@ export default function OurStorySection() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 76%",
-            toggleActions: "play none none reverse",
+            toggleActions: "play none none none",
             ...triggerDefaults,
           },
         })
@@ -58,7 +58,7 @@ export default function OurStorySection() {
             scrollTrigger: {
               trigger: item,
               start: "top 86%",
-              toggleActions: "play none none reverse",
+              toggleActions: "play none none none",
               ...triggerDefaults,
             },
           },

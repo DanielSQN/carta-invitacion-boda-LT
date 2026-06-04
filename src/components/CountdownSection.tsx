@@ -112,7 +112,7 @@ export default function CountdownSection() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 78%",
-            toggleActions: "play none none reverse",
+            toggleActions: "play none none none",
             ...triggerDefaults,
           },
         })
