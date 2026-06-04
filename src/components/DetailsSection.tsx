@@ -3,6 +3,7 @@
 import { Check, Copy, Gift, Mail } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import SectionFrameDecor from "./SectionFrameDecor";
 
 const virtualQrSrc = "/images/details/qr-transferencia.svg";
 const brebKey = "@miBodaLT";
@@ -49,6 +50,7 @@ export default function DetailsSection() {
 
   return (
     <section className="details-section" aria-labelledby="details-title">
+      <SectionFrameDecor variant="details" />
       <div className="details-bg" aria-hidden="true">
         <Image src="/images/couple/_DSC1252.webp" alt="" fill sizes="100vw" className="details-bg-image" />
       </div>

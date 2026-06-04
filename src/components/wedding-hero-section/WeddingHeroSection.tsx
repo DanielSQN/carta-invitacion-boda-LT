@@ -6,6 +6,7 @@ import Image from "next/image";
 import { type FormEvent, type TouchEvent, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
+import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
 import OurStorySection from "../OurStorySection";
@@ -212,6 +213,8 @@ function MemoriesSection() {
   const sectionRef = useRevealSection();
   const touchStartXRef = useRef<number | null>(null);
   const currentPhoto = memoryPhotos[currentIndex];
+  const previousPhoto = memoryPhotos[currentIndex === 0 ? memoryPhotos.length - 1 : currentIndex - 1];
+  const nextPhoto = memoryPhotos[currentIndex === memoryPhotos.length - 1 ? 0 : currentIndex + 1];
 
   const goToPrevious = () => {
     setCurrentIndex((index) => (index === 0 ? memoryPhotos.length - 1 : index - 1));
@@ -251,6 +254,7 @@ function MemoriesSection() {
 
   return (
     <section ref={sectionRef} className="memories-section finale-section" aria-labelledby="memories-title">
+      <SectionFrameDecor variant="memories" />
       <div className="finale-section-bg" aria-hidden="true" />
       <div className="finale-inner">
         <div className="finale-heading finale-reveal">
@@ -260,17 +264,22 @@ function MemoriesSection() {
         </div>
 
         <div className="memories-carousel finale-reveal">
-          <div className="memories-photo-frame">
-            <div className="memories-touch-area" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          <div className="memories-collage memories-touch-area" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+            {[
+              { photo: previousPhoto, className: "memories-print--left" },
+              { photo: currentPhoto, className: "memories-print--center" },
+              { photo: nextPhoto, className: "memories-print--right" },
+            ].map(({ photo, className }) => (
+              <figure key={`${photo.src}-${className}`} className={`memories-print ${className}`}>
               <Image
-                key={currentPhoto.src}
-                src={currentPhoto.src}
-                alt={currentPhoto.alt}
+                src={photo.src}
+                alt={photo.alt}
                 fill
-                sizes="(max-width: 760px) 88vw, 34rem"
+                sizes="(max-width: 760px) 46vw, 18rem"
                 className="memories-photo"
               />
-            </div>
+              </figure>
+            ))}
           </div>
 
           <div className="memories-controls" aria-label="Controles del carrusel">
@@ -319,6 +328,7 @@ function AttendanceSection() {
 
   return (
     <section ref={sectionRef} className="attendance-section finale-section" aria-labelledby="attendance-title">
+      <SectionFrameDecor variant="attendance" />
       <div className="finale-section-bg finale-section-bg--attendance" aria-hidden="true" />
       <div className="finale-inner attendance-inner">
         <div className="finale-heading finale-reveal">

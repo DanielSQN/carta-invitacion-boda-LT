@@ -691,7 +691,7 @@ button {
 .fixed-swipe-down-content {
   display: grid;
   justify-items: center;
-  gap: 0.12rem;
+  gap: 0.16rem;
 }
 
 .fixed-swipe-down-content span {
@@ -705,6 +705,34 @@ button {
   text-shadow:
     0 0.18rem 0.32rem rgba(7, 17, 31, 0.9),
     0 0 0.7rem rgba(7, 17, 31, 0.72);
+}
+
+.fixed-swipe-rule {
+  display: grid;
+  width: min(13.4rem, 62vw);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.46rem;
+  margin-top: 0.18rem;
+  color: #d6a85e !important;
+  filter: drop-shadow(0 0.16rem 0.22rem rgba(7, 17, 31, 0.78));
+}
+
+.fixed-swipe-rule i {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+}
+
+.fixed-swipe-rule i:last-child {
+  background: linear-gradient(90deg, currentColor, transparent);
+}
+
+.fixed-swipe-rule b {
+  display: block;
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
 .fixed-swipe-down-svg {
@@ -735,6 +763,156 @@ button {
     opacity: 0.95;
     transform: translate3d(0, 0.35rem, 0);
   }
+}
+
+.section-frame-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.section-gold-frame {
+  position: absolute;
+  inset: clamp(0.8rem, 3.2vw, 1.28rem);
+  z-index: 3;
+  border: 1px solid rgba(214, 178, 116, 0.68);
+  border-radius: 0.28rem;
+  opacity: 0.9;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 241, 0.04),
+    0 0 1.3rem rgba(214, 178, 116, 0.08);
+}
+
+.section-gold-frame::before,
+.section-gold-frame::after {
+  position: absolute;
+  width: clamp(1.7rem, 7vw, 2.35rem);
+  height: clamp(1.7rem, 7vw, 2.35rem);
+  border-color: rgba(214, 178, 116, 0.86);
+  content: "";
+}
+
+.section-gold-frame::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-top-left-radius: 0.72rem;
+}
+
+.section-gold-frame::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+  border-bottom-right-radius: 0.72rem;
+}
+
+.section-frame-heart {
+  position: absolute;
+  left: 50%;
+  display: grid;
+  grid-template-columns: minmax(2.6rem, 1fr) auto minmax(2.6rem, 1fr);
+  align-items: center;
+  width: min(15.5rem, 58vw);
+  gap: 0.5rem;
+  color: #d6a85e;
+  font-family: Georgia, serif;
+  font-size: 0.86rem;
+  line-height: 1;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.section-frame-heart::before,
+.section-frame-heart::after {
+  display: block;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  content: "";
+  opacity: 0.88;
+}
+
+.section-frame-heart::after {
+  background: linear-gradient(90deg, currentColor, transparent);
+}
+
+.section-frame-heart--top {
+  top: -0.54rem;
+}
+
+.section-frame-heart--bottom {
+  bottom: -0.54rem;
+}
+
+.section-blue-florals {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.section-blue-floral {
+  position: absolute;
+  width: clamp(9rem, 44vw, 17rem);
+  height: auto;
+  opacity: 0.28;
+  filter: saturate(0.82) sepia(0.08) drop-shadow(0 0.9rem 1.5rem rgba(7, 17, 31, 0.16));
+  mix-blend-mode: screen;
+  user-select: none;
+}
+
+.section-blue-floral--corner-top {
+  top: clamp(-2.2rem, -7vw, -0.95rem);
+  right: clamp(-2.6rem, -8vw, -1rem);
+}
+
+.section-blue-floral--sprig {
+  bottom: clamp(2.4rem, 9vw, 5rem);
+  left: clamp(-4.6rem, -14vw, -2.2rem);
+  transform: rotate(-12deg);
+}
+
+.section-blue-floral--corner-bottom {
+  right: clamp(-3.8rem, -13vw, -1.9rem);
+  bottom: clamp(-3.4rem, -11vw, -1.55rem);
+  transform: scaleX(-1) rotate(-5deg);
+}
+
+.section-frame-decor--celebration .section-blue-floral--corner-top,
+.section-frame-decor--details .section-blue-floral--corner-top {
+  right: auto;
+  left: clamp(-2.8rem, -9vw, -1.1rem);
+  transform: scaleX(-1);
+}
+
+.section-frame-decor--celebration .section-blue-floral--sprig {
+  left: auto;
+  right: clamp(-4.7rem, -15vw, -2.1rem);
+  bottom: clamp(3.5rem, 12vw, 6.2rem);
+  transform: scaleX(-1) rotate(14deg);
+}
+
+.section-frame-decor--story .section-blue-floral,
+.section-frame-decor--countdown .section-blue-floral {
+  opacity: 0.34;
+}
+
+.section-frame-decor--dress .section-blue-floral--corner-bottom {
+  right: auto;
+  left: clamp(-3.5rem, -12vw, -1.7rem);
+  transform: rotate(7deg);
+}
+
+.section-frame-decor--memories .section-blue-floral--sprig,
+.section-frame-decor--attendance .section-blue-floral--sprig {
+  bottom: auto;
+  top: clamp(6.5rem, 24vw, 9rem);
+  opacity: 0.22;
+}
+
+.section-frame-decor--attendance .section-blue-floral--corner-bottom {
+  opacity: 0.18;
 }
 
 .countdown-section {
@@ -789,7 +967,7 @@ button {
 
 .countdown-layout {
   position: relative;
-  z-index: 4;
+  z-index: 12;
   display: grid;
   width: 100%;
   height: 100%;
@@ -798,6 +976,8 @@ button {
 }
 
 .countdown-quote-panel {
+  position: relative;
+  z-index: 22;
   justify-self: stretch;
   width: 100%;
   padding: calc(env(safe-area-inset-top) + 0.85rem) 0 0.85rem;
@@ -969,12 +1149,14 @@ button {
 
 .countdown-unit {
   min-width: 0;
-  border: 0;
+  border: 1px solid rgba(214, 178, 116, 0.68);
   border-radius: 0.42rem;
   background: rgba(48, 65, 78, 0.34);
   box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 241, 0.06),
     inset 0 0 1.4rem rgba(140, 182, 209, 0.07),
-    0 0.85rem 1.6rem rgba(0, 0, 0, 0.16);
+    0 0.85rem 1.6rem rgba(0, 0, 0, 0.16),
+    0 0 0.78rem rgba(214, 178, 116, 0.1);
   backdrop-filter: blur(3px) saturate(1.02);
   -webkit-backdrop-filter: blur(3px) saturate(1.02);
   padding: clamp(0.78rem, 2.7svh, 1rem) 0.28rem clamp(0.7rem, 2.4svh, 0.9rem);
@@ -1017,6 +1199,48 @@ button {
   font-weight: 600;
   letter-spacing: 0.34em;
   text-indent: 0.34em;
+}
+
+.countdown-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(0.52rem, 2.4vw, 0.8rem);
+  margin-top: clamp(0.72rem, 2.4svh, 1rem);
+}
+
+.countdown-actions a {
+  display: inline-flex;
+  min-height: 2.45rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.46rem;
+  padding: 0.55rem 0.82rem;
+  border: 1px solid rgba(214, 178, 116, 0.5);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.92);
+  box-shadow:
+    0 0.65rem 1.25rem rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  color: #071827;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(0.62rem, 2.65vw, 0.78rem);
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.countdown-section .section-frame-decor {
+  z-index: 6;
+}
+
+.countdown-action-icon {
+  width: 1.28rem;
+  height: 1.28rem;
+  flex: 0 0 auto;
+  filter: drop-shadow(0 0.16rem 0.24rem rgba(7, 24, 39, 0.18));
 }
 
 .countdown-place {
@@ -1385,13 +1609,15 @@ button {
 }
 
 .celebration-map-button--waze {
-  background: rgba(226, 250, 255, 0.92);
+  background: rgba(255, 250, 241, 0.92);
 }
 
 .celebration-brand-icon {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.42rem;
+  height: 1.42rem;
   flex: 0 0 auto;
+  color: currentColor;
+  filter: drop-shadow(0 0.22rem 0.42rem rgba(7, 24, 39, 0.2));
 }
 
 .story-section {
@@ -1501,9 +1727,11 @@ button {
   aspect-ratio: 1;
   place-items: center;
   overflow: hidden;
-  border: 1px solid rgba(185, 150, 90, 0.44);
+  border: 1px solid rgba(255, 250, 241, 0.84);
   border-radius: 999px;
-  background: rgba(255, 250, 241, 0.1);
+  background:
+    radial-gradient(circle at 32% 22%, rgba(140, 182, 209, 0.38), transparent 42%),
+    linear-gradient(180deg, rgba(18, 103, 138, 0.96), rgba(9, 63, 92, 0.98));
   box-shadow:
     inset 0 0 0.75rem rgba(255, 250, 241, 0.06),
     0 0.36rem 0.72rem rgba(0, 0, 0, 0.12);
@@ -1521,7 +1749,7 @@ button {
   width: 55%;
   height: 55%;
   object-fit: contain;
-  filter: none;
+  filter: brightness(0) invert(1);
 }
 
 .story-copy {
@@ -1795,7 +2023,7 @@ button {
   align-content: center;
   justify-items: center;
   padding: clamp(1rem, 4vw, 1.35rem);
-  border: 1px solid rgba(255, 250, 241, 0.22);
+  border: 1px solid rgba(214, 178, 116, 0.38);
   border-radius: 0.42rem;
   background: rgba(255, 250, 241, 0.12);
   box-shadow:
@@ -1807,9 +2035,9 @@ button {
 }
 
 .details-card-icon {
-  width: 2.15rem;
-  height: 2.15rem;
-  color: rgba(255, 250, 241, 0.82);
+  width: 2.25rem;
+  height: 2.25rem;
+  color: #d6b274;
   filter: drop-shadow(0 0.35rem 0.7rem rgba(7, 24, 39, 0.62));
 }
 
@@ -1901,12 +2129,16 @@ button {
 
 .details-info-card p {
   margin: 0.38rem 0 0;
-  color: #d6b274;
+  color: #8cb6d1;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(1rem, 4vw, 1.24rem);
   font-weight: 700;
   line-height: 1.08;
   text-shadow: 0 0.45rem 0.85rem rgba(7, 24, 39, 0.54);
+}
+
+.details-card-qr-block + h3 + p {
+  color: #8cb6d1;
 }
 
 @media (min-width: 760px) {
@@ -2021,29 +2253,54 @@ button {
   transition-delay: 120ms;
 }
 
-.memories-photo-frame {
+.memories-collage {
   position: relative;
-  aspect-ratio: 4 / 5;
-  width: min(100%, 22rem);
-  overflow: hidden;
-  border: 1px solid rgba(255, 250, 241, 0.2);
-  border-radius: 0.6rem;
-  background: rgba(255, 250, 241, 0.08);
-  box-shadow:
-    0 1.1rem 2.4rem rgba(0, 0, 0, 0.3),
-    inset 0 0 0 1px rgba(255, 250, 241, 0.06);
+  width: min(100%, 25rem);
+  min-height: clamp(17.5rem, 72vw, 24rem);
+  margin-top: 0.2rem;
+  touch-action: pan-y;
 }
 
-.memories-touch-area {
+.memories-print {
   position: absolute;
-  inset: 0;
-  touch-action: pan-y;
+  aspect-ratio: 0.72 / 1;
+  width: clamp(8.2rem, 38vw, 12.4rem);
+  margin: 0;
+  overflow: hidden;
+  border: clamp(0.42rem, 1.7vw, 0.7rem) solid rgba(255, 254, 248, 0.98);
+  border-bottom-width: clamp(0.9rem, 3.8vw, 1.35rem);
+  background: #fffaf1;
+  box-shadow:
+    0 1.15rem 2rem rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(7, 24, 39, 0.08);
+}
+
+.memories-print--left {
+  top: clamp(1.25rem, 5vw, 2rem);
+  left: clamp(0.2rem, 1.4vw, 0.8rem);
+  z-index: 2;
+  transform: rotate(-8deg);
+}
+
+.memories-print--center {
+  top: 0;
+  left: 50%;
+  z-index: 4;
+  width: clamp(9.6rem, 44vw, 14rem);
+  transform: translateX(-50%) rotate(2.5deg);
+}
+
+.memories-print--right {
+  top: clamp(1.05rem, 4.2vw, 1.7rem);
+  right: clamp(0.05rem, 1vw, 0.7rem);
+  z-index: 3;
+  transform: rotate(7deg);
 }
 
 .memories-photo {
   object-fit: cover;
   object-position: center;
-  filter: saturate(0.94) contrast(0.98);
+  filter: saturate(0.94) contrast(0.98) sepia(0.06);
 }
 
 .memories-controls {
@@ -2264,13 +2521,6 @@ button {
 
   .attendance-footer-envelope {
     margin-top: clamp(1.2rem, 5vw, 2rem);
-  }
-}
-
-@media (min-width: 760px) {
-  .memories-photo-frame {
-    aspect-ratio: 16 / 10;
-    width: min(100%, 36rem);
   }
 }
 
@@ -2911,36 +3161,41 @@ button {
   }
 
   .countdown-unit {
+    border: 1px solid rgba(214, 178, 116, 0.62);
     background:
       linear-gradient(180deg, rgba(92, 108, 119, 0.34), rgba(35, 52, 65, 0.32)),
       rgba(60, 76, 88, 0.28);
     box-shadow:
+      inset 0 0 0 1px rgba(255, 250, 241, 0.08),
       inset 0 0 1rem rgba(140, 182, 209, 0.08),
-      0 0.75rem 1.35rem rgba(0, 0, 0, 0.14);
-    backdrop-filter: blur(1px) saturate(1.01);
-    -webkit-backdrop-filter: blur(1px) saturate(1.01);
+      0 0.75rem 1.35rem rgba(0, 0, 0, 0.14),
+      0 0 0.65rem rgba(214, 178, 116, 0.14);
+    backdrop-filter: blur(0.35px) saturate(1.01);
+    -webkit-backdrop-filter: blur(0.35px) saturate(1.01);
   }
 
   .celebration-info-card {
     background:
       linear-gradient(180deg, rgba(7, 24, 39, 0.68), rgba(7, 24, 39, 0.52)),
       rgba(243, 237, 227, 0.05);
-    backdrop-filter: blur(1.5px) saturate(1.02);
-    -webkit-backdrop-filter: blur(1.5px) saturate(1.02);
+    backdrop-filter: blur(0.35px) saturate(1.01);
+    -webkit-backdrop-filter: blur(0.35px) saturate(1.01);
   }
 
   .story-icon-wrap {
-    background: rgba(255, 250, 241, 0.14);
-    backdrop-filter: blur(1.5px) saturate(1.01);
-    -webkit-backdrop-filter: blur(1.5px) saturate(1.01);
+    background:
+      radial-gradient(circle at 32% 22%, rgba(140, 182, 209, 0.38), transparent 42%),
+      linear-gradient(180deg, rgba(18, 103, 138, 0.96), rgba(9, 63, 92, 0.98));
+    backdrop-filter: blur(0.35px) saturate(1.01);
+    -webkit-backdrop-filter: blur(0.35px) saturate(1.01);
   }
 
   .details-info-card {
     background:
       linear-gradient(180deg, rgba(255, 250, 241, 0.14), rgba(255, 250, 241, 0.1)),
       rgba(7, 24, 39, 0.14);
-    backdrop-filter: blur(1.5px) saturate(1.02);
-    -webkit-backdrop-filter: blur(1.5px) saturate(1.02);
+    backdrop-filter: blur(0.35px) saturate(1.01);
+    -webkit-backdrop-filter: blur(0.35px) saturate(1.01);
   }
 }
 

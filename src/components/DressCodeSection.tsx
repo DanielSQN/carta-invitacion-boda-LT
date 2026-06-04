@@ -1,12 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import SectionFrameDecor from "./SectionFrameDecor";
 
 const dressColors = ["#56799a", "#ffffff", "#071827", "#2c86c7", "#8ab7ce"];
 
 export default function DressCodeSection() {
   return (
     <section className="dress-section" aria-labelledby="dress-title">
+      <SectionFrameDecor variant="dress" />
       <div className="dress-bg" aria-hidden="true">
         <Image src="/images/details/background-dress-code.webp" alt="" fill sizes="100vw" className="dress-bg-image" />
       </div>

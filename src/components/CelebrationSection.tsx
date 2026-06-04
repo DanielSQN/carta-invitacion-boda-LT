@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import SectionFrameDecor from "./SectionFrameDecor";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -135,6 +136,7 @@ export default function CelebrationSection() {
 
   return (
     <section ref={sectionRef} className="celebration-section" aria-labelledby="celebration-title">
+      <SectionFrameDecor variant="celebration" />
       <div ref={imageRef} className="celebration-bg" aria-hidden="true">
         <Image
           src="/images/venues/lugar-celebracion.webp"
@@ -182,7 +184,7 @@ export default function CelebrationSection() {
                   rel="noopener noreferrer"
                 >
                   <GoogleMapsIcon />
-                  Maps
+                  Mapa
                 </a>
                 <a
                   className="celebration-map-button celebration-map-button--waze"
