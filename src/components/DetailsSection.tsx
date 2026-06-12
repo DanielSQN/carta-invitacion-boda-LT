@@ -81,19 +81,24 @@ export default function DetailsSection() {
           {detailCards.map(({ icon: Icon, qr, title, text, wide }) => (
             <article key={title} className={`details-info-card${wide ? " details-info-card--wide" : ""}`} data-reveal>
               {qr ? (
-                <div className="details-card-qr-block" aria-label="QR llave Bre-B">
-                  <span className="details-card-qr-label">QR llave Bre-B</span>
-                  <Image className="details-card-qr-image" src={virtualQrSrc} alt="QR para transferencia" width={148} height={148} />
-                  <button className="details-card-qr-badge" type="button" onClick={copyBrebKey} aria-label="Copiar llave Bre-B @miBodaLT">
-                    {hasCopiedBrebKey ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
-                    {hasCopiedBrebKey ? "Copiado" : `Llave: ${brebKey}`}
-                  </button>
-                </div>
+                <>
+                  <h3>{title}</h3>
+                  <div className="details-card-qr-block" aria-label="QR llave Bre-B">
+                    <Image className="details-card-qr-image" src={virtualQrSrc} alt="QR para transferencia" width={148} height={148} />
+                    <button className="details-card-qr-badge" type="button" onClick={copyBrebKey} aria-label="Copiar llave Bre-B @miBodaLT">
+                      {hasCopiedBrebKey ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                      {hasCopiedBrebKey ? "Copiado" : `Llave: ${brebKey}`}
+                    </button>
+                  </div>
+                  <p>{text}</p>
+                </>
               ) : (
-                Icon && <Icon className="details-card-icon" aria-hidden="true" strokeWidth={1.4} />
+                <>
+                  {Icon ? <Icon className="details-card-icon" aria-hidden="true" strokeWidth={1.4} /> : null}
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </>
               )}
-              <h3>{title}</h3>
-              <p>{text}</p>
             </article>
           ))}
         </div>

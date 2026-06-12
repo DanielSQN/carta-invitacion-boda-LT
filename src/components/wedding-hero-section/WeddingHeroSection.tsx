@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { Check, ChevronLeft, ChevronRight, ChevronsRight, Heart, User, X } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
 import SectionFrameDecor from "../SectionFrameDecor";
@@ -170,35 +171,46 @@ function HeroSection() {
   );
 }
 
-// Para agregar mas recuerdos (hasta ~28): sube las fotos optimizadas (webp)
-// a public/images/memories/ y agrega una entrada con su año y descripcion.
-// El orden del arreglo define el orden del recorrido (idealmente cronologico).
-const memoryPhotos = [
-  {
-    src: "/images/couple/couple-photo.webp?v=20260601-assets-2",
-    alt: "Foto de la pareja",
-    year: "2016",
-    caption: "Donde todo comenzó",
-  },
-  {
-    src: "/images/couple/_DSC0723.webp?v=20260601-assets-1",
-    alt: "Luisa y Jhonnatan sonriendo juntos",
-    year: "2024",
-    caption: "Una tarde inolvidable",
-  },
-  {
-    src: "/images/couple/_DSC0953.webp",
-    alt: "Recuerdo de Luisa y Jhonnatan",
-    year: "2025",
-    caption: "Entre risas y planes",
-  },
-  {
-    src: "/images/couple/_DSC1252.webp",
-    alt: "Luisa y Jhonnatan en una foto especial",
-    year: "2026",
-    caption: "Rumbo al altar",
-  },
+// RECUERDOS (28 fotos, 2016-2026).
+// Estructura de simulacion: cada año tiene su cantidad real de fotos, pero
+// las imagenes son placeholders (se reciclan las 4 fotos existentes).
+// Para poner las definitivas: sube los webp optimizados a
+// public/images/memories/ y reemplaza src/alt/caption de cada entrada.
+const memoryPlaceholderSources = [
+  { src: "/images/couple/couple-photo.webp?v=20260601-assets-2", alt: "Recuerdo de Luisa y Jhonnatan" },
+  { src: "/images/couple/_DSC0723.webp?v=20260601-assets-1", alt: "Luisa y Jhonnatan sonriendo juntos" },
+  { src: "/images/couple/_DSC0953.webp", alt: "Recuerdo de Luisa y Jhonnatan" },
+  { src: "/images/couple/_DSC1252.webp", alt: "Luisa y Jhonnatan en una foto especial" },
 ];
+
+// [año, cantidad de fotos de ese año] — total: 28
+const memoryYearCounts: Array<[string, number]> = [
+  ["2016", 2],
+  ["2017", 2],
+  ["2018", 2],
+  ["2019", 2],
+  ["2020", 3],
+  ["2021", 2],
+  ["2022", 3],
+  ["2023", 3],
+  ["2024", 4],
+  ["2025", 3],
+  ["2026", 2],
+];
+
+let memoryPhotoCursor = 0;
+const memoryPhotos = memoryYearCounts.flatMap(([year, count]) =>
+  Array.from({ length: count }, (_, photoIndex) => {
+    const source = memoryPlaceholderSources[memoryPhotoCursor % memoryPlaceholderSources.length];
+    memoryPhotoCursor += 1;
+
+    return {
+      ...source,
+      year,
+      caption: count > 1 ? `Recuerdo ${photoIndex + 1} · ${year}` : `Un momento de ${year}`,
+    };
+  }),
+);
 
 const memoryYears = Array.from(new Set(memoryPhotos.map((photo) => photo.year)));
 
@@ -333,13 +345,80 @@ function MemoriesSection() {
 
   const activeYear = memoryPhotos[activeIndex]?.year;
 
-  const scrollToYear = (year: string) => {
-    const firstIndex = memoryPhotos.findIndex((photo) => photo.year === year);
+  // El lightbox se monta en <body> via portal: si quedara dentro de la
+  // seccion, las secciones siguientes lo taparian al hacer scroll.
+  const lightbox = (
+    <AnimatePresence>
+      {lightboxIndex !== null ? (
+        <motion.div
+          key="memories-lightbox"
+          className="memories-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Foto ampliada"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.28, ease: "easeOut" }}
+          onClick={() => setLightboxIndex(null)}
+        >
+          <motion.figure
+            className="memories-lightbox-card"
+            initial={{ scale: 0.88, y: 22 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.92, y: 12 }}
+            transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span className="memories-lightbox-year">{memoryPhotos[lightboxIndex].year}</span>
+            <span className="memories-lightbox-photo">
+              <Image
+                src={memoryPhotos[lightboxIndex].src}
+                alt={memoryPhotos[lightboxIndex].alt}
+                fill
+                sizes="92vw"
+                className="memories-lightbox-image"
+              />
+            </span>
+            <figcaption>
+              <strong>{memoryPhotos[lightboxIndex].caption}</strong>
+            </figcaption>
+          </motion.figure>
 
-    if (firstIndex >= 0) {
-      scrollToIndex(firstIndex);
-    }
-  };
+          <button
+            type="button"
+            className="memories-lightbox-close"
+            onClick={() => setLightboxIndex(null)}
+            aria-label="Cerrar foto"
+          >
+            <X strokeWidth={2.2} />
+          </button>
+          <button
+            type="button"
+            className="memories-lightbox-nav memories-lightbox-nav--prev"
+            onClick={(event) => {
+              event.stopPropagation();
+              setLightboxIndex((index) => (index === null ? index : (index + memoryPhotos.length - 1) % memoryPhotos.length));
+            }}
+            aria-label="Foto anterior"
+          >
+            <ChevronLeft strokeWidth={2.2} />
+          </button>
+          <button
+            type="button"
+            className="memories-lightbox-nav memories-lightbox-nav--next"
+            onClick={(event) => {
+              event.stopPropagation();
+              setLightboxIndex((index) => (index === null ? index : (index + 1) % memoryPhotos.length));
+            }}
+            aria-label="Siguiente foto"
+          >
+            <ChevronRight strokeWidth={2.2} />
+          </button>
+        </motion.div>
+      ) : null}
+    </AnimatePresence>
+  );
 
   return (
     <section ref={sectionRef} className="memories-section finale-section" aria-labelledby="memories-title">
@@ -353,24 +432,18 @@ function MemoriesSection() {
         </div>
 
         <div className="memories-gallery" data-reveal>
-          <div className="memories-years" role="tablist" aria-label="Ir a un año">
+          {/* Banner indicativo del año activo (no interactivo) */}
+          <div className="memories-years" aria-hidden="true">
             {memoryYears.map((year) => (
-              <button
-                key={year}
-                type="button"
-                role="tab"
-                aria-selected={year === activeYear}
-                className={year === activeYear ? "is-active" : ""}
-                onClick={() => scrollToYear(year)}
-              >
+              <span key={year} className={year === activeYear ? "is-active" : ""}>
                 {year}
-              </button>
+              </span>
             ))}
           </div>
 
           <div ref={stripRef} className="memories-strip" aria-label="Galeria de recuerdos">
             {memoryPhotos.map((photo, index) => (
-              <figure key={photo.src} className={`memories-card ${index === activeIndex ? "is-active" : ""}`}>
+              <figure key={`${photo.year}-${index}`} className={`memories-card ${index === activeIndex ? "is-active" : ""}`}>
                 <button
                   type="button"
                   className="memories-card-trigger"
@@ -425,76 +498,7 @@ function MemoriesSection() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {lightboxIndex !== null ? (
-          <motion.div
-            key="memories-lightbox"
-            className="memories-lightbox"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Foto ampliada"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: "easeOut" }}
-            onClick={() => setLightboxIndex(null)}
-          >
-            <motion.figure
-              className="memories-lightbox-card"
-              initial={{ scale: 0.88, y: 22 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.92, y: 12 }}
-              transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <span className="memories-lightbox-photo">
-                <Image
-                  src={memoryPhotos[lightboxIndex].src}
-                  alt={memoryPhotos[lightboxIndex].alt}
-                  fill
-                  sizes="92vw"
-                  className="memories-lightbox-image"
-                />
-              </span>
-              <figcaption>
-                <strong>{memoryPhotos[lightboxIndex].caption}</strong>
-                <span>{memoryPhotos[lightboxIndex].year}</span>
-              </figcaption>
-            </motion.figure>
-
-            <button
-              type="button"
-              className="memories-lightbox-close"
-              onClick={() => setLightboxIndex(null)}
-              aria-label="Cerrar foto"
-            >
-              <X strokeWidth={2.2} />
-            </button>
-            <button
-              type="button"
-              className="memories-lightbox-nav memories-lightbox-nav--prev"
-              onClick={(event) => {
-                event.stopPropagation();
-                setLightboxIndex((lightboxIndex + memoryPhotos.length - 1) % memoryPhotos.length);
-              }}
-              aria-label="Foto anterior"
-            >
-              <ChevronLeft strokeWidth={2.2} />
-            </button>
-            <button
-              type="button"
-              className="memories-lightbox-nav memories-lightbox-nav--next"
-              onClick={(event) => {
-                event.stopPropagation();
-                setLightboxIndex((lightboxIndex + 1) % memoryPhotos.length);
-              }}
-              aria-label="Siguiente foto"
-            >
-              <ChevronRight strokeWidth={2.2} />
-            </button>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      {typeof document !== "undefined" ? createPortal(lightbox, document.body) : null}
     </section>
   );
 }
