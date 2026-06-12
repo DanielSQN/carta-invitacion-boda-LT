@@ -150,6 +150,17 @@ button {
   shape-rendering: geometricPrecision;
 }
 
+/* correccion optica: el glifo de la nota carga su masa visual arriba a la
+   derecha (viga diagonal), aunque el SVG quede centrado geometricamente */
+.music-toggle-svg--music {
+  transform: translate(-0.05rem, 0.06rem);
+}
+
+/* el altavoz tachado carga la masa a la izquierda */
+.music-toggle-svg--muted {
+  transform: translateX(0.04rem);
+}
+
 .hero-transition-card {
   --photo-frame: 0.3rem;
   --photo-frame-bottom: 0.85rem;

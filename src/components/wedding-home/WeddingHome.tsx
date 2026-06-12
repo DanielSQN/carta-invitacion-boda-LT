@@ -22,9 +22,9 @@ const preloadedInvitationAssets = [
 
 function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
   return isPlaying ? (
-    <Music className="music-toggle-svg" strokeWidth={2} aria-hidden="true" />
+    <Music className="music-toggle-svg music-toggle-svg--music" strokeWidth={2} aria-hidden="true" />
   ) : (
-    <VolumeX className="music-toggle-svg" strokeWidth={2} aria-hidden="true" />
+    <VolumeX className="music-toggle-svg music-toggle-svg--muted" strokeWidth={2} aria-hidden="true" />
   );
 }
 
