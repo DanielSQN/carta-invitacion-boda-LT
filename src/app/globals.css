@@ -158,7 +158,7 @@ button {
   overflow: hidden;
   pointer-events: none;
   background: #fffdf4;
-  box-shadow: 0 1.4rem 3rem rgba(7, 24, 39, 0.32);
+  box-shadow: 0 1.25rem 2.6rem rgba(28, 25, 18, 0.28);
   will-change: opacity, transform, width, height, top;
 }
 
@@ -334,6 +334,9 @@ button {
   border: 0.3rem solid #fffdf4;
   border-bottom-width: 0.85rem;
   background: #fffdf4;
+  /* misma sombra que .hero-transition-card para que el intercambio
+     carta → tarjeta no agregue una sombra "de golpe" */
+  box-shadow: 0 1.25rem 2.6rem rgba(28, 25, 18, 0.28);
 }
 
 .envelope-top-flap > div {
@@ -1016,59 +1019,23 @@ button {
   overflow: hidden;
 }
 
-.countdown-quote-copy {
-  display: block;
-  width: 100%;
+/* frase estatica en cursiva (reemplaza el marquee) */
+.countdown-quote-static {
+  width: min(94%, 28rem);
   margin: 0 auto;
-  overflow: hidden;
-  white-space: nowrap;
+  color: #1d2f44;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(1.22rem, 5vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.18;
+  text-align: center;
 }
 
-.countdown-quote-copy > span {
-  display: inline-flex;
-  width: max-content;
-  min-width: 200%;
-  align-items: center;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.92rem, 3.7vw, 1.16rem);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  line-height: 1.15;
-  text-transform: uppercase;
-  will-change: transform, opacity;
-}
-
-.countdown-quote-copy > span > span {
-  display: inline-flex;
-  min-width: 50%;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  padding-inline: clamp(1.5rem, 7vw, 3rem);
-}
-
-.countdown-marquee-heart {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  display: block;
-  width: 1rem;
-  height: 0.88rem;
-  flex: 0 0 auto;
-  color: #5f8fb4;
-  opacity: 0.9;
-  transform: translate3d(50%, -50%, 0);
-}
-
-.countdown-marquee-heart path {
-  stroke-width: 1.9;
-}
-
-.countdown-marquee-yes {
-  color: #5f8fb4;
-  text-shadow:
-    0 0 0.48rem rgba(95, 143, 180, 0.56),
-    0 0 1.05rem rgba(95, 143, 180, 0.32);
+.countdown-quote-yes {
+  color: #2f6f9f;
+  font-size: 1.3em;
+  line-height: 1;
+  text-shadow: 0 0 0.55rem rgba(95, 143, 180, 0.32);
 }
 
 .countdown-content {
@@ -1348,8 +1315,8 @@ button {
     padding: calc(env(safe-area-inset-top) + 1rem) 0 1rem;
   }
 
-  .countdown-quote-copy > span {
-    font-size: clamp(1rem, 2.4vw, 1.3rem);
+  .countdown-quote-static {
+    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
   }
 
   .countdown-content {
@@ -1383,8 +1350,8 @@ button {
     padding: calc(env(safe-area-inset-top) + 1.05rem) 0 1.05rem;
   }
 
-  .countdown-quote-copy > span {
-    font-size: clamp(1.08rem, 1.35vw, 1.38rem);
+  .countdown-quote-static {
+    font-size: clamp(1.45rem, 1.6vw, 1.85rem);
   }
 
   .countdown-content {
@@ -2463,10 +2430,15 @@ button {
 .memories-strip {
   --memories-card-w: clamp(11.5rem, 56vw, 15.5rem);
   display: flex;
-  width: 100%;
+  /* full-bleed: el carril llega a los bordes de la pantalla para que las
+     fotos laterales no se corten a mitad de pantalla */
+  width: 100vw;
+  margin: -1.35rem calc((100% - 100vw) / 2) -1.7rem;
   gap: 0;
   overflow-x: auto;
-  padding: 1.5rem calc(50% - var(--memories-card-w) / 2) 1.9rem;
+  /* padding vertical amplio: el overflow del carril recortaba las sombras
+     difusas y se veia un recuadro marcado */
+  padding: 2.7rem calc(50% - var(--memories-card-w) / 2) 3.5rem;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
@@ -2680,36 +2652,16 @@ button {
 
 .memories-swipe-hint {
   display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  margin: 0;
+  max-width: 18rem;
+  margin: 0 auto;
   color: rgba(207, 228, 246, 0.78);
   font-family: var(--font-display), Georgia, serif;
   font-size: 0.64rem;
   font-weight: 800;
   letter-spacing: 0.16em;
+  line-height: 1.6;
+  text-align: center;
   text-transform: uppercase;
-}
-
-.memories-swipe-hint svg {
-  width: 1.05rem;
-  height: 1.05rem;
-  color: #8fc1e9;
-  animation: memories-hint-slide 1.9s ease-in-out infinite;
-}
-
-@keyframes memories-hint-slide {
-  0%,
-  100% {
-    opacity: 0.35;
-    transform: translateX(-0.2rem);
-  }
-
-  50% {
-    opacity: 1;
-    transform: translateX(0.3rem);
-  }
 }
 
 /* En tactil: sin flechas, con hint de deslizamiento. En desktop: flechas. */
@@ -2723,7 +2675,7 @@ button {
   }
 
   .memories-swipe-hint {
-    display: flex;
+    display: block;
   }
 }
 
@@ -2755,31 +2707,36 @@ button {
   position: relative;
   display: block;
   width: 100%;
-  height: min(66svh, 32rem);
+  height: min(62svh, 30rem);
   overflow: hidden;
   border-radius: 0.14rem;
-  background: #0a1420;
+  /* sin fondo oscuro: las bandas del object-fit:contain se funden con el
+     papel del polaroid en vez de verse como bordes azules */
+  background: transparent;
 }
 
+/* barra de año a todo el ancho, arriba de la foto */
 .memories-lightbox-year {
-  position: absolute;
-  top: clamp(0.95rem, 3.6vw, 1.25rem);
-  right: clamp(0.95rem, 3.6vw, 1.25rem);
-  z-index: 2;
-  display: inline-flex;
+  display: flex;
+  width: 100%;
   align-items: center;
-  padding: 0.3rem 0.72rem;
-  border: 1px solid rgba(255, 250, 241, 0.38);
-  border-radius: 999px;
-  background: rgba(7, 17, 31, 0.74);
-  color: #cfe4f6;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.32rem 0 0.6rem;
+  color: #2f4257;
   font-family: var(--font-display), Georgia, serif;
-  font-size: 0.72rem;
+  font-size: clamp(0.86rem, 3.6vw, 1rem);
   font-weight: 800;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.26em;
   line-height: 1;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+  text-indent: 0.26em;
+}
+
+.memories-lightbox-year i {
+  display: block;
+  width: clamp(1.8rem, 8vw, 2.6rem);
+  height: 1px;
+  background: rgba(47, 66, 87, 0.4);
 }
 
 .memories-lightbox-image {

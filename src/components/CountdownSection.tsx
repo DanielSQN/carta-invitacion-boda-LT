@@ -36,24 +36,6 @@ function getCountdownTime(): CountdownTime {
   };
 }
 
-function HeartIcon({ className = "" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 28 24" fill="none" aria-hidden="true" focusable="false">
-      <path
-        d="M14 21.2C7.7 16.55 4.1 12.95 4.1 8.85C4.1 5.95 6.28 4 8.88 4C11.05 4 12.62 5.18 14 7.05C15.38 5.18 16.95 4 19.12 4C21.72 4 23.9 5.95 23.9 8.85C23.9 12.95 20.3 16.55 14 21.2Z"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.15"
-      />
-    </svg>
-  );
-}
-
-function MarqueeHeart({ className = "" }: { className?: string }) {
-  return <HeartIcon className={`countdown-marquee-heart ${className}`} />;
-}
-
 const googleCalendarUrl =
   "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda%20Luisa%20%26%20Tattan&dates=20260926T200000Z/20260927T050000Z&details=Celebramos%20nuestra%20boda%20con%20ustedes.&location=Hacienda%20Santa%20Elena%2C%20Cota%2C%20Cundinamarca";
 const icsCalendarUrl = "/boda-luisa-jhonnatan.ics";
@@ -62,7 +44,6 @@ export default function CountdownSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
-  const quoteTextRef = useRef<HTMLSpanElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const metaRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -98,11 +79,9 @@ export default function CountdownSection() {
 
     const ctx = gsap.context(() => {
       gsap.set(topRef.current, { opacity: 1 });
-      gsap.set(quoteTextRef.current, { xPercent: 0, opacity: 1 });
       gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], { opacity: 0 });
 
       if (reduceMotion) {
-        gsap.set(quoteTextRef.current, { opacity: 1, xPercent: 0 });
         gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], {
           opacity: 1,
           y: 0,
@@ -120,7 +99,6 @@ export default function CountdownSection() {
             ...triggerDefaults,
           },
         })
-        .to(quoteTextRef.current, { xPercent: -50, duration: 14, repeat: -1, ease: "none" }, 0)
         .fromTo(titleRef.current, { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.86, ease: "power2.out" }, 0.22)
         .fromTo(
           itemRefs.current,
@@ -162,21 +140,8 @@ export default function CountdownSection() {
 
       <div className="countdown-layout">
         <div ref={topRef} className="countdown-quote-panel">
-          <p className="countdown-quote-copy">
-            <span ref={quoteTextRef}>
-              <span className="countdown-marquee-item">
-                <span className="countdown-marquee-text">
-                  Desde aquel <span className="countdown-marquee-yes">Sí</span>, empezó nuestra aventura favorita
-                </span>
-                <MarqueeHeart />
-              </span>
-              <span className="countdown-marquee-item" aria-hidden="true">
-                <span className="countdown-marquee-text">
-                  Desde aquel <span className="countdown-marquee-yes">Sí</span>, empezó nuestra aventura favorita
-                </span>
-                <MarqueeHeart />
-              </span>
-            </span>
+          <p className="countdown-quote-static">
+            Desde aquel <span className="countdown-quote-yes">Sí</span>, empezó nuestra aventura favorita
           </p>
         </div>
 

@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
-import { Check, ChevronLeft, ChevronRight, ChevronsRight, Heart, User, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Heart, User, X } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -271,32 +271,12 @@ function MemoriesSection() {
     const ctx = gsap.context(() => {
       createSectionReveal(sectionRef.current);
 
-      const cards = gsap.utils.toArray<HTMLElement>(".memories-card");
-
       if (prefersReducedMotion()) {
-        gsap.set(cards, { opacity: 1 });
         return;
       }
 
-      gsap.fromTo(
-        cards,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.85,
-          stagger: 0.12,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            toggleActions: "play none none none",
-            ...(scroller ? { scroller } : {}),
-          },
-        },
-      );
-
-      // Vaiven sutil del strip (mismo ritmo que el hint, 1.9s) para invitar a
-      // deslizar; se detiene definitivamente al primer gesto del usuario.
+      // Vaiven sutil del strip para invitar a deslizar; se detiene
+      // definitivamente al primer gesto del usuario.
       if (strip) {
         const nudge = gsap.to(strip, {
           x: -16,
@@ -423,7 +403,11 @@ function MemoriesSection() {
             transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
             onClick={(event) => event.stopPropagation()}
           >
-            <span className="memories-lightbox-year">{memoryPhotos[lightboxIndex].year}</span>
+            <span className="memories-lightbox-year">
+              <i aria-hidden="true" />
+              {memoryPhotos[lightboxIndex].year}
+              <i aria-hidden="true" />
+            </span>
             <span className="memories-lightbox-photo">
               <Image
                 src={memoryPhotos[lightboxIndex].src}
@@ -545,8 +529,7 @@ function MemoriesSection() {
           </div>
 
           <p className="memories-swipe-hint" aria-hidden="true">
-            <span>Desliza para conocer nuestra historia juntos</span>
-            <ChevronsRight strokeWidth={2} />
+            Desliza para conocer nuestra historia juntos
           </p>
         </div>
       </div>

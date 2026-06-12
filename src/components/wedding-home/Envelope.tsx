@@ -37,7 +37,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
 
         <motion.div
           ref={letterRef}
-          className="envelope-letter-insert absolute left-1/2 top-[8%] z-[4] h-[78%] w-[77%] -translate-x-1/2 overflow-hidden rounded-sm shadow-[0_20px_42px_rgba(77,58,35,0.16)]"
+          className="envelope-letter-insert absolute left-1/2 top-[8%] z-[4] h-[78%] w-[77%] -translate-x-1/2 overflow-hidden rounded-sm"
           initial={false}
           animate={isOpen ? { y: -178, scale: 1, scaleY: 1, opacity: 1 } : { y: 18, scale: 1, scaleY: 0.68, opacity: 1 }}
           transition={{ duration: 1.08, delay: isOpen ? 0.26 : 0, ease: [0.22, 1, 0.36, 1] }}
