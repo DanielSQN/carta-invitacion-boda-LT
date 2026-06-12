@@ -47,6 +47,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
               src="/images/couple/couple-photo.webp?v=20260601-assets-2"
               alt=""
               fill
+              priority
               sizes="(max-width: 430px) 58vw, 245px"
               className="hero-transition-image object-cover"
             />

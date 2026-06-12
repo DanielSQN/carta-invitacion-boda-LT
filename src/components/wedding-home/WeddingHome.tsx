@@ -10,28 +10,13 @@ import FloralCorners from "./FloralCorners";
 import Verse from "./Verse";
 import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
 
+// Solo se precargan los assets consumidos por URL directa (fondos CSS).
+// El resto de imagenes pasa por next/image, que sirve URLs optimizadas
+// distintas: precargar el archivo original lo descargaria dos veces.
 const preloadedInvitationAssets = [
   "/images/couple/couple-photo.webp?v=20260601-assets-2",
-  "/images/couple/_DSC0723.webp?v=20260601-assets-1",
-  "/images/couple/_DSC0953.webp",
-  "/images/couple/_DSC1252.webp",
-  "/images/details/background-dress-code.webp",
-  "/images/details/dress-code.webp",
-  "/images/story/001-heart.webp",
-  "/images/story/002-wedding-rings.webp",
-  "/images/story/003-heart-1.webp",
-  "/images/story/004-correo.webp",
-  "/images/florals/generated/blue-breath-corner-top.webp?v=20260604-metal-blue",
-  "/images/florals/generated/blue-breath-corner-bottom.webp?v=20260604-metal-blue",
-  "/images/florals/generated/blue-breath-sprig.webp?v=20260604-metal-blue",
-  "/images/venues/ceremony-venue.webp?v=20260526-performance-1",
-  "/images/venues/reception-venue.webp?v=20260526-performance-1",
-  "/images/venues/hacienda_SH.webp",
-  "/images/ui/envelope.webp?v=20260601-assets-1",
-  "/images/ui/wax-seal.webp?v=20260601-assets-1",
-  "/images/ui/footer-envelope.webp",
-  "/images/paper/tear-1.webp",
-  "/images/paper/tear-2.webp",
+  "/images/paper/paper-texture.webp?v=20260525-wedding-home",
+  "/images/paper/paper-texture-old.webp",
 ];
 
 function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
@@ -225,15 +210,35 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           () => {
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
-            const startRect = envelopeLetterRef.current?.getBoundingClientRect();
-            const measuredRect = startRect?.width && startRect?.height
-              ? startRect
-              : {
-                  height: Math.min(viewportWidth * 0.43, 186),
-                  left: viewportWidth * 0.19,
-                  top: viewportHeight * 0.39,
-                  width: Math.min(viewportWidth * 0.62, 265),
-                };
+            const letterEl = envelopeLetterRef.current;
+            const aabb = letterEl?.getBoundingClientRect();
+            let measuredRect: { height: number; left: number; top: number; width: number };
+
+            if (letterEl && aabb?.width && aabb?.height) {
+              // getBoundingClientRect devuelve la caja alineada a los ejes de
+              // la carta rotada (-7deg), mas grande que la carta visual: se
+              // despeja la escala real para igualar tamano y centro exactos
+              // y que el intercambio no pegue un salto.
+              const angle = (7 * Math.PI) / 180;
+              const scale = aabb.width / (letterEl.offsetWidth * Math.cos(angle) + letterEl.offsetHeight * Math.sin(angle));
+              const width = letterEl.offsetWidth * scale;
+              const height = letterEl.offsetHeight * scale;
+
+              measuredRect = {
+                width,
+                height,
+                left: aabb.left + (aabb.width - width) / 2,
+                top: aabb.top + (aabb.height - height) / 2,
+              };
+            } else {
+              measuredRect = {
+                height: Math.min(viewportWidth * 0.43, 186),
+                left: viewportWidth * 0.19,
+                top: viewportHeight * 0.39,
+                width: Math.min(viewportWidth * 0.62, 265),
+              };
+            }
+
             const centeredWidth = Math.min(viewportWidth * 0.78, 335);
             const centeredHeight = centeredWidth * (measuredRect.height / measuredRect.width);
 
@@ -261,6 +266,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           1.48,
         )
         .to(envelopeLetterRef.current, { autoAlpha: 0, duration: 0.04, ease: "sine.out" }, 1.5)
+        .to(homeSceneRef.current, { duration: 0.6, opacity: 0, y: -10, ease: "sine.inOut" }, 1.5)
         .to(
           transitionCardRef.current,
           {
@@ -278,7 +284,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           },
           1.72,
         )
-        .to(homeSceneRef.current, { duration: 0.72, opacity: 0, y: -14 }, 1.72)
         .to(
           transitionCardRef.current,
           {

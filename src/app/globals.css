@@ -279,18 +279,21 @@ button {
   text-shadow: 0 1px 0 rgba(255, 252, 244, 0.8);
 }
 
+/* Comillas ancladas a las esquinas del parrafo (en em, relativas al texto)
+   para que nunca caigan sobre el versiculo en tablets u otras pantallas. */
 .verse-quote {
-  font-size: clamp(2.25rem, min(11vw, 6dvh), 3rem);
+  font-size: 2.1em;
+  text-shadow: none;
 }
 
 .verse-quote-left {
-  left: clamp(1.45rem, 7vw, 2.35rem);
-  top: clamp(-0.85rem, -1.4dvh, -0.35rem);
+  top: -0.32em;
+  left: -0.18em;
 }
 
 .verse-quote-right {
-  right: clamp(1.45rem, 7vw, 2.35rem);
-  top: clamp(1.75rem, 4.6dvh, 2.55rem);
+  right: -0.18em;
+  bottom: -0.42em;
 }
 
 .verse-reference {
