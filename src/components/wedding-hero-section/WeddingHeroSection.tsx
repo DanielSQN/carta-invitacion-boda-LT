@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
-import { Check, ChevronLeft, ChevronRight, Heart, User, X } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, ChevronsRight, Heart, User, X } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -529,7 +529,8 @@ function MemoriesSection() {
           </div>
 
           <p className="memories-swipe-hint" aria-hidden="true">
-            Desliza para conocer nuestra historia juntos
+            <span>Desliza para conocer nuestra historia juntos</span>
+            <ChevronsRight strokeWidth={2} />
           </p>
         </div>
       </div>

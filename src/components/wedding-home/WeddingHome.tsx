@@ -273,6 +273,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         .to(
           transitionCardRef.current,
           {
+            boxShadow: "0 1.25rem 2.6rem rgba(28, 25, 18, 0.28)",
             duration: 0.72,
             height: () => cardGeometry.centeredHeight,
             left: () => cardGeometry.centeredLeft,

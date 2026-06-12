@@ -158,7 +158,9 @@ button {
   overflow: hidden;
   pointer-events: none;
   background: #fffdf4;
-  box-shadow: 0 1.25rem 2.6rem rgba(28, 25, 18, 0.28);
+  /* arranca transparente (igual que la carta) y GSAP la funde durante el
+     centrado para que nunca aparezca de golpe */
+  box-shadow: 0 1.25rem 2.6rem rgba(28, 25, 18, 0);
   will-change: opacity, transform, width, height, top;
 }
 
@@ -334,9 +336,10 @@ button {
   border: 0.3rem solid #fffdf4;
   border-bottom-width: 0.85rem;
   background: #fffdf4;
-  /* misma sombra que .hero-transition-card para que el intercambio
-     carta → tarjeta no agregue una sombra "de golpe" */
-  box-shadow: 0 1.25rem 2.6rem rgba(28, 25, 18, 0.28);
+  /* sin sombra: la carta esta detras del sobre (z-4 < z-5) y su sombra
+     "aparecia de golpe" al desvanecerse el sobre; la sombra entra luego
+     con fade en la tarjeta de transicion */
+  box-shadow: none;
 }
 
 .envelope-top-flap > div {
@@ -2650,9 +2653,14 @@ button {
   text-align: center;
 }
 
+/* visible en todos los dispositivos, con flecha animada horizontal */
 .memories-swipe-hint {
-  display: none;
-  max-width: 18rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  max-width: 20rem;
   margin: 0 auto;
   color: rgba(207, 228, 246, 0.78);
   font-family: var(--font-display), Georgia, serif;
@@ -2664,7 +2672,28 @@ button {
   text-transform: uppercase;
 }
 
-/* En tactil: sin flechas, con hint de deslizamiento. En desktop: flechas. */
+.memories-swipe-hint svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+  color: #8fc1e9;
+  animation: memories-hint-slide 1.9s ease-in-out infinite;
+}
+
+@keyframes memories-hint-slide {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(-0.22rem);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(0.34rem);
+  }
+}
+
+/* En tactil no hay flechas de control (se desliza con el dedo). */
 @media (pointer: coarse) {
   .memories-controls {
     grid-template-columns: auto;
@@ -2672,10 +2701,6 @@ button {
 
   .memories-arrow {
     display: none;
-  }
-
-  .memories-swipe-hint {
-    display: block;
   }
 }
 
