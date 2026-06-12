@@ -26,8 +26,29 @@ export default function DressCodeSection() {
 
       if (prefersReducedMotion()) {
         gsap.set(swatches, { opacity: 1, scale: 1, y: 0 });
+        gsap.set(".dress-polaroid", { y: 0, rotate: -2 });
         return;
       }
+
+      // El polaroid se revela solo con transform (sin opacity): animar la
+      // opacidad de un contenedor con backdrop-filter hace que el blur
+      // "reviente" encima al llegar a 1.
+      gsap.fromTo(
+        ".dress-polaroid",
+        { y: 46, rotate: -5.5 },
+        {
+          y: 0,
+          rotate: -2,
+          duration: 0.95,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 72%",
+            toggleActions: "play none none none",
+            ...(scroller ? { scroller } : {}),
+          },
+        },
+      );
 
       gsap.fromTo(
         swatches,
@@ -66,7 +87,7 @@ export default function DressCodeSection() {
           <h2 id="dress-title">Código de vestimenta</h2>
         </div>
 
-        <div className="dress-column dress-column--attire" data-reveal>
+        <div className="dress-column dress-column--attire">
           <figure className="dress-polaroid">
             <span className="dress-polaroid-frame">
               <span className="dress-polaroid-photo">

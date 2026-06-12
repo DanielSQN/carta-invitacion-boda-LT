@@ -206,6 +206,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           },
         })
         .to(homeSceneRef.current, { duration: 0.42, opacity: 0.98, scale: 0.996 }, 0)
+        // el sobre se va desvaneciendo mientras la carta termina de salir
+        // (despues de que el flap termina su animacion de framer ~0.96s)
+        .to(".envelope-shell, .envelope-top-flap", { autoAlpha: 0, duration: 0.55, ease: "sine.inOut" }, 0.98)
         .call(
           () => {
             const viewportWidth = window.innerWidth;

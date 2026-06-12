@@ -6,7 +6,7 @@ import { Check, Copy, Gift, Mail } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createSectionReveal } from "./sectionFx";
+import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -38,8 +38,34 @@ export default function DetailsSection() {
   const bgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const scroller = getSectionScroller(sectionRef.current);
+
     const ctx = gsap.context(() => {
       createSectionReveal(sectionRef.current, { stagger: 0.16 });
+
+      // Las tarjetas usan backdrop-filter: se revelan solo con transform
+      // (sin opacity) para que el blur no "reviente" al final del fade.
+      if (prefersReducedMotion()) {
+        gsap.set(".details-info-card", { y: 0 });
+        return;
+      }
+
+      gsap.fromTo(
+        ".details-info-card",
+        { y: 38 },
+        {
+          y: 0,
+          duration: 0.85,
+          stagger: 0.14,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 72%",
+            toggleActions: "play none none none",
+            ...(scroller ? { scroller } : {}),
+          },
+        },
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -79,7 +105,7 @@ export default function DetailsSection() {
 
         <div className="details-card-grid">
           {detailCards.map(({ icon: Icon, qr, title, text, wide }) => (
-            <article key={title} className={`details-info-card${wide ? " details-info-card--wide" : ""}`} data-reveal>
+            <article key={title} className={`details-info-card${wide ? " details-info-card--wide" : ""}`}>
               {qr ? (
                 <>
                   <h3>{title}</h3>

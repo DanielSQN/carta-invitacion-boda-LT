@@ -198,17 +198,32 @@ const memoryYearCounts: Array<[string, number]> = [
   ["2026", 2],
 ];
 
+// Leyendas amorosas para el marco de cada foto (el año va solo en el badge).
+const memoryCaptions = [
+  "Donde todo comenzó",
+  "Cómplices para siempre",
+  "Entre risas y miradas",
+  "Caminando de tu mano",
+  "Nuestro lugar favorito: juntos",
+  "Amor en cada detalle",
+  "El mejor equipo",
+  "Sueños compartidos",
+  "Cada día te elijo",
+  "Pedacitos de felicidad",
+  "Tu risa es mi hogar",
+  "Aventura de dos",
+  "Un sí para toda la vida",
+  "Momentos que atesoramos",
+];
+
 let memoryPhotoCursor = 0;
 const memoryPhotos = memoryYearCounts.flatMap(([year, count]) =>
-  Array.from({ length: count }, (_, photoIndex) => {
+  Array.from({ length: count }, () => {
     const source = memoryPlaceholderSources[memoryPhotoCursor % memoryPlaceholderSources.length];
+    const caption = memoryCaptions[memoryPhotoCursor % memoryCaptions.length];
     memoryPhotoCursor += 1;
 
-    return {
-      ...source,
-      year,
-      caption: count > 1 ? `Recuerdo ${photoIndex + 1} · ${year}` : `Un momento de ${year}`,
-    };
+    return { ...source, year, caption };
   }),
 );
 
@@ -250,6 +265,8 @@ function MemoriesSection() {
 
   useEffect(() => {
     const scroller = getSectionScroller(sectionRef.current);
+    const strip = stripRef.current;
+    let removeNudgeListeners: (() => void) | undefined;
 
     const ctx = gsap.context(() => {
       createSectionReveal(sectionRef.current);
@@ -277,9 +294,45 @@ function MemoriesSection() {
           },
         },
       );
+
+      // Vaiven sutil del strip (mismo ritmo que el hint, 1.9s) para invitar a
+      // deslizar; se detiene definitivamente al primer gesto del usuario.
+      if (strip) {
+        const nudge = gsap.to(strip, {
+          x: -16,
+          duration: 0.95,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 62%",
+            toggleActions: "play none none none",
+            ...(scroller ? { scroller } : {}),
+          },
+        });
+
+        const stopNudge = () => {
+          removeNudgeListeners?.();
+          removeNudgeListeners = undefined;
+          nudge.scrollTrigger?.kill();
+          nudge.kill();
+          gsap.to(strip, { x: 0, duration: 0.45, ease: "sine.out" });
+        };
+
+        strip.addEventListener("scroll", stopNudge, { passive: true });
+        strip.addEventListener("pointerdown", stopNudge, { passive: true });
+        removeNudgeListeners = () => {
+          strip.removeEventListener("scroll", stopNudge);
+          strip.removeEventListener("pointerdown", stopNudge);
+        };
+      }
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      removeNudgeListeners?.();
+      ctx.revert();
+    };
   }, []);
 
   useEffect(() => {
@@ -492,7 +545,7 @@ function MemoriesSection() {
           </div>
 
           <p className="memories-swipe-hint" aria-hidden="true">
-            <span>Desliza para recorrer los años</span>
+            <span>Desliza para conocer nuestra historia juntos</span>
             <ChevronsRight strokeWidth={2} />
           </p>
         </div>
