@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
+import { Music, VolumeX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import DecorativeText from "./DecorativeText";
@@ -20,17 +21,10 @@ const preloadedInvitationAssets = [
 ];
 
 function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
-  return (
-    <svg className="music-toggle-svg" viewBox="0 0 58 58" fill="none" aria-hidden="true" focusable="false">
-      {isPlaying ? (
-        <>
-          <path d="M23.5 18.5V39.5" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
-          <path d="M34.5 18.5V39.5" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
-        </>
-      ) : (
-        <path d="M24 18.2L39.2 29L24 39.8V18.2Z" fill="currentColor" />
-      )}
-    </svg>
+  return isPlaying ? (
+    <Music className="music-toggle-svg" strokeWidth={2} aria-hidden="true" />
+  ) : (
+    <VolumeX className="music-toggle-svg" strokeWidth={2} aria-hidden="true" />
   );
 }
 

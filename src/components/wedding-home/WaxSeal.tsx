@@ -21,7 +21,7 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
       aria-hidden="true"
     >
       <Image
-        className="object-contain drop-shadow-[0_14px_18px_rgba(76,48,18,0.28)]"
+        className="object-contain"
         src={`/images/ui/wax-seal.webp?v=${assetVersion}`}
         alt=""
         fill

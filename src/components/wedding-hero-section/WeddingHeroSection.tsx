@@ -529,7 +529,7 @@ function MemoriesSection() {
           </div>
 
           <p className="memories-swipe-hint" aria-hidden="true">
-            <span>Desliza para conocer nuestra historia juntos</span>
+            <span>Desliza para ver más fotos y toca una para ampliarla</span>
             <ChevronsRight strokeWidth={2} />
           </p>
         </div>

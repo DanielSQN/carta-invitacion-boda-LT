@@ -33,7 +33,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
             : { duration: 5.4, repeat: Infinity, ease: "easeInOut" }
         }
       >
-        <div className="envelope-shell absolute inset-x-[5%] bottom-[-10%] h-[34%] rounded-[50%] bg-stone-900/20 blur-2xl" />
+        <div className="envelope-shell envelope-ground-shadow absolute inset-x-[5%] bottom-[-10%] h-[34%]" />
 
         <motion.div
           ref={letterRef}
@@ -57,7 +57,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
 
         <div className="envelope-shell absolute inset-0 z-[5]">
           <Image
-            className="object-contain drop-shadow-[0_24px_28px_rgba(77,58,35,0.22)]"
+            className="object-contain"
             src={`/images/ui/envelope.webp?v=${assetVersion}`}
             alt=""
             fill
