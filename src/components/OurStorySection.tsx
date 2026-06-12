@@ -5,7 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createBgParallax } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -27,45 +26,68 @@ export default function OurStorySection() {
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
-      createBgParallax(sectionRef.current, imageRef.current, { amplitude: 10, scale: 1.1 });
-
       if (reduceMotion) {
         gsap.set([titleRef.current, ".story-item"], { opacity: 1, y: 0 });
         gsap.set(".story-line-fill", { scaleY: 1 });
         return;
       }
 
-      gsap
-        .timeline({
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, y: -26 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.82,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top 76%",
             toggleActions: "play none none none",
             ...triggerDefaults,
           },
-        })
-        .fromTo(titleRef.current, { opacity: 0, y: -26 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0)
-        .fromTo(".story-line-fill", { scaleY: 0 }, { scaleY: 1, duration: 1.6, ease: "power2.out" }, 0.18);
+        },
+      );
+
+      // La linea conectora se va llenando con el scroll (y se vacia al subir).
+      gsap.fromTo(
+        ".story-line-fill",
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".story-timeline",
+            start: "top 82%",
+            end: "bottom 42%",
+            scrub: 0.5,
+            invalidateOnRefresh: true,
+            ...triggerDefaults,
+          },
+        },
+      );
 
       // Cada hito aparece uno a uno al bajar y se retira al subir
       // (play al entrar, reverse al salir, en ambas direcciones).
       gsap.utils.toArray<HTMLElement>(".story-item").forEach((item) => {
+        const icon = item.querySelector(".story-icon-wrap");
+        const copy = item.querySelector(".story-copy");
+        const itemTrigger = {
+          trigger: item,
+          start: "top 88%",
+          toggleActions: "play reverse play reverse",
+          ...triggerDefaults,
+        };
+
         gsap.fromTo(
-          item,
-          { opacity: 0, x: -28, y: 16 },
-          {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            duration: 0.62,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top 88%",
-              toggleActions: "play reverse play reverse",
-              ...triggerDefaults,
-            },
-          },
+          icon,
+          { opacity: 0, scale: 0.35 },
+          { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(2.2)", scrollTrigger: itemTrigger },
+        );
+        gsap.fromTo(
+          copy,
+          { opacity: 0, x: -30 },
+          { opacity: 1, x: 0, duration: 0.62, ease: "power2.out", scrollTrigger: { ...itemTrigger } },
         );
       });
     }, sectionRef);

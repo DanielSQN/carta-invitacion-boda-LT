@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
-import { Check, Heart, User } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, ChevronsRight, Heart, User, X } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
@@ -11,7 +11,7 @@ import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
 import OurStorySection from "../OurStorySection";
-import { createBgParallax, createSectionReveal, getSectionScroller, prefersReducedMotion } from "../sectionFx";
+import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "../sectionFx";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (
@@ -62,6 +62,7 @@ function HeroSection() {
           y: 0,
         });
         gsap.set(cursorRef.current, { opacity: 0 });
+        window.setTimeout(() => window.dispatchEvent(new Event("hero-intro-complete")), 350);
         return undefined;
       }
 
@@ -100,11 +101,29 @@ function HeroSection() {
         .fromTo(ampRef.current, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.48, ease: "power2.out" }, ">+0.16")
         .add(typeText(jhonnatanRef.current, "Jhonnatan", 1.15), ">+0.14")
         .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.78, ease: "power2.out" }, ">+0.18")
+        .call(() => window.dispatchEvent(new Event("hero-intro-complete")), [], ">+0.05")
         .to(cursorRef.current, { opacity: 0.18, duration: 0.72, repeat: -1, yoyo: true, ease: "sine.inOut" }, ">");
 
-      // scale 1 para que la foto del hero coincida 1:1 con la foto de la
-      // transicion del sobre cuando esta se desvanece.
-      createBgParallax(heroRef.current, imageRef.current, { amplitude: 9, scale: 1 });
+      // Zoom-in al hacer scroll. Arranca en scale 1 para que la foto del hero
+      // coincida 1:1 con la foto de la transicion del sobre.
+      const scroller = getSectionScroller(heroRef.current);
+      gsap.fromTo(
+        imageRef.current,
+        { scale: 1, yPercent: 0, transformOrigin: "50% 30%" },
+        {
+          scale: 1.16,
+          yPercent: 4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+            ...(scroller ? { scroller } : {}),
+          },
+        },
+      );
     }, heroRef);
 
     return () => ctx.revert();
@@ -151,29 +170,71 @@ function HeroSection() {
   );
 }
 
+// Para agregar mas recuerdos (hasta ~28): sube las fotos optimizadas (webp)
+// a public/images/memories/ y agrega una entrada con su año y descripcion.
+// El orden del arreglo define el orden del recorrido (idealmente cronologico).
 const memoryPhotos = [
+  {
+    src: "/images/couple/couple-photo.webp?v=20260601-assets-2",
+    alt: "Foto de la pareja",
+    year: "2016",
+    caption: "Donde todo comenzó",
+  },
   {
     src: "/images/couple/_DSC0723.webp?v=20260601-assets-1",
     alt: "Luisa y Jhonnatan sonriendo juntos",
+    year: "2024",
+    caption: "Una tarde inolvidable",
   },
   {
     src: "/images/couple/_DSC0953.webp",
     alt: "Recuerdo de Luisa y Jhonnatan",
+    year: "2025",
+    caption: "Entre risas y planes",
   },
   {
     src: "/images/couple/_DSC1252.webp",
     alt: "Luisa y Jhonnatan en una foto especial",
-  },
-  {
-    src: "/images/couple/couple-photo.webp?v=20260601-assets-2",
-    alt: "Foto de la pareja",
+    year: "2026",
+    caption: "Rumbo al altar",
   },
 ];
+
+const memoryYears = Array.from(new Set(memoryPhotos.map((photo) => photo.year)));
 
 function MemoriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (lightboxIndex === null) {
+      return;
+    }
+
+    const scroller = sectionRef.current?.closest(".details-scroll") as HTMLElement | null;
+    scroller?.classList.add("is-scroll-locked");
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setLightboxIndex(null);
+      } else if (event.key === "ArrowRight") {
+        setLightboxIndex((index) => (index === null ? index : (index + 1) % memoryPhotos.length));
+      } else if (event.key === "ArrowLeft") {
+        setLightboxIndex((index) =>
+          index === null ? index : (index + memoryPhotos.length - 1) % memoryPhotos.length,
+        );
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      scroller?.classList.remove("is-scroll-locked");
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lightboxIndex]);
 
   useEffect(() => {
     const scroller = getSectionScroller(sectionRef.current);
@@ -270,6 +331,16 @@ function MemoriesSection() {
     });
   };
 
+  const activeYear = memoryPhotos[activeIndex]?.year;
+
+  const scrollToYear = (year: string) => {
+    const firstIndex = memoryPhotos.findIndex((photo) => photo.year === year);
+
+    if (firstIndex >= 0) {
+      scrollToIndex(firstIndex);
+    }
+  };
+
   return (
     <section ref={sectionRef} className="memories-section finale-section" aria-labelledby="memories-title">
       <SectionFrameDecor variant="memories" />
@@ -282,49 +353,148 @@ function MemoriesSection() {
         </div>
 
         <div className="memories-gallery" data-reveal>
+          <div className="memories-years" role="tablist" aria-label="Ir a un año">
+            {memoryYears.map((year) => (
+              <button
+                key={year}
+                type="button"
+                role="tab"
+                aria-selected={year === activeYear}
+                className={year === activeYear ? "is-active" : ""}
+                onClick={() => scrollToYear(year)}
+              >
+                {year}
+              </button>
+            ))}
+          </div>
+
           <div ref={stripRef} className="memories-strip" aria-label="Galeria de recuerdos">
             {memoryPhotos.map((photo, index) => (
               <figure key={photo.src} className={`memories-card ${index === activeIndex ? "is-active" : ""}`}>
-                <div className="memories-card-photo">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    loading="eager"
-                    sizes="(max-width: 760px) 62vw, 17rem"
-                    className="memories-photo"
-                  />
-                </div>
-                <figcaption aria-hidden="true">♥</figcaption>
+                <button
+                  type="button"
+                  className="memories-card-trigger"
+                  onClick={() => setLightboxIndex(index)}
+                  aria-label={`Ampliar foto: ${photo.caption} (${photo.year})`}
+                >
+                  <span className="memories-card-photo">
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      loading="eager"
+                      sizes="(max-width: 760px) 62vw, 17rem"
+                      className="memories-photo"
+                    />
+                  </span>
+                  <span className="memories-card-year" aria-hidden="true">
+                    {photo.year}
+                  </span>
+                </button>
+                <figcaption className="memories-card-caption">{photo.caption}</figcaption>
               </figure>
             ))}
           </div>
 
           <div className="memories-controls" aria-label="Controles de la galeria">
-            <button type="button" onClick={() => scrollToIndex(activeIndex - 1)} aria-label="Foto anterior">
+            <button
+              type="button"
+              className="memories-arrow"
+              onClick={() => scrollToIndex(activeIndex - 1)}
+              aria-label="Foto anterior"
+            >
               ‹
             </button>
-            <div className="memories-dots" role="tablist" aria-label="Ir a una foto">
-              {memoryPhotos.map((photo, index) => (
-                <button
-                  key={photo.src}
-                  type="button"
-                  className={index === activeIndex ? "is-active" : ""}
-                  onClick={() => scrollToIndex(index)}
-                  aria-label={`Foto ${index + 1} de ${memoryPhotos.length}`}
-                />
-              ))}
-            </div>
-            <button type="button" onClick={() => scrollToIndex(activeIndex + 1)} aria-label="Siguiente foto">
+            <p className="memories-counter" aria-live="polite">
+              {activeIndex + 1} / {memoryPhotos.length}
+            </p>
+            <button
+              type="button"
+              className="memories-arrow"
+              onClick={() => scrollToIndex(activeIndex + 1)}
+              aria-label="Siguiente foto"
+            >
               ›
             </button>
           </div>
 
-          <p className="memories-counter" aria-live="polite">
-            {activeIndex + 1} / {memoryPhotos.length}
+          <p className="memories-swipe-hint" aria-hidden="true">
+            <span>Desliza para recorrer los años</span>
+            <ChevronsRight strokeWidth={2} />
           </p>
         </div>
       </div>
+
+      <AnimatePresence>
+        {lightboxIndex !== null ? (
+          <motion.div
+            key="memories-lightbox"
+            className="memories-lightbox"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Foto ampliada"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+            onClick={() => setLightboxIndex(null)}
+          >
+            <motion.figure
+              className="memories-lightbox-card"
+              initial={{ scale: 0.88, y: 22 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.92, y: 12 }}
+              transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <span className="memories-lightbox-photo">
+                <Image
+                  src={memoryPhotos[lightboxIndex].src}
+                  alt={memoryPhotos[lightboxIndex].alt}
+                  fill
+                  sizes="92vw"
+                  className="memories-lightbox-image"
+                />
+              </span>
+              <figcaption>
+                <strong>{memoryPhotos[lightboxIndex].caption}</strong>
+                <span>{memoryPhotos[lightboxIndex].year}</span>
+              </figcaption>
+            </motion.figure>
+
+            <button
+              type="button"
+              className="memories-lightbox-close"
+              onClick={() => setLightboxIndex(null)}
+              aria-label="Cerrar foto"
+            >
+              <X strokeWidth={2.2} />
+            </button>
+            <button
+              type="button"
+              className="memories-lightbox-nav memories-lightbox-nav--prev"
+              onClick={(event) => {
+                event.stopPropagation();
+                setLightboxIndex((lightboxIndex + memoryPhotos.length - 1) % memoryPhotos.length);
+              }}
+              aria-label="Foto anterior"
+            >
+              <ChevronLeft strokeWidth={2.2} />
+            </button>
+            <button
+              type="button"
+              className="memories-lightbox-nav memories-lightbox-nav--next"
+              onClick={(event) => {
+                event.stopPropagation();
+                setLightboxIndex((lightboxIndex + 1) % memoryPhotos.length);
+              }}
+              aria-label="Siguiente foto"
+            >
+              <ChevronRight strokeWidth={2.2} />
+            </button>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }
@@ -348,16 +518,16 @@ function AttendanceSection() {
 
       gsap.fromTo(
         footerEnvelopeRef.current,
-        { y: 90 },
+        { opacity: 0, y: 48 },
         {
+          opacity: 1,
           y: 0,
-          ease: "none",
+          duration: 1.05,
+          ease: "power2.out",
           scrollTrigger: {
             trigger: footerEnvelopeRef.current,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: 0.6,
-            invalidateOnRefresh: true,
+            start: "top 96%",
+            toggleActions: "play none none none",
             ...(scroller ? { scroller } : {}),
           },
         },

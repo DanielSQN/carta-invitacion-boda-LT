@@ -6,7 +6,7 @@ import { Check, Copy, Gift, Mail } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createBgParallax, createSectionReveal } from "./sectionFx";
+import { createSectionReveal } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -17,17 +17,18 @@ const detailCards = [
   {
     icon: Gift,
     title: "Tu presencia",
-    text: "Es nuestro mejor regalo",
+    text: "Compartir este día contigo es el regalo que más nos ilusiona",
+    wide: true,
+  },
+  {
+    title: "Opción virtual",
+    text: "Escanea el QR y transfiere desde tu celular",
+    qr: true,
   },
   {
     icon: Mail,
     title: "Lluvia de sobres",
-    text: "En el evento",
-  },
-  {
-    title: "Opción virtual",
-    text: "Transferencia",
-    qr: true,
+    text: "Tu cariño en un sobre, el día del evento",
   },
 ];
 
@@ -38,7 +39,6 @@ export default function DetailsSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      createBgParallax(sectionRef.current, bgRef.current, { amplitude: 8, scale: 1.1 });
       createSectionReveal(sectionRef.current, { stagger: 0.16 });
     }, sectionRef);
 
@@ -78,8 +78,8 @@ export default function DetailsSection() {
         </h2>
 
         <div className="details-card-grid">
-          {detailCards.map(({ icon: Icon, qr, title, text }) => (
-            <article key={title} className="details-info-card" data-reveal>
+          {detailCards.map(({ icon: Icon, qr, title, text, wide }) => (
+            <article key={title} className={`details-info-card${wide ? " details-info-card--wide" : ""}`} data-reveal>
               {qr ? (
                 <div className="details-card-qr-block" aria-label="QR llave Bre-B">
                   <span className="details-card-qr-label">QR llave Bre-B</span>

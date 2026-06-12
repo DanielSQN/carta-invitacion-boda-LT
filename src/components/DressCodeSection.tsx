@@ -90,6 +90,9 @@ export default function DressCodeSection() {
               <span key={color} className="dress-swatch" style={{ backgroundColor: color }} />
             ))}
           </div>
+          <p className="dress-reserved-note">
+            Todo tipo de azul nos lo reservamos los novios <span aria-hidden="true">♥</span>
+          </p>
         </div>
       </div>
     </section>

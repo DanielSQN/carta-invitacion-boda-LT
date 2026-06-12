@@ -2,6 +2,7 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CalendarPlus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
@@ -54,17 +55,9 @@ function MarqueeHeart({ className = "" }: { className?: string }) {
   return <HeartIcon className={`countdown-marquee-heart ${className}`} />;
 }
 
-function GoogleCalendarIcon() {
-  return (
-    <svg className="countdown-action-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
-      <path d="M6 9.2h20v15.9A2.9 2.9 0 0 1 23.1 28H8.9A2.9 2.9 0 0 1 6 25.1V9.2Z" fill="#fff" />
-      <path d="M6 9.2h20V6.9A2.9 2.9 0 0 0 23.1 4H8.9A2.9 2.9 0 0 0 6 6.9v2.3Z" fill="#4285F4" />
-      <path d="M11.1 2.8v4.7M20.9 2.8v4.7" stroke="#5F6368" strokeLinecap="round" strokeWidth="1.8" />
-      <path d="M13.2 22.3h5.9M13.2 17.2h5.9" stroke="#4285F4" strokeLinecap="round" strokeWidth="2" />
-      <path d="M8.9 4h14.2A2.9 2.9 0 0 1 26 6.9v18.2a2.9 2.9 0 0 1-2.9 2.9H8.9A2.9 2.9 0 0 1 6 25.1V6.9A2.9 2.9 0 0 1 8.9 4Z" fill="none" stroke="#DADCE0" strokeWidth="1" />
-    </svg>
-  );
-}
+const googleCalendarUrl =
+  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda%20Luisa%20%26%20Tattan&dates=20260926T200000Z/20260927T050000Z&details=Celebramos%20nuestra%20boda%20con%20ustedes.&location=Hacienda%20Santa%20Elena%2C%20Cota%2C%20Cundinamarca";
+const icsCalendarUrl = "/boda-luisa-jhonnatan.ics";
 
 export default function CountdownSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -75,6 +68,19 @@ export default function CountdownSection() {
   const metaRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [countdown, setCountdown] = useState<CountdownTime>(initialCountdown);
+  const [calendarHref, setCalendarHref] = useState(googleCalendarUrl);
+
+  useEffect(() => {
+    // Mismo boton para todos: en iOS abre el .ics (Apple Calendar),
+    // en Android/desktop abre Google Calendar.
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.userAgent.includes("Mac") && navigator.maxTouchPoints > 1);
+
+    if (isIOS) {
+      queueMicrotask(() => setCalendarHref(icsCalendarUrl));
+    }
+  }, []);
 
   useEffect(() => {
     const initialTimer = window.setTimeout(() => setCountdown(getCountdownTime()), 0);
@@ -139,8 +145,7 @@ export default function CountdownSection() {
     { label: "MINUTOS", value: countdown.minutes },
     { label: "SEGUNDOS", value: countdown.seconds },
   ];
-  const calendarUrl =
-    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda%20Luisa%20%26%20Tattan&dates=20260926T200000Z/20260927T050000Z&details=Celebramos%20nuestra%20boda%20con%20ustedes.&location=Hacienda%20Santa%20Elena%2C%20Cota%2C%20Cundinamarca";
+  const isIcsCalendar = calendarHref === icsCalendarUrl;
 
   return (
     <section ref={sectionRef} className="countdown-section" aria-labelledby="countdown-title">
@@ -203,15 +208,14 @@ export default function CountdownSection() {
 
           <div ref={metaRef} className="countdown-meta">
             <p className="countdown-date">26 · SEP · 2026</p>
-            <div className="countdown-actions" aria-label="Acciones de fecha y ubicacion">
-              <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
-                <GoogleCalendarIcon />
+            <div className="countdown-actions" aria-label="Agregar la fecha al calendario">
+              <a
+                href={calendarHref}
+                {...(isIcsCalendar ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+              >
+                <CalendarPlus className="countdown-action-icon" aria-hidden="true" strokeWidth={1.8} />
                 Agregar al calendario
               </a>
-            </div>
-            <div className="countdown-place">
-              <p>HACIENDA SANTA ELENA</p>
-              <span>COTA</span>
             </div>
           </div>
         </div>

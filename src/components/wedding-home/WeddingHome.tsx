@@ -99,6 +99,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [showWeddingHero, setShowWeddingHero] = useState(false);
   const [isHeroTransitioning, setIsHeroTransitioning] = useState(false);
+  const [isHeroIntroDone, setIsHeroIntroDone] = useState(false);
+  const [isAttendanceVisible, setIsAttendanceVisible] = useState(false);
   const [guestName, setGuestName] = useState(initialGuestName);
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
@@ -107,6 +109,36 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const envelopeLetterRef = useRef<HTMLDivElement>(null);
   const transitionCardRef = useRef<HTMLDivElement>(null);
   const transitionWashRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleIntroComplete = () => setIsHeroIntroDone(true);
+
+    window.addEventListener("hero-intro-complete", handleIntroComplete);
+
+    return () => window.removeEventListener("hero-intro-complete", handleIntroComplete);
+  }, []);
+
+  useEffect(() => {
+    if (!showWeddingHero) {
+      return;
+    }
+
+    const scroller = document.querySelector(".details-scroll");
+    const attendanceSection = document.querySelector(".attendance-section");
+
+    if (!attendanceSection) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsAttendanceVisible(entry.isIntersecting),
+      { root: scroller, threshold: 0.05 },
+    );
+
+    observer.observe(attendanceSection);
+
+    return () => observer.disconnect();
+  }, [showWeddingHero]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -369,9 +401,11 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     </AnimatePresence>
   );
 
+  const showSwipePrompt = showWeddingHero && isHeroIntroDone && !isAttendanceVisible;
+
   const swipeDownControl = (
     <AnimatePresence>
-      {showWeddingHero ? (
+      {showSwipePrompt ? (
         <motion.div
           key="swipe-down"
           className="fixed-swipe-down"
