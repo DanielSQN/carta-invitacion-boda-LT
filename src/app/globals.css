@@ -39,6 +39,9 @@ html {
   /* el documento no scrollea (lo hace .details-scroll): sin esto, arrastrar
      hacia abajo disparaba el pull-to-refresh de Android y recargaba */
   overscroll-behavior: none;
+  /* iOS ignora user-scalable=no del viewport: pan-x pan-y permite el scroll
+     pero bloquea pinch-zoom y doble tap (Safari lo respeta desde iOS 13) */
+  touch-action: pan-x pan-y;
 }
 
 body {

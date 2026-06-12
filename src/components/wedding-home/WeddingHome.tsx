@@ -98,6 +98,20 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, []);
 
   useEffect(() => {
+    // iOS Safari ignora user-scalable=no: ademas del touch-action en CSS,
+    // se bloquea el gesto de pellizco via los eventos gesture* de WebKit.
+    const preventPinchZoom = (event: Event) => event.preventDefault();
+
+    document.addEventListener("gesturestart", preventPinchZoom);
+    document.addEventListener("gesturechange", preventPinchZoom);
+
+    return () => {
+      document.removeEventListener("gesturestart", preventPinchZoom);
+      document.removeEventListener("gesturechange", preventPinchZoom);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!showWeddingHero) {
       return;
     }
