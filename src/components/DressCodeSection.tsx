@@ -67,10 +67,20 @@ export default function DressCodeSection() {
         </div>
 
         <div className="dress-column dress-column--attire" data-reveal>
-          <div className="dress-figure" aria-hidden="true">
-            <Image src="/images/details/dress-code.webp" alt="" fill sizes="(max-width: 760px) 74vw, 24rem" className="dress-image" />
-          </div>
-          <h3>Formal</h3>
+          <figure className="dress-polaroid">
+            <span className="dress-polaroid-frame">
+              <span className="dress-polaroid-photo">
+                <Image
+                  src="/images/details/dress-code.webp"
+                  alt="Ilustracion de traje y vestido formal"
+                  fill
+                  sizes="(max-width: 760px) 74vw, 22rem"
+                  className="dress-image"
+                />
+              </span>
+            </span>
+            <figcaption className="dress-polaroid-caption">Formal</figcaption>
+          </figure>
         </div>
 
         <div className="dress-column dress-column--reserved" data-reveal>

@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const storyItems = [
   { year: "2015", text: "Nos conocimos", icon: "/images/story/001-heart.webp" },
-  { year: "2018", text: "Inicio de esta aventura", icon: "/images/story/004-correo.webp" },
+  { year: "2016", text: "Inicio de esta aventura", icon: "/images/story/004-correo.webp" },
   { year: "2024", text: "Dos almas, una promesa", icon: "/images/story/002-wedding-rings.webp" },
   { year: "2026", text: "Para toda la vida", icon: "/images/story/003-heart-1.webp" },
 ];
@@ -47,19 +47,22 @@ export default function OurStorySection() {
         .fromTo(titleRef.current, { opacity: 0, y: -26 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0)
         .fromTo(".story-line-fill", { scaleY: 0 }, { scaleY: 1, duration: 1.6, ease: "power2.out" }, 0.18);
 
+      // Cada hito aparece uno a uno al bajar y se retira al subir
+      // (play al entrar, reverse al salir, en ambas direcciones).
       gsap.utils.toArray<HTMLElement>(".story-item").forEach((item) => {
         gsap.fromTo(
           item,
-          { opacity: 0, y: -34 },
+          { opacity: 0, x: -28, y: 16 },
           {
             opacity: 1,
+            x: 0,
             y: 0,
-            duration: 0.72,
+            duration: 0.62,
             ease: "power2.out",
             scrollTrigger: {
               trigger: item,
-              start: "top 86%",
-              toggleActions: "play none none none",
+              start: "top 88%",
+              toggleActions: "play reverse play reverse",
               ...triggerDefaults,
             },
           },

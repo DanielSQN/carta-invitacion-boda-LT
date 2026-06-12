@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import gsap from "gsap";
+import { Check, Heart, User } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
@@ -383,6 +384,13 @@ function AttendanceSection() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsConfirmed(true);
+
+    window.requestAnimationFrame(() => {
+      sectionRef.current?.querySelector(".attendance-confirmed")?.scrollIntoView({
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+        block: "center",
+      });
+    });
   };
 
   return (
@@ -397,8 +405,18 @@ function AttendanceSection() {
         </div>
 
         <form className="attendance-form" data-reveal onSubmit={handleSubmit}>
-          <div className="attendance-quantity-field">
-            <span>Cantidad de asistentes</span>
+          <p className="attendance-hint">
+            Completa estos dos pasos y presiona <strong>Confirmar asistencia</strong>.
+          </p>
+
+          <div className="attendance-step">
+            <div className="attendance-step-head">
+              <span className="attendance-step-number" aria-hidden="true">
+                1
+              </span>
+              <span className="attendance-step-title">¿Cuántas personas asisten?</span>
+            </div>
+
             <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
               <button
                 type="button"
@@ -410,6 +428,7 @@ function AttendanceSection() {
               </button>
               <output aria-live="polite" aria-label={`${guestCount} asistentes`}>
                 {guestCount}
+                <small>{guestCount === 1 ? "persona" : "personas"}</small>
               </output>
               <button
                 type="button"
@@ -420,32 +439,51 @@ function AttendanceSection() {
                 +
               </button>
             </div>
+
+            <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo 6).</p>
           </div>
 
-          <div className="attendance-name-grid">
-            {guestNames.map((name, index) => (
-              <label key={index} className="attendance-field">
-                <span>{guestCount === 1 ? "Nombre" : `Nombre ${index + 1}`}</span>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(event) => updateGuestName(index, event.target.value)}
-                  placeholder="Nombre completo"
-                  required
-                />
-              </label>
-            ))}
-          </div>
+          <div className="attendance-step">
+            <div className="attendance-step-head">
+              <span className="attendance-step-number" aria-hidden="true">
+                2
+              </span>
+              <span className="attendance-step-title">¿Quiénes asisten?</span>
+            </div>
 
-          <button className="attendance-submit" type="submit">
-            Confirmar
-          </button>
+            <div className="attendance-name-grid">
+              {guestNames.map((name, index) => (
+                <label key={index} className="attendance-field">
+                  <span>{guestCount === 1 ? "Tu nombre" : index === 0 ? "Tu nombre" : `Acompañante ${index}`}</span>
+                  <span className="attendance-input-wrap">
+                    <User aria-hidden="true" strokeWidth={2} />
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(event) => updateGuestName(index, event.target.value)}
+                      placeholder="Nombre completo"
+                      required
+                    />
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
 
           {isConfirmed ? (
-            <p className="attendance-confirmed" role="status">
-              Gracias, tu confirmacion quedo registrada visualmente.
-            </p>
-          ) : null}
+            <div className="attendance-confirmed" role="status">
+              <span className="attendance-confirmed-icon" aria-hidden="true">
+                <Check strokeWidth={2.6} />
+              </span>
+              <p>¡Gracias por confirmar{guestCount > 1 ? ` por ${guestCount} personas` : ""}!</p>
+              <span>Nos vemos el 26 de septiembre de 2026 ♥</span>
+            </div>
+          ) : (
+            <button className="attendance-submit" type="submit">
+              <Heart aria-hidden="true" strokeWidth={2.2} />
+              Confirmar asistencia
+            </button>
+          )}
         </form>
       </div>
 
