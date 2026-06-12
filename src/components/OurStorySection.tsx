@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
+import { createBgParallax } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,7 +27,7 @@ export default function OurStorySection() {
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
-      gsap.set(imageRef.current, { scale: reduceMotion ? 1 : 1.04, yPercent: reduceMotion ? 0 : -3, force3D: true });
+      createBgParallax(sectionRef.current, imageRef.current, { amplitude: 10, scale: 1.1 });
 
       if (reduceMotion) {
         gsap.set([titleRef.current, ".story-item"], { opacity: 1, y: 0 });
@@ -63,20 +64,6 @@ export default function OurStorySection() {
             },
           },
         );
-      });
-
-      gsap.to(imageRef.current, {
-        yPercent: 4,
-        scale: 1.01,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.75,
-          invalidateOnRefresh: true,
-          ...triggerDefaults,
-        },
       });
     }, sectionRef);
 

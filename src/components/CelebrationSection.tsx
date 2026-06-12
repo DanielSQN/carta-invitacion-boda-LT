@@ -2,9 +2,11 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { CalendarDays, Clock } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
+import { createBgParallax } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -63,6 +65,7 @@ export default function CelebrationSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
+  const venueRef = useRef<HTMLElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
@@ -73,8 +76,10 @@ export default function CelebrationSection() {
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
+      createBgParallax(sectionRef.current, imageRef.current, { amplitude: 10, scale: 1.1 });
+
       if (reduceMotion) {
-        gsap.set([titleRef.current, ruleRef.current, infoRef.current, imageRef.current, actionsRef.current], {
+        gsap.set([titleRef.current, ruleRef.current, venueRef.current, infoRef.current, actionsRef.current], {
           opacity: 1,
           y: 0,
           scale: 1,
@@ -91,25 +96,16 @@ export default function CelebrationSection() {
             ...triggerDefaults,
           },
         })
-        .fromTo(imageRef.current, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.1, ease: "power2.out" }, 0)
-        .fromTo(titleRef.current, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0.12)
-        .fromTo(ruleRef.current, { opacity: 0 }, { opacity: 1, duration: 0.78, ease: "power2.out" }, 0.22)
-        .fromTo(infoRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.88, ease: "power2.out" }, 0.34)
-        .fromTo(actionsRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.68, ease: "power2.out" }, 0.54);
-
-      gsap.to(imageRef.current, {
-        yPercent: 4,
-        scale: 1.01,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.75,
-          invalidateOnRefresh: true,
-          ...triggerDefaults,
-        },
-      });
+        .fromTo(titleRef.current, { opacity: 0, y: 32 }, { opacity: 1, y: 0, duration: 0.82, ease: "power2.out" }, 0.06)
+        .fromTo(ruleRef.current, { opacity: 0 }, { opacity: 1, duration: 0.78, ease: "power2.out" }, 0.18)
+        .fromTo(
+          venueRef.current,
+          { opacity: 0, y: 36, rotate: -5 },
+          { opacity: 1, y: 0, rotate: -1.8, duration: 0.95, ease: "power3.out" },
+          0.3,
+        )
+        .fromTo(infoRef.current, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.88, ease: "power2.out" }, 0.46)
+        .fromTo(actionsRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.68, ease: "power2.out" }, 0.66);
 
       const rulePaths = gsap.utils.toArray<SVGPathElement>(".celebration-rule path");
       rulePaths.forEach((path) => {
@@ -159,15 +155,35 @@ export default function CelebrationSection() {
         </div>
 
         <div className="celebration-layout">
+          <figure ref={venueRef} className="celebration-venue">
+            <span className="celebration-venue-frame">
+              <span className="celebration-venue-photo-wrap">
+                <Image
+                  src="/images/venues/hacienda_SH.webp"
+                  alt="Hacienda Santa Elena"
+                  fill
+                  sizes="(max-width: 760px) 88vw, 26rem"
+                  className="celebration-venue-photo"
+                />
+              </span>
+            </span>
+            <figcaption className="celebration-venue-caption">Hacienda Santa Elena</figcaption>
+          </figure>
+
           <div ref={infoRef} className="celebration-info-card">
-            <div className="celebration-detail-row">
-              <span>Fecha</span>
-              <strong>26 · SEP · 2026</strong>
+            <div className="celebration-meta-grid">
+              <div className="celebration-meta">
+                <CalendarDays aria-hidden="true" strokeWidth={1.5} />
+                <span>Fecha</span>
+                <strong>26 · SEP · 2026</strong>
+              </div>
+              <div className="celebration-meta">
+                <Clock aria-hidden="true" strokeWidth={1.5} />
+                <span>Hora</span>
+                <strong>XX:XX P.M.</strong>
+              </div>
             </div>
-            <div className="celebration-detail-row">
-              <span>Hora</span>
-              <strong>XX:XX P.M.</strong>
-            </div>
+
             <div className="celebration-place">
               <span>Lugar</span>
               <strong>Hacienda Santa Elena</strong>
@@ -175,7 +191,7 @@ export default function CelebrationSection() {
             </div>
 
             <div ref={actionsRef} className="celebration-location-card">
-              <h3>Ver ubicación</h3>
+              <h3>¿Cómo llegar?</h3>
               <div className="celebration-location-actions">
                 <a
                   className="celebration-map-button celebration-map-button--maps"

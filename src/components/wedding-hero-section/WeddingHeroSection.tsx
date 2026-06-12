@@ -3,13 +3,14 @@
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import Image from "next/image";
-import { type FormEvent, type TouchEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
 import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
 import OurStorySection from "../OurStorySection";
+import { createBgParallax, createSectionReveal, getSectionScroller, prefersReducedMotion } from "../sectionFx";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (
@@ -43,8 +44,6 @@ function HeroSection() {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const scroller = heroRef.current?.closest(".details-scroll") as HTMLElement | null;
-    const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
       gsap.set(imageRef.current, { scale: 1, force3D: true });
@@ -102,19 +101,9 @@ function HeroSection() {
         .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.78, ease: "power2.out" }, ">+0.18")
         .to(cursorRef.current, { opacity: 0.18, duration: 0.72, repeat: -1, yoyo: true, ease: "sine.inOut" }, ">");
 
-      gsap.to(imageRef.current, {
-        yPercent: 5,
-        scale: 1.03,
-        ease: "none",
-        scrollTrigger: {
-          trigger: heroRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.75,
-          invalidateOnRefresh: true,
-          ...triggerDefaults,
-        },
-      });
+      // scale 1 para que la foto del hero coincida 1:1 con la foto de la
+      // transicion del sobre cuando esta se desvanece.
+      createBgParallax(heroRef.current, imageRef.current, { amplitude: 9, scale: 1 });
     }, heroRef);
 
     return () => ctx.revert();
@@ -180,95 +169,104 @@ const memoryPhotos = [
   },
 ];
 
-function useRevealSection() {
+function MemoriesSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    const section = sectionRef.current;
+    const scroller = getSectionScroller(sectionRef.current);
 
-    if (!section) {
-      return;
-    }
+    const ctx = gsap.context(() => {
+      createSectionReveal(sectionRef.current);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          section.classList.add("is-visible");
-          observer.disconnect();
-        }
-      },
-      {
-        threshold: 0.22,
-        rootMargin: "-10% 0px -10% 0px",
-      },
-    );
+      const cards = gsap.utils.toArray<HTMLElement>(".memories-card");
 
-    observer.observe(section);
+      if (prefersReducedMotion()) {
+        gsap.set(cards, { opacity: 1 });
+        return;
+      }
 
-    return () => observer.disconnect();
+      gsap.fromTo(
+        cards,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.85,
+          stagger: 0.12,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 70%",
+            toggleActions: "play none none none",
+            ...(scroller ? { scroller } : {}),
+          },
+        },
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
-  return sectionRef;
-}
+  useEffect(() => {
+    const strip = stripRef.current;
 
-function MemoriesSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const sectionRef = useRevealSection();
-  const touchStartXRef = useRef<number | null>(null);
-
-  const getMemoryClassName = (index: number) => {
-    const previousIndex = currentIndex === 0 ? memoryPhotos.length - 1 : currentIndex - 1;
-    const nextIndex = currentIndex === memoryPhotos.length - 1 ? 0 : currentIndex + 1;
-
-    if (index === currentIndex) {
-      return "memories-print--center";
-    }
-
-    if (index === previousIndex) {
-      return "memories-print--left";
-    }
-
-    if (index === nextIndex) {
-      return "memories-print--right";
-    }
-
-    return "memories-print--hidden";
-  };
-
-  const goToPrevious = () => {
-    setCurrentIndex((index) => (index === 0 ? memoryPhotos.length - 1 : index - 1));
-  };
-
-  const goToNext = () => {
-    setCurrentIndex((index) => (index === memoryPhotos.length - 1 ? 0 : index + 1));
-  };
-
-  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
-    touchStartXRef.current = event.touches[0]?.clientX ?? null;
-  };
-
-  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
-    const startX = touchStartXRef.current;
-    const endX = event.changedTouches[0]?.clientX;
-
-    touchStartXRef.current = null;
-
-    if (startX === null || endX === undefined) {
+    if (!strip) {
       return;
     }
 
-    const deltaX = endX - startX;
+    let frame = 0;
 
-    if (Math.abs(deltaX) < 42) {
+    const updateActiveIndex = () => {
+      frame = 0;
+      const center = strip.scrollLeft + strip.clientWidth / 2;
+      let closestIndex = 0;
+      let closestDistance = Number.POSITIVE_INFINITY;
+
+      Array.from(strip.children).forEach((child, index) => {
+        const card = child as HTMLElement;
+        const distance = Math.abs(card.offsetLeft + card.offsetWidth / 2 - center);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+
+      setActiveIndex(closestIndex);
+    };
+
+    const handleScroll = () => {
+      if (!frame) {
+        frame = window.requestAnimationFrame(updateActiveIndex);
+      }
+    };
+
+    strip.addEventListener("scroll", handleScroll, { passive: true });
+    updateActiveIndex();
+
+    return () => {
+      strip.removeEventListener("scroll", handleScroll);
+
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+    };
+  }, []);
+
+  const scrollToIndex = (index: number) => {
+    const strip = stripRef.current;
+    const targetIndex = (index + memoryPhotos.length) % memoryPhotos.length;
+    const card = strip?.children[targetIndex] as HTMLElement | undefined;
+
+    if (!strip || !card) {
       return;
     }
 
-    if (deltaX > 0) {
-      goToPrevious();
-      return;
-    }
-
-    goToNext();
+    strip.scrollTo({
+      left: card.offsetLeft - (strip.clientWidth - card.offsetWidth) / 2,
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
   };
 
   return (
@@ -276,49 +274,54 @@ function MemoriesSection() {
       <SectionFrameDecor variant="memories" />
       <div className="finale-section-bg" aria-hidden="true" />
       <div className="finale-inner">
-        <div className="finale-heading finale-reveal">
+        <div className="finale-heading" data-reveal>
           <span>Recuerdos</span>
           <h2 id="memories-title">Algunos recuerdos</h2>
           <p>Momentos que guardamos con amor y que nos trajeron hasta este dia.</p>
         </div>
 
-        <div className="memories-carousel finale-reveal">
-          <div className="memories-collage memories-touch-area" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
-            {memoryPhotos.map((photo, index) => {
-              const className = getMemoryClassName(index);
-
-              return (
-                <figure
-                  key={photo.src}
-                  className={`memories-print ${className}`}
-                  aria-hidden={className === "memories-print--hidden"}
-                >
+        <div className="memories-gallery" data-reveal>
+          <div ref={stripRef} className="memories-strip" aria-label="Galeria de recuerdos">
+            {memoryPhotos.map((photo, index) => (
+              <figure key={photo.src} className={`memories-card ${index === activeIndex ? "is-active" : ""}`}>
+                <div className="memories-card-photo">
                   <Image
                     src={photo.src}
                     alt={photo.alt}
                     fill
                     loading="eager"
-                    sizes="(max-width: 760px) 46vw, 18rem"
+                    sizes="(max-width: 760px) 62vw, 17rem"
                     className="memories-photo"
                   />
-                </figure>
-              );
-            })}
+                </div>
+                <figcaption aria-hidden="true">♥</figcaption>
+              </figure>
+            ))}
           </div>
 
-          <div className="memories-controls" aria-label="Controles del carrusel">
-            <button type="button" onClick={goToPrevious} aria-label="Foto anterior">
+          <div className="memories-controls" aria-label="Controles de la galeria">
+            <button type="button" onClick={() => scrollToIndex(activeIndex - 1)} aria-label="Foto anterior">
               ‹
             </button>
-            <div className="memories-dots" aria-hidden="true">
+            <div className="memories-dots" role="tablist" aria-label="Ir a una foto">
               {memoryPhotos.map((photo, index) => (
-                <span key={photo.src} className={index === currentIndex ? "is-active" : ""} />
+                <button
+                  key={photo.src}
+                  type="button"
+                  className={index === activeIndex ? "is-active" : ""}
+                  onClick={() => scrollToIndex(index)}
+                  aria-label={`Foto ${index + 1} de ${memoryPhotos.length}`}
+                />
               ))}
             </div>
-            <button type="button" onClick={goToNext} aria-label="Siguiente foto">
+            <button type="button" onClick={() => scrollToIndex(activeIndex + 1)} aria-label="Siguiente foto">
               ›
             </button>
           </div>
+
+          <p className="memories-counter" aria-live="polite">
+            {activeIndex + 1} / {memoryPhotos.length}
+          </p>
         </div>
       </div>
     </section>
@@ -329,7 +332,39 @@ function AttendanceSection() {
   const [guestCount, setGuestCount] = useState(1);
   const [guestNames, setGuestNames] = useState([""]);
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const sectionRef = useRevealSection();
+  const sectionRef = useRef<HTMLElement>(null);
+  const footerEnvelopeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scroller = getSectionScroller(sectionRef.current);
+
+    const ctx = gsap.context(() => {
+      createSectionReveal(sectionRef.current);
+
+      if (prefersReducedMotion()) {
+        return;
+      }
+
+      gsap.fromTo(
+        footerEnvelopeRef.current,
+        { y: 90 },
+        {
+          y: 0,
+          ease: "none",
+          scrollTrigger: {
+            trigger: footerEnvelopeRef.current,
+            start: "top bottom",
+            end: "bottom bottom",
+            scrub: 0.6,
+            invalidateOnRefresh: true,
+            ...(scroller ? { scroller } : {}),
+          },
+        },
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const updateGuestCount = (value: number) => {
     const nextValue = Math.min(Math.max(value, 1), 6);
@@ -355,13 +390,13 @@ function AttendanceSection() {
       <SectionFrameDecor variant="attendance" />
       <div className="finale-section-bg finale-section-bg--attendance" aria-hidden="true" />
       <div className="finale-inner attendance-inner">
-        <div className="finale-heading finale-reveal">
+        <div className="finale-heading" data-reveal>
           <span>RSVP</span>
           <h2 id="attendance-title">Confirmar tu asistencia</h2>
           <p>Ayudanos a preparar cada detalle con amor.</p>
         </div>
 
-        <form className="attendance-form finale-reveal" onSubmit={handleSubmit}>
+        <form className="attendance-form" data-reveal onSubmit={handleSubmit}>
           <div className="attendance-quantity-field">
             <span>Cantidad de asistentes</span>
             <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
@@ -414,7 +449,7 @@ function AttendanceSection() {
         </form>
       </div>
 
-      <div className="attendance-footer-envelope" aria-hidden="true">
+      <div ref={footerEnvelopeRef} className="attendance-footer-envelope" aria-hidden="true">
         <Image
           src="/images/ui/footer-envelope.webp"
           alt=""

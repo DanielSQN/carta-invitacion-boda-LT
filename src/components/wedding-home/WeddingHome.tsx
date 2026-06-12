@@ -250,6 +250,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         .to(
           transitionCardRef.current,
           {
+            "--photo-frame": "0rem",
+            "--photo-frame-bottom": "0rem",
             borderRadius: 0,
             duration: 1.14,
             height: "100svh",

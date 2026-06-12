@@ -1,9 +1,14 @@
 "use client";
 
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, Copy, Gift, Mail } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
+import { createBgParallax, createSectionReveal } from "./sectionFx";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const virtualQrSrc = "/images/details/qr-transferencia.svg";
 const brebKey = "@miBodaLT";
@@ -28,6 +33,17 @@ const detailCards = [
 
 export default function DetailsSection() {
   const [hasCopiedBrebKey, setHasCopiedBrebKey] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      createBgParallax(sectionRef.current, bgRef.current, { amplitude: 8, scale: 1.1 });
+      createSectionReveal(sectionRef.current, { stagger: 0.16 });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const copyBrebKey = async () => {
     try {
@@ -49,19 +65,21 @@ export default function DetailsSection() {
   };
 
   return (
-    <section className="details-section" aria-labelledby="details-title">
+    <section ref={sectionRef} className="details-section" aria-labelledby="details-title">
       <SectionFrameDecor variant="details" />
-      <div className="details-bg" aria-hidden="true">
+      <div ref={bgRef} className="details-bg" aria-hidden="true">
         <Image src="/images/couple/_DSC1252.webp" alt="" fill sizes="100vw" className="details-bg-image" />
       </div>
       <div className="details-overlay" aria-hidden="true" />
 
       <div className="details-inner">
-        <h2 id="details-title">Detalles</h2>
+        <h2 id="details-title" data-reveal>
+          Detalles
+        </h2>
 
         <div className="details-card-grid">
           {detailCards.map(({ icon: Icon, qr, title, text }) => (
-            <article key={title} className="details-info-card">
+            <article key={title} className="details-info-card" data-reveal>
               {qr ? (
                 <div className="details-card-qr-block" aria-label="QR llave Bre-B">
                   <span className="details-card-qr-label">QR llave Bre-B</span>

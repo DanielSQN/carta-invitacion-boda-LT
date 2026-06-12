@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
+import { createBgParallax } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,13 +92,13 @@ export default function CountdownSection() {
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
-      gsap.set(imageRef.current, { yPercent: -4, scale: 1.08, force3D: true });
       gsap.set(topRef.current, { opacity: 1 });
       gsap.set(quoteTextRef.current, { xPercent: 0, opacity: 1 });
       gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], { opacity: 0 });
 
+      createBgParallax(sectionRef.current, imageRef.current, { amplitude: 5, scale: 1.1 });
+
       if (reduceMotion) {
-        gsap.set(imageRef.current, { yPercent: 0, scale: 1 });
         gsap.set(quoteTextRef.current, { opacity: 1, xPercent: 0 });
         gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], {
           opacity: 1,
@@ -125,20 +126,6 @@ export default function CountdownSection() {
           0.36,
         )
         .fromTo(metaRef.current, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.72, ease: "power2.out" }, 0.58);
-
-      gsap.to(imageRef.current, {
-        yPercent: 4,
-        scale: 1.02,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.75,
-          invalidateOnRefresh: true,
-          ...triggerDefaults,
-        },
-      });
 
       ScrollTrigger.refresh();
     }, sectionRef);
