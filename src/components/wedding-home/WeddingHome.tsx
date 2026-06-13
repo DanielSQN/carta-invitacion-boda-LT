@@ -24,6 +24,65 @@ const preloadedInvitationAssets = [
   "/images/paper/paper-texture-old.webp",
 ];
 
+const sectionBackgroundAssets = [
+  "/images/couple/_DSC0723.webp?v=20260601-assets-1",
+  "/images/venues/lugar-celebracion.webp",
+  "/images/venues/hacienda_SH.webp",
+  "/images/couple/_DSC0953.webp",
+  "/images/details/background-dress-code.webp",
+  "/images/details/dress-code.webp",
+  "/images/couple/_DSC1252.webp",
+  "/images/paper/paper-texture-old.webp",
+  "/images/florals/generated/blue-breath-corner-top.webp",
+  "/images/florals/generated/blue-breath-corner-bottom.webp",
+  "/images/florals/generated/blue-breath-sprig.webp",
+];
+
+function preloadImages(sources: string[], timeoutMs = 6500) {
+  const uniqueSources = Array.from(new Set(sources));
+
+  return new Promise<void>((resolve) => {
+    if (!uniqueSources.length) {
+      resolve();
+      return;
+    }
+
+    let settled = 0;
+    const timer = window.setTimeout(resolve, timeoutMs);
+
+    const done = () => {
+      settled += 1;
+
+      if (settled >= uniqueSources.length) {
+        window.clearTimeout(timer);
+        resolve();
+      }
+    };
+
+    uniqueSources.forEach((src) => {
+      const image = new window.Image();
+      let didSettle = false;
+      const settleImage = () => {
+        if (didSettle) {
+          return;
+        }
+
+        didSettle = true;
+        done();
+      };
+
+      image.decoding = "async";
+      image.onload = settleImage;
+      image.onerror = settleImage;
+      image.src = src;
+
+      if (image.complete) {
+        settleImage();
+      }
+    });
+  });
+}
+
 function MusicToggleIcon({ isPlaying }: { isPlaying: boolean }) {
   return isPlaying ? (
     <Music className="music-toggle-svg music-toggle-svg--music" strokeWidth={2} aria-hidden="true" />
@@ -83,6 +142,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [showWeddingHero, setShowWeddingHero] = useState(false);
   const [isHeroTransitioning, setIsHeroTransitioning] = useState(false);
   const [isHeroIntroDone, setIsHeroIntroDone] = useState(false);
+  const [areSectionAssetsReady, setAreSectionAssetsReady] = useState(false);
   const [isAttendanceVisible, setIsAttendanceVisible] = useState(false);
   const [guestName, setGuestName] = useState(initialGuestName);
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
@@ -159,6 +219,24 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isEnvelopeOpen) {
+      return;
+    }
+
+    let cancelled = false;
+
+    preloadImages(sectionBackgroundAssets).then(() => {
+      if (!cancelled) {
+        setAreSectionAssetsReady(true);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isEnvelopeOpen]);
 
   useEffect(() => {
     if (!isEnvelopeOpen) {
@@ -356,6 +434,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
+      setAreSectionAssetsReady(false);
+      setIsHeroIntroDone(false);
       setIsHeroTransitioning(true);
       setIsEnvelopeOpen(true);
 
@@ -420,7 +500,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     </AnimatePresence>
   );
 
-  const showSwipePrompt = showWeddingHero && isHeroIntroDone && !isAttendanceVisible;
+  const canScrollInvitation = !showWeddingHero || (isHeroIntroDone && areSectionAssetsReady);
+  const showSwipePrompt = showWeddingHero && canScrollInvitation && !isAttendanceVisible;
 
   const swipeDownControl = (
     <AnimatePresence>
@@ -441,9 +522,12 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   return (
     <main
+      aria-busy={showWeddingHero && !canScrollInvitation}
       className={
         showWeddingHero
-          ? "details-scroll relative h-svh overflow-x-hidden overflow-y-auto bg-[#07111f] text-olive"
+          ? `details-scroll relative h-svh overflow-x-hidden bg-[#07111f] text-olive ${
+              canScrollInvitation ? "overflow-y-auto" : "overflow-y-hidden"
+            }`
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >

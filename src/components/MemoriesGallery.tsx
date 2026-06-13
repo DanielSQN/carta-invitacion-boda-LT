@@ -3,9 +3,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChevronLeft, ChevronRight, ChevronsRight, X } from "lucide-react";
+import { ChevronsRight, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { prefersReducedMotion } from "./sectionFx";
 
@@ -69,11 +69,32 @@ const memoryPhotos = memoryYearCounts.flatMap(([year, count]) =>
 
 const memoryYears = Array.from(new Set(memoryPhotos.map((photo) => photo.year)));
 
+function normalizeMemoryIndex(index: number) {
+  return (index + memoryPhotos.length) % memoryPhotos.length;
+}
+
+function preloadMemoryNeighbors(index: number) {
+  [index - 1, index + 1, index + 2].forEach((target) => {
+    const photo = memoryPhotos[normalizeMemoryIndex(target)];
+    const image = new window.Image();
+    image.decoding = "async";
+    image.src = photo.src;
+  });
+}
+
 export default function MemoriesGallery() {
   const galleryRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  const showPreviousLightboxPhoto = useCallback(() => {
+    setLightboxIndex((index) => (index === null ? index : normalizeMemoryIndex(index - 1)));
+  }, []);
+
+  const showNextLightboxPhoto = useCallback(() => {
+    setLightboxIndex((index) => (index === null ? index : normalizeMemoryIndex(index + 1)));
+  }, []);
 
   useEffect(() => {
     if (lightboxIndex === null) {
@@ -87,9 +108,9 @@ export default function MemoriesGallery() {
       if (event.key === "Escape") {
         setLightboxIndex(null);
       } else if (event.key === "ArrowRight") {
-        setLightboxIndex((index) => (index === null ? index : (index + 1) % memoryPhotos.length));
+        showNextLightboxPhoto();
       } else if (event.key === "ArrowLeft") {
-        setLightboxIndex((index) => (index === null ? index : (index + memoryPhotos.length - 1) % memoryPhotos.length));
+        showPreviousLightboxPhoto();
       }
     };
 
@@ -99,6 +120,16 @@ export default function MemoriesGallery() {
       scroller?.classList.remove("is-scroll-locked");
       window.removeEventListener("keydown", handleKeyDown);
     };
+  }, [lightboxIndex, showNextLightboxPhoto, showPreviousLightboxPhoto]);
+
+  useEffect(() => {
+    preloadMemoryNeighbors(activeIndex);
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (lightboxIndex !== null) {
+      preloadMemoryNeighbors(lightboxIndex);
+    }
   }, [lightboxIndex]);
 
   useEffect(() => {
@@ -197,7 +228,7 @@ export default function MemoriesGallery() {
 
   const scrollToIndex = (index: number) => {
     const strip = stripRef.current;
-    const targetIndex = (index + memoryPhotos.length) % memoryPhotos.length;
+    const targetIndex = normalizeMemoryIndex(index);
     const card = strip?.children[targetIndex] as HTMLElement | undefined;
 
     if (!strip || !card) {
@@ -229,10 +260,24 @@ export default function MemoriesGallery() {
           onClick={() => setLightboxIndex(null)}
         >
           <motion.figure
+            key={`memories-lightbox-card-${lightboxIndex}`}
             className="memories-lightbox-card"
             initial={{ scale: 0.88, y: 22 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.92, y: 12 }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.18}
+            onDragEnd={(_, info) => {
+              const swipeDistance = 58;
+              const swipeVelocity = 450;
+
+              if (info.offset.x <= -swipeDistance || info.velocity.x <= -swipeVelocity) {
+                showNextLightboxPhoto();
+              } else if (info.offset.x >= swipeDistance || info.velocity.x >= swipeVelocity) {
+                showPreviousLightboxPhoto();
+              }
+            }}
             transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
             onClick={(event) => event.stopPropagation()}
           >
@@ -257,28 +302,6 @@ export default function MemoriesGallery() {
 
           <button type="button" className="memories-lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="Cerrar foto">
             <X strokeWidth={2.2} />
-          </button>
-          <button
-            type="button"
-            className="memories-lightbox-nav memories-lightbox-nav--prev"
-            onClick={(event) => {
-              event.stopPropagation();
-              setLightboxIndex((index) => (index === null ? index : (index + memoryPhotos.length - 1) % memoryPhotos.length));
-            }}
-            aria-label="Foto anterior"
-          >
-            <ChevronLeft strokeWidth={2.2} />
-          </button>
-          <button
-            type="button"
-            className="memories-lightbox-nav memories-lightbox-nav--next"
-            onClick={(event) => {
-              event.stopPropagation();
-              setLightboxIndex((index) => (index === null ? index : (index + 1) % memoryPhotos.length));
-            }}
-            aria-label="Siguiente foto"
-          >
-            <ChevronRight strokeWidth={2.2} />
           </button>
         </motion.div>
       ) : null}
@@ -315,7 +338,7 @@ export default function MemoriesGallery() {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  loading="lazy"
+                  loading={index < 3 ? "eager" : "lazy"}
                   sizes="(max-width: 760px) 62vw, 17rem"
                   className="memories-photo"
                 />

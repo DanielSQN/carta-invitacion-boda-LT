@@ -51,9 +51,11 @@ function HeroSection() {
 
     const ctx = gsap.context(() => {
       gsap.set(imageRef.current, { scale: 1, force3D: true });
-      gsap.set(overlayRef.current, { opacity: reduceMotion ? 0.28 : 0 });
-      gsap.set(glowRef.current, { opacity: reduceMotion ? 0.42 : 0 });
-      gsap.set(fadeRef.current, { opacity: reduceMotion ? 0.92 : 0 });
+      // Mantiene continuidad con el wash azul de la transicion del sobre:
+      // el hero ya nace con su tratamiento final y solo aparece el contenido.
+      gsap.set(overlayRef.current, { opacity: 0.28 });
+      gsap.set(glowRef.current, { opacity: 0.42 });
+      gsap.set(fadeRef.current, { opacity: 0.92 });
       gsap.set(contentRef.current, { opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 40 });
 
       if (luisaRef.current) luisaRef.current.textContent = reduceMotion ? "Luisa" : "";
@@ -69,12 +71,13 @@ function HeroSection() {
         return undefined;
       }
 
-      gsap
-        .timeline({ delay: 0.06 })
-        .to(overlayRef.current, { opacity: 0.28, duration: 1.35, ease: "sine.out" }, 0.12)
-        .to(glowRef.current, { opacity: 0.42, duration: 1.45, ease: "sine.out" }, 0.3)
-        .to(fadeRef.current, { opacity: 0.92, duration: 1.65, ease: "sine.out" }, 0.44)
-        .to(contentRef.current, { opacity: 1, y: 0, duration: 1.35, ease: "power3.out" }, 0.28);
+      gsap.to(contentRef.current, {
+        opacity: 1,
+        y: 0,
+        delay: 0.18,
+        duration: 1.15,
+        ease: "power3.out",
+      });
 
       const typeText = (element: HTMLSpanElement | null, text: string, duration: number) => {
         if (!element) return gsap.timeline();
