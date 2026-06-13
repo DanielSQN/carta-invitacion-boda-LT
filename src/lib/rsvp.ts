@@ -8,8 +8,12 @@
 //   SUPABASE_URL                 URL del proyecto Supabase
 //   SUPABASE_SERVICE_ROLE_KEY    service role key (secreta, solo servidor)
 
-const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, "");
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Acepta tanto la URL base (https://xxx.supabase.co) como el endpoint REST
+// (https://xxx.supabase.co/rest/v1) — se normaliza a la base.
+const SUPABASE_URL = process.env.SUPABASE_URL?.trim()
+  .replace(/\/+$/, "")
+  .replace(/\/rest\/v1$/, "");
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 const TABLE = "rsvps";
 
 export type RsvpInput = {
