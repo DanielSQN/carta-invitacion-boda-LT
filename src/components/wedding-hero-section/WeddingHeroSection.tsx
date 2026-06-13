@@ -699,30 +699,25 @@ function AttendanceSection() {
       </div>
 
       <div ref={footerEnvelopeRef} className="footer-letter">
-        <div className="footer-letter-stage">
+        <div className="footer-envelope">
           <blockquote className="footer-letter-note">
-            <span className="footer-letter-quote" aria-hidden="true">
-              &ldquo;
-            </span>
+            <cite className="footer-letter-ref">1 Tesalonicenses 3:12</cite>
             <p className="footer-letter-verse">
-              Y sobre todo, v&iacute;stanse de amor,
-              <br />
-              que es el v&iacute;nculo perfecto.
+              &ldquo;Y el Se&ntilde;or os haga crecer y abundar en amor unos para con otros y para con todos, como tambi&eacute;n
+              lo hacemos nosotros para con vosotros.&rdquo;
             </p>
-            <span className="footer-letter-ref">Colosenses 3:14</span>
           </blockquote>
 
-          <div className="footer-envelope" aria-hidden="true">
-            <span className="footer-envelope-back" />
-            <span className="footer-envelope-pocket" />
+          <div className="footer-envelope-front" aria-hidden="true">
             <span className="footer-envelope-seal">
-              <Image src="/images/ui/wax-seal.webp?v=20260601-assets-1" alt="" fill sizes="92px" className="object-contain" />
+              <Image src="/images/ui/wax-seal.webp?v=20260601-assets-1" alt="" fill sizes="96px" className="object-contain" />
             </span>
           </div>
         </div>
 
         <p className="footer-signature">
-          Con amor, <span>Luisa &amp; Jhonnatan</span>
+          Con amor <span className="footer-signature-heart" aria-hidden="true">♥</span>
+          <span className="footer-signature-names">Luisa &amp; Jhonnatan</span>
         </p>
       </div>
     </section>

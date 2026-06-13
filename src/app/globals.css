@@ -3242,8 +3242,9 @@ button {
 }
 
 /* ---------------------------------------------------------------------------
-   Footer: sobre construido en CSS (sin imagen) del que "sale" una nota con
-   el versiculo, rematado con el sello de cera reutilizado.
+   Footer: sobre abierto a TODO el ancho del que parece salir el contenido de
+   la pagina. El versiculo es la "carta" que emerge por la boca del sobre; el
+   frente lleva las costuras y el sello de cera reutilizado.
 --------------------------------------------------------------------------- */
 .footer-letter {
   position: relative;
@@ -3251,142 +3252,133 @@ button {
   display: grid;
   justify-items: center;
   width: 100%;
-  margin-top: auto;
-  padding: clamp(2.6rem, 10vw, 4.2rem) clamp(1.25rem, 5vw, 2rem) calc(env(safe-area-inset-bottom) + clamp(1.6rem, 6vw, 2.4rem));
+  margin-top: clamp(2.4rem, 9vw, 4rem);
 }
 
-.footer-letter-stage {
+/* sobre full-bleed: ocupa todo el ancho de la seccion */
+.footer-envelope {
   position: relative;
-  width: min(100%, 23rem);
+  z-index: 1;
+  width: 100%;
 }
 
-/* nota/carta con el versiculo que emerge del sobre */
+/* la "carta" con el versiculo, detras del frente, asomando por la boca */
 .footer-letter-note {
   position: relative;
-  z-index: 2;
-  width: 90%;
-  margin: 0 auto -9%;
-  padding: clamp(1.3rem, 6vw, 1.85rem) clamp(1.1rem, 5vw, 1.6rem) clamp(1.5rem, 6.5vw, 2rem);
-  border-radius: 0.28rem 0.28rem 0.12rem 0.12rem;
+  z-index: 1;
+  width: min(86%, 27rem);
+  margin: 0 auto -2.8rem;
+  padding: clamp(1.35rem, 6vw, 1.9rem) clamp(1.2rem, 5vw, 1.9rem) clamp(3rem, 10vw, 3.8rem);
+  border-radius: 0.3rem 0.3rem 0.12rem 0.12rem;
   background: linear-gradient(180deg, #fffdf6 0%, #fbf3e2 100%);
   box-shadow:
-    0 -0.1rem 0 1px rgba(122, 92, 52, 0.08),
-    0 -1.1rem 1.8rem -0.6rem rgba(3, 12, 22, 0.42);
+    0 0 0 1px rgba(122, 92, 52, 0.08),
+    0 -1.2rem 2rem -0.7rem rgba(3, 12, 22, 0.5);
   text-align: center;
 }
 
-.footer-letter-quote {
+.footer-letter-ref {
   display: block;
-  margin-bottom: -0.65rem;
-  color: rgba(95, 143, 180, 0.6);
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: 2.4rem;
-  line-height: 1;
+  color: #2f6f9f;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(0.72rem, 3.1vw, 0.82rem);
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.footer-letter-ref::after {
+  display: block;
+  width: 2.4rem;
+  height: 1px;
+  margin: 0.55rem auto 0.75rem;
+  background: linear-gradient(90deg, transparent, rgba(95, 143, 180, 0.7), transparent);
+  content: "";
 }
 
 .footer-letter-verse {
   margin: 0;
   color: #3f4f3c;
   font-family: var(--font-serif), Georgia, serif;
-  font-size: clamp(0.96rem, 4.2vw, 1.12rem);
+  font-size: clamp(0.98rem, 4.1vw, 1.16rem);
   font-style: italic;
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
-.footer-letter-ref {
-  display: block;
-  margin-top: 0.7rem;
-  color: #2f6f9f;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.footer-envelope {
+/* frente del sobre a todo el ancho; el borde superior es la boca abierta */
+.footer-envelope-front {
   position: relative;
-  z-index: 3;
+  z-index: 2;
   width: 100%;
-  aspect-ratio: 7 / 4;
+  height: clamp(8.5rem, 32vw, 12.5rem);
+  background: linear-gradient(180deg, #f5e9d2 0%, #e6d3b0 100%);
+  /* boca del sobre: el borde superior baja en suave V hacia el centro */
+  clip-path: polygon(0 9%, 50% 17%, 100% 9%, 100% 100%, 0 100%);
+  box-shadow: inset 0 0.12rem 0 rgba(255, 252, 243, 0.5);
 }
 
-/* cuerpo del sobre (panel trasero) */
-.footer-envelope-back {
+/* costuras diagonales (esquinas inferiores hacia el centro) del frente */
+.footer-envelope-front::before,
+.footer-envelope-front::after {
   position: absolute;
-  inset: 0;
-  border-radius: 0.35rem;
-  background: linear-gradient(180deg, #f3e6cd 0%, #e9d8b8 100%);
-  box-shadow:
-    inset 0 0 0 1px rgba(122, 92, 52, 0.16),
-    0 1.4rem 2.6rem -0.8rem rgba(3, 12, 22, 0.55);
-}
-
-/* solapa frontal triangular (punta hacia arriba) que tapa la base de la nota */
-.footer-envelope-pocket {
-  position: absolute;
-  inset: 0;
-  border-radius: 0.35rem;
-  background:
-    linear-gradient(120deg, rgba(122, 92, 52, 0.12), transparent 42%),
-    linear-gradient(240deg, rgba(122, 92, 52, 0.12), transparent 42%),
-    linear-gradient(180deg, #fbf1da 0%, #efdfc0 100%);
-  clip-path: polygon(0 100%, 50% 34%, 100% 100%);
-  box-shadow: inset 0 0 0 1px rgba(122, 92, 52, 0.14);
-}
-
-/* costuras laterales del sobre */
-.footer-envelope-back::before,
-.footer-envelope-back::after {
-  position: absolute;
-  top: 0;
   bottom: 0;
-  width: 50%;
+  width: 58%;
+  height: 100%;
   content: "";
   pointer-events: none;
 }
 
-.footer-envelope-back::before {
+.footer-envelope-front::before {
   left: 0;
-  background: linear-gradient(to top right, transparent 49.5%, rgba(122, 92, 52, 0.16) 50%, transparent 50.5%);
+  background: linear-gradient(to top right, transparent calc(50% - 0.7px), rgba(122, 92, 52, 0.2) 50%, transparent calc(50% + 0.7px));
 }
 
-.footer-envelope-back::after {
+.footer-envelope-front::after {
   right: 0;
-  background: linear-gradient(to top left, transparent 49.5%, rgba(122, 92, 52, 0.16) 50%, transparent 50.5%);
+  background: linear-gradient(to top left, transparent calc(50% - 0.7px), rgba(122, 92, 52, 0.2) 50%, transparent calc(50% + 0.7px));
 }
 
-/* sello de cera reutilizado, en la punta de la solapa */
+/* sello de cera reutilizado, centrado en el frente del sobre */
 .footer-envelope-seal {
   position: absolute;
-  top: 34%;
+  top: 56%;
   left: 50%;
-  z-index: 4;
-  width: clamp(3.1rem, 15vw, 3.9rem);
+  z-index: 3;
+  width: clamp(3.3rem, 15vw, 4.2rem);
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  filter: drop-shadow(0 0.5rem 0.7rem rgba(48, 30, 12, 0.42));
+  filter: drop-shadow(0 0.5rem 0.7rem rgba(48, 30, 12, 0.45));
 }
 
 .footer-signature {
-  margin: clamp(1.5rem, 6vw, 2.2rem) 0 0;
-  color: rgba(237, 243, 250, 0.66);
+  margin: clamp(1.4rem, 6vw, 2.1rem) 0 calc(env(safe-area-inset-bottom) + clamp(1.4rem, 6vw, 2.2rem));
+  color: rgba(237, 243, 250, 0.72);
   font-family: var(--font-display), Georgia, serif;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
   text-align: center;
   text-transform: uppercase;
 }
 
-.footer-signature span {
+.footer-signature-heart {
   color: #8fc1e9;
+}
+
+.footer-signature-names {
+  display: block;
+  margin-top: 0.5rem;
+  color: #cfe4f6;
   font-family: var(--font-script), "Brush Script MT", cursive;
-  font-size: 1.5rem;
+  font-size: 1.85rem;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
+  white-space: nowrap;
 }
 
 @media (max-width: 430px) {
