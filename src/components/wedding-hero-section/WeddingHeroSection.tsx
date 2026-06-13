@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, Heart, User } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -14,7 +13,7 @@ import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
 import OurStorySection from "../OurStorySection";
-import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "../sectionFx";
+import { createSectionReveal, getSectionScroller } from "../sectionFx";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (
@@ -213,188 +212,36 @@ function AttendanceSection() {
   const [declineMessage, setDeclineMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [alreadyResponded, setAlreadyResponded] = useState(false);
-  const [hasChosenAttendance, setHasChosenAttendance] = useState(false);
-  const [rsvpLookupDone, setRsvpLookupDone] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
-  const shrinkRef = useRef<gsap.core.Tween | null>(null);
 
-  const disableConfirmShrink = useCallback(() => {
-    shrinkRef.current?.scrollTrigger?.kill();
-    shrinkRef.current?.kill();
-    shrinkRef.current = null;
+  const applySavedRsvp = useCallback((data: SavedRsvp) => {
+    const names = Array.isArray(data.names) ? data.names.map((name) => name.trim()).filter(Boolean) : [];
 
-    if (confirmInnerRef.current) {
-      gsap.set(confirmInnerRef.current, { clearProps: "transform,transformOrigin,opacity,visibility" });
-    }
-  }, []);
+    setAttending(data.attending);
+    setAlreadyResponded(true);
 
-  const scrollAttendanceToTop = useCallback(() => {
-    const section = sectionRef.current;
-
-    if (!section) {
+    if (data.attending) {
+      const savedGuestCount = data.guestCount ?? names.length;
+      const count = Math.min(Math.max(savedGuestCount || 1, 1), 6);
+      setGuestCount(count);
+      setGuestNames(Array.from({ length: count }, (_, index) => names[index] ?? ""));
       return;
     }
 
-    const scroller = getSectionScroller(section);
-    const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
-
-    const align = (nextBehavior: ScrollBehavior) => {
-      if (scroller) {
-        const sectionRect = section.getBoundingClientRect();
-        const scrollerRect = scroller.getBoundingClientRect();
-
-        scroller.scrollTo({
-          top: scroller.scrollTop + sectionRect.top - scrollerRect.top,
-          behavior: nextBehavior,
-        });
-        return;
-      }
-
-      section.scrollIntoView({ behavior: nextBehavior, block: "start" });
-    };
-
-    window.requestAnimationFrame(() => {
-      align(behavior);
-      window.setTimeout(() => align("auto"), 320);
-    });
+    setDeclineName(names[0] ?? "");
+    setDeclineMessage(data.message ?? "");
   }, []);
 
-  const applySavedRsvp = useCallback(
-    (data: SavedRsvp) => {
-      const names = Array.isArray(data.names) ? data.names.map((name) => name.trim()).filter(Boolean) : [];
-
-      disableConfirmShrink();
-      setAttending(data.attending);
-      setAlreadyResponded(true);
-      setRsvpLookupDone(true);
-
-      if (data.attending) {
-        const savedGuestCount = data.guestCount ?? names.length;
-        const count = Math.min(Math.max(savedGuestCount || 1, 1), 6);
-        setGuestCount(count);
-        setGuestNames(Array.from({ length: count }, (_, index) => names[index] ?? ""));
-        return;
-      }
-
-      setDeclineName(names[0] ?? "");
-      setDeclineMessage(data.message ?? "");
-    },
-    [disableConfirmShrink],
-  );
-
+  // Revelado suave del formulario; el footer queda siempre visible (sin animar).
   useEffect(() => {
-    const scroller = getSectionScroller(sectionRef.current);
-
     const ctx = gsap.context(() => {
       createSectionReveal(sectionRef.current);
-
-      if (prefersReducedMotion()) {
-        return;
-      }
-
-      gsap.fromTo(
-        footerEnvelopeRef.current,
-        { opacity: 0, y: 48 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1.05,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: footerEnvelopeRef.current,
-            start: "top 96%",
-            toggleActions: "play none none none",
-            ...(scroller ? { scroller } : {}),
-          },
-        },
-      );
-
-      // Cierre: los nombres de los novios se "escriben" de izquierda a derecha.
-      const names = sectionRef.current?.querySelector(".footer-letter-names");
-      if (names) {
-        gsap
-          .timeline({
-            scrollTrigger: {
-              trigger: ".footer-letter-note",
-              start: "top 82%",
-              toggleActions: "play none none none",
-              ...(scroller ? { scroller } : {}),
-            },
-          })
-          .fromTo(
-            names,
-            { clipPath: "inset(0 100% 0 0)", opacity: 1 },
-            { clipPath: "inset(0 0% 0 0)", duration: 1.05, ease: "power1.inOut" },
-          )
-          .fromTo(
-            names,
-            { scale: 1.07 },
-            { scale: 1, duration: 0.5, ease: "back.out(2.6)", transformOrigin: "center bottom" },
-            "-=0.22",
-          );
-      }
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
-
-  useEffect(() => {
-    if (
-      !rsvpLookupDone ||
-      attending !== null ||
-      alreadyResponded ||
-      hasChosenAttendance ||
-      status === "success" ||
-      prefersReducedMotion()
-    ) {
-      disableConfirmShrink();
-      return;
-    }
-
-    const scroller = getSectionScroller(sectionRef.current);
-
-    const ctx = gsap.context(() => {
-      // Solo la pantalla inicial de eleccion se encoge hacia el sobre.
-      shrinkRef.current = gsap.to(confirmInnerRef.current, {
-        scale: 0.66,
-        y: 22,
-        autoAlpha: 0.28,
-        ease: "none",
-        transformOrigin: "bottom center",
-        scrollTrigger: {
-          trigger: confirmInnerRef.current,
-          start: "bottom bottom-=120",
-          end: "+=240",
-          scrub: 0.6,
-          ...(scroller ? { scroller } : {}),
-        },
-      });
-    }, sectionRef);
-
-    return () => {
-      ctx.revert();
-      shrinkRef.current = null;
-    };
-  }, [alreadyResponded, attending, disableConfirmShrink, hasChosenAttendance, rsvpLookupDone, status]);
-
-  // El alto del formulario cambia con el paso/cantidad: recalcular ScrollTrigger.
-  useEffect(() => {
-    const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => window.cancelAnimationFrame(id);
-  }, [attending, guestCount, status]);
-
-  // Tras confirmar, la pantalla de éxito NO debe encogerse hacia el sobre
-  // (si no, el mensaje queda diminuto/oculto al hacer scroll). Se desactiva el
-  // encogimiento y se restablece el tamaño normal.
-  useEffect(() => {
-    if (status !== "success" || !confirmInnerRef.current) {
-      return;
-    }
-
-    disableConfirmShrink();
-  }, [disableConfirmShrink, status]);
 
   // Si esta invitación (?para=) ya respondió, se consulta primero el servidor.
   // localStorage queda solo como respaldo para vista previa sin Supabase.
@@ -418,20 +265,15 @@ function AttendanceSection() {
     const invitedAs = getInvitationParam();
 
     if (!key && !invitedAs) {
-      queueMicrotask(() => setRsvpLookupDone(true));
       return;
     }
 
     if (!invitedAs) {
       const localRsvp = readLocalRsvp();
 
-      queueMicrotask(() => {
-        if (localRsvp) {
-          applySavedRsvp(localRsvp);
-        } else {
-          setRsvpLookupDone(true);
-        }
-      });
+      if (localRsvp) {
+        queueMicrotask(() => applySavedRsvp(localRsvp));
+      }
 
       return;
     }
@@ -466,11 +308,8 @@ function AttendanceSection() {
 
           if (localRsvp) {
             applySavedRsvp(localRsvp);
-            return;
           }
         }
-
-        setRsvpLookupDone(true);
       } catch {
         if (cancelled) {
           return;
@@ -480,8 +319,6 @@ function AttendanceSection() {
 
         if (localRsvp) {
           applySavedRsvp(localRsvp);
-        } else {
-          setRsvpLookupDone(true);
         }
       }
     };
@@ -505,11 +342,8 @@ function AttendanceSection() {
   };
 
   const chooseAttending = (value: boolean) => {
-    disableConfirmShrink();
-    setHasChosenAttendance(true);
     setAttending(value);
     setStatus("idle");
-    scrollAttendanceToTop();
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -551,7 +385,6 @@ function AttendanceSection() {
       }
 
       setStatus("success");
-      scrollAttendanceToTop();
     } catch {
       setStatus("error");
     }

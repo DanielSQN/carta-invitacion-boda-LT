@@ -166,21 +166,40 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    const scroller = document.querySelector(".details-scroll");
-    const attendanceSection = document.querySelector(".attendance-section");
+    // WeddingHeroSection se carga de forma diferida, así que .attendance-section
+    // aparece después de showWeddingHero: se reintenta hasta que exista para
+    // conectar el observer (si no, el swipe nunca se ocultaba al llegar ahí).
+    let observer: IntersectionObserver | undefined;
+    let raf = 0;
+    let attempts = 0;
 
-    if (!attendanceSection) {
-      return;
-    }
+    const attach = () => {
+      const scroller = document.querySelector(".details-scroll");
+      const attendanceSection = document.querySelector(".attendance-section");
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsAttendanceVisible(entry.isIntersecting),
-      { root: scroller, threshold: 0.05 },
-    );
+      if (!attendanceSection) {
+        attempts += 1;
+        if (attempts < 180) {
+          raf = window.requestAnimationFrame(attach);
+        }
+        return;
+      }
 
-    observer.observe(attendanceSection);
+      observer = new IntersectionObserver(([entry]) => setIsAttendanceVisible(entry.isIntersecting), {
+        root: scroller,
+        threshold: 0.05,
+      });
+      observer.observe(attendanceSection);
+    };
 
-    return () => observer.disconnect();
+    attach();
+
+    return () => {
+      if (raf) {
+        window.cancelAnimationFrame(raf);
+      }
+      observer?.disconnect();
+    };
   }, [showWeddingHero]);
 
   useEffect(() => {
