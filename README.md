@@ -41,9 +41,22 @@ confirmación visual pero **no** guarda los datos (modo vista previa).
 
 ### 3. Panel privado `/invitados`
 
-- Muestra quién confirmó, cuántas personas y quién no asiste.
+Dashboard tipo enterprise para los novios:
+
+- **Métricas** (clic para filtrar): Respuestas (formularios recibidos),
+  Asisten (dijeron que sí), Personas (total de asistentes), No asisten.
+- **Filtros y búsqueda** por nombre, invitación o mensaje.
+- **Exportar CSV** de las respuestas (respeta el filtro activo).
+- **Invitaciones:** importa la lista de "para" a los que enviarás el link
+  (una por línea, opcional `Nombre, cantidad`). El panel cruza cada
+  invitación con las respuestas y marca *Pendiente / Confirmó / Declinó*, y
+  genera el link `?para=` para copiar y enviar.
 - Protegido con la clave `INVITADOS_PASSWORD` (definir en `.env.local`).
-- Por defecto (sin definir) la clave es `boda-lj-2026` — cámbiala en producción.
+  Por defecto (sin definir) es `boda-lj-2026` — cámbiala en producción.
+
+> Si ya habías creado la tabla `rsvps`, vuelve a ejecutar `supabase/schema.sql`
+> (es idempotente) para crear también la tabla `invitations` que usa el
+> control de invitaciones enviadas.
 
 ## Variables de entorno
 

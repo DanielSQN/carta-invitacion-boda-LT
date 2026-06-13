@@ -17,3 +17,18 @@ create table if not exists public.rsvps (
 alter table public.rsvps enable row level security;
 
 create index if not exists rsvps_created_at_idx on public.rsvps (created_at desc);
+
+-- Lista de invitaciones enviadas (los valores de "?para=" a los que mandas el
+-- link). Sirve para controlar a quién enviaste y quién ya respondió: se cruza
+-- invitations.label con rsvps.invited_as.
+create table if not exists public.invitations (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  label text not null unique,
+  guests_planned integer,
+  notes text
+);
+
+alter table public.invitations enable row level security;
+
+create index if not exists invitations_label_idx on public.invitations (label);
