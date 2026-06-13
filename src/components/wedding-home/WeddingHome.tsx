@@ -142,7 +142,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [showWeddingHero, setShowWeddingHero] = useState(false);
   const [isHeroTransitioning, setIsHeroTransitioning] = useState(false);
   const [isHeroIntroDone, setIsHeroIntroDone] = useState(false);
-  const [areSectionAssetsReady, setAreSectionAssetsReady] = useState(false);
   const [isAttendanceVisible, setIsAttendanceVisible] = useState(false);
   const [guestName, setGuestName] = useState(initialGuestName);
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
@@ -244,17 +243,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    let cancelled = false;
-
-    preloadImages(sectionBackgroundAssets).then(() => {
-      if (!cancelled) {
-        setAreSectionAssetsReady(true);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
+    // Precarga en segundo plano (sin bloquear el scroll): next/image muestra
+    // el espacio mientras tanto y la mayoría ya estarán listas al desplazarse.
+    void preloadImages(sectionBackgroundAssets);
   }, [isEnvelopeOpen]);
 
   useEffect(() => {
@@ -453,7 +444,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
-      setAreSectionAssetsReady(false);
       setIsHeroIntroDone(false);
       setIsHeroTransitioning(true);
       setIsEnvelopeOpen(true);
@@ -519,7 +509,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     </AnimatePresence>
   );
 
-  const canScrollInvitation = !showWeddingHero || (isHeroIntroDone && areSectionAssetsReady);
+  const canScrollInvitation = !showWeddingHero || isHeroIntroDone;
   const showSwipePrompt = showWeddingHero && canScrollInvitation && !isAttendanceVisible;
 
   const swipeDownControl = (

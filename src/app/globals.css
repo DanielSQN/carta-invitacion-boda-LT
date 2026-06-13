@@ -3371,6 +3371,79 @@ body.is-lightbox-scroll-locked {
   font-weight: 600;
 }
 
+/* Resumen para quien ya respondió: muestra solo un resumen (sin nombres ni
+   mensajes) con opción de modificar. */
+.attendance-summary-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: clamp(1.4rem, 6vw, 1.9rem) clamp(1.1rem, 5vw, 1.6rem);
+  border: 1px solid rgba(47, 111, 159, 0.32);
+  border-radius: 0.55rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(143, 193, 233, 0.18), transparent 60%),
+    rgba(255, 253, 246, 0.5);
+  text-align: center;
+  animation: attendance-rise-in 420ms ease both;
+}
+
+.attendance-summary-icon {
+  display: grid;
+  width: 2.6rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #5f8fb4, #2f6f9f);
+  box-shadow: 0 0.4rem 0.85rem rgba(23, 58, 92, 0.3);
+  color: #fff8eb;
+}
+
+.attendance-summary-icon--no {
+  background: linear-gradient(135deg, #e6c34d, #c79a2f);
+}
+
+.attendance-summary-icon svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.attendance-summary-card p {
+  margin: 0;
+  color: #21405d;
+  font-size: clamp(1.02rem, 4.2vw, 1.18rem);
+  font-weight: 700;
+}
+
+.attendance-summary-card > span {
+  color: rgba(33, 64, 93, 0.7);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.attendance-summary-edit {
+  min-height: 2.9rem;
+  margin-top: 0.3rem;
+  padding: 0.6rem 1.6rem;
+  border: 1px solid rgba(23, 58, 92, 0.55);
+  border-radius: 0.46rem;
+  background: linear-gradient(135deg, #1f4e7d, #0d2438);
+  color: #fff8eb;
+  cursor: pointer;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: 0 0.6rem 1.2rem rgba(23, 58, 92, 0.3);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.attendance-summary-edit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.9rem 1.6rem rgba(23, 58, 92, 0.36);
+}
+
 @keyframes attendance-rise-in {
   from {
     opacity: 0;

@@ -212,6 +212,7 @@ function AttendanceSection() {
   const [declineMessage, setDeclineMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [alreadyResponded, setAlreadyResponded] = useState(false);
+  const [editing, setEditing] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
@@ -422,6 +423,29 @@ function AttendanceSection() {
               )}
             </div>
           </div>
+        ) : alreadyResponded && !editing ? (
+          <div className="attendance-form attendance-summary" data-reveal>
+            <div className="attendance-summary-card" role="status">
+              <span
+                className={`attendance-summary-icon${attending ? "" : " attendance-summary-icon--no"}`}
+                aria-hidden="true"
+              >
+                {attending ? <Check strokeWidth={2.6} /> : <Heart strokeWidth={2.2} />}
+              </span>
+              {attending ? (
+                <p>
+                  Ya confirmaste tu asistencia
+                  {guestCount > 0 ? ` por ${guestCount} ${guestCount === 1 ? "persona" : "personas"}` : ""}.
+                </p>
+              ) : (
+                <p>Habías indicado que no podrás acompañarnos.</p>
+              )}
+              <span>¿Deseas modificar tu respuesta?</span>
+              <button type="button" className="attendance-summary-edit" onClick={() => setEditing(true)}>
+                Modificar respuesta
+              </button>
+            </div>
+          </div>
         ) : attending === null ? (
           <div className="attendance-form attendance-choice" data-reveal>
             <p className="attendance-hint">¿Nos acompañarás en este gran día?</p>
@@ -440,12 +464,6 @@ function AttendanceSection() {
             <button type="button" className="attendance-back" onClick={() => setAttending(null)}>
               ‹ Cambiar respuesta
             </button>
-
-            {alreadyResponded ? (
-              <p className="attendance-prefilled">
-                Ya habías respondido — aquí está lo que enviaste. Puedes editarlo y volver a enviar.
-              </p>
-            ) : null}
 
             {attending ? (
               <>
