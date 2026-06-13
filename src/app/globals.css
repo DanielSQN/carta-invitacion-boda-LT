@@ -36,13 +36,11 @@
 html {
   height: 100%;
   background: var(--paper);
-  /* el documento no scrollea (lo hace .details-scroll): sin esto, arrastrar
-     hacia abajo disparaba el pull-to-refresh de Android y recargaba */
-  overscroll-behavior: none;
   /* OJO: no usar pan-x/pan-y aqui — el soporte de Safari iOS es parcial y
      bloquea el scroll nativo. manipulation permite el scroll en ambos ejes
      y bloquea el zoom por doble tap; el pinch lo bloquean los eventos
-     gesture* (iOS) y el viewport meta (Android). */
+     gesture* (iOS) y el viewport meta (Android).
+     Sin overscroll-behavior: el pull-to-refresh nativo debe funcionar. */
   touch-action: manipulation;
 }
 
@@ -53,7 +51,6 @@ body {
   background: var(--paper);
   color: var(--foreground);
   font-family: var(--font-cormorant), Georgia, serif;
-  overscroll-behavior: none;
 }
 
 button,
@@ -444,7 +441,8 @@ button {
 
 .details-scroll {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  /* sin overscroll-behavior contain: al llegar al tope, el gesto encadena
+     al documento y permite el pull-to-refresh nativo del navegador */
   scrollbar-width: none;
 }
 
