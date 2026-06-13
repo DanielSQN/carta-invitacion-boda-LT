@@ -101,8 +101,42 @@ export default function MemoriesGallery() {
       return;
     }
 
-    const scroller = galleryRef.current?.closest(".details-scroll") as HTMLElement | null;
+    const scroller = (galleryRef.current?.closest(".details-scroll") ?? document.querySelector(".details-scroll")) as HTMLElement | null;
+    const html = document.documentElement;
+    const body = document.body;
+    const lockedScrollTop = scroller?.scrollTop ?? 0;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousHtmlTouchAction = html.style.touchAction;
+    const previousBodyOverflow = body.style.overflow;
+    const previousBodyTouchAction = body.style.touchAction;
+    const previousScrollerOverflowY = scroller?.style.overflowY ?? "";
+    const previousScrollerOverscrollBehavior = scroller?.style.overscrollBehavior ?? "";
+
+    const keepScrollPosition = () => {
+      if (scroller && scroller.scrollTop !== lockedScrollTop) {
+        scroller.scrollTop = lockedScrollTop;
+      }
+
+      if (window.scrollY !== 0) {
+        window.scrollTo(0, 0);
+      }
+    };
+
     scroller?.classList.add("is-scroll-locked");
+    html.classList.add("is-lightbox-scroll-locked");
+    body.classList.add("is-lightbox-scroll-locked");
+    html.style.overflow = "hidden";
+    html.style.touchAction = "none";
+    body.style.overflow = "hidden";
+    body.style.touchAction = "none";
+
+    if (scroller) {
+      scroller.style.overflowY = "hidden";
+      scroller.style.overscrollBehavior = "none";
+      scroller.addEventListener("scroll", keepScrollPosition, { passive: true });
+    }
+
+    window.addEventListener("scroll", keepScrollPosition, { passive: true });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -118,6 +152,21 @@ export default function MemoriesGallery() {
 
     return () => {
       scroller?.classList.remove("is-scroll-locked");
+      html.classList.remove("is-lightbox-scroll-locked");
+      body.classList.remove("is-lightbox-scroll-locked");
+      html.style.overflow = previousHtmlOverflow;
+      html.style.touchAction = previousHtmlTouchAction;
+      body.style.overflow = previousBodyOverflow;
+      body.style.touchAction = previousBodyTouchAction;
+
+      if (scroller) {
+        scroller.style.overflowY = previousScrollerOverflowY;
+        scroller.style.overscrollBehavior = previousScrollerOverscrollBehavior;
+        scroller.scrollTop = lockedScrollTop;
+        scroller.removeEventListener("scroll", keepScrollPosition);
+      }
+
+      window.removeEventListener("scroll", keepScrollPosition);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [lightboxIndex, showNextLightboxPhoto, showPreviousLightboxPhoto]);

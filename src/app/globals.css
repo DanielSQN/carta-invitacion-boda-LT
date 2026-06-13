@@ -2387,7 +2387,7 @@ button {
 
 .details-info-card p {
   margin: 0.42rem 0 0;
-  color: #1d4a73;
+  color: #111111;
   font-family: var(--font-display), Georgia, serif;
   font-size: clamp(0.78rem, 3.1vw, 1.08rem);
   font-weight: 700;
@@ -2788,6 +2788,8 @@ button {
   background: rgba(3, 9, 16, 0.88);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  overscroll-behavior: contain;
+  touch-action: none !important;
 }
 
 .memories-lightbox-card {
@@ -2801,7 +2803,7 @@ button {
   background: #fffdf4;
   box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.5);
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: none !important;
   user-select: none;
 }
 
@@ -2897,6 +2899,13 @@ button {
 
 .details-scroll.is-scroll-locked {
   overflow-y: hidden !important;
+}
+
+html.is-lightbox-scroll-locked,
+body.is-lightbox-scroll-locked {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 /* con el lightbox abierto, los controles flotantes no deben taparlo */
