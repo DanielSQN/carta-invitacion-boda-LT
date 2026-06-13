@@ -47,11 +47,28 @@ export async function insertRsvp(input: RsvpInput): Promise<void> {
     throw new Error("Supabase no está configurado");
   }
 
+  const invitedAs = input.invitedAs?.trim() || null;
+
+  // Re-confirmación: si la invitación (?para=) ya respondió antes, se reemplaza
+  // su registro para no dejar duplicados. Las respuestas sin ?para= no se
+  // pueden deduplicar, así que cada una queda como un registro nuevo.
+  if (invitedAs) {
+    const cleanup = await fetch(
+      `${SUPABASE_URL}/rest/v1/${TABLE}?invited_as=eq.${encodeURIComponent(invitedAs)}`,
+      { method: "DELETE", headers: restHeaders({ Prefer: "return=minimal" }), cache: "no-store" },
+    );
+
+    if (!cleanup.ok) {
+      const detail = await cleanup.text().catch(() => "");
+      throw new Error(`Error actualizando RSVP (${cleanup.status}): ${detail}`);
+    }
+  }
+
   const row = {
     attending: input.attending,
     guest_count: input.guestCount,
     names: input.names,
-    invited_as: input.invitedAs ?? null,
+    invited_as: invitedAs,
     message: input.message ?? null,
   };
 

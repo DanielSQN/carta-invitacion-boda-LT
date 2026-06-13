@@ -3273,6 +3273,19 @@ button {
   text-align: center;
 }
 
+.attendance-prefilled {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(47, 111, 159, 0.32);
+  border-radius: 0.5rem;
+  background: rgba(143, 193, 233, 0.16);
+  color: #21405d;
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+}
+
 .attendance-confirmed-icon--no {
   background: linear-gradient(135deg, #e6c34d, #c79a2f);
 }

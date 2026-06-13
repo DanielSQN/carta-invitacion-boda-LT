@@ -173,6 +173,16 @@ function HeroSection() {
   );
 }
 
+// Clave de localStorage para recordar la respuesta de esta invitación (?para=).
+function getStoredRsvpKey(): string | null {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  const params = new URLSearchParams(window.location.search);
+  const para = (params.get("para") || params.get("invitado") || "").trim().toLowerCase();
+  return para ? `rsvp:${para}` : null;
+}
+
 function AttendanceSection() {
   const [attending, setAttending] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState(1);
@@ -180,6 +190,7 @@ function AttendanceSection() {
   const [declineName, setDeclineName] = useState("");
   const [declineMessage, setDeclineMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [alreadyResponded, setAlreadyResponded] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
@@ -263,6 +274,45 @@ function AttendanceSection() {
     return () => window.cancelAnimationFrame(id);
   }, [attending, guestCount, status]);
 
+  // Si esta invitación (?para=) ya respondió antes en este dispositivo, se
+  // pre-llena el formulario para que vea/edite lo que confirmó y vuelva a
+  // enviar (el servidor reemplaza su registro, no crea duplicados).
+  useEffect(() => {
+    const key = getStoredRsvpKey();
+    if (!key) {
+      return;
+    }
+
+    try {
+      const saved = window.localStorage.getItem(key);
+      if (!saved) {
+        return;
+      }
+
+      const data = JSON.parse(saved) as {
+        attending: boolean;
+        names?: string[];
+        message?: string | null;
+      };
+      const names = Array.isArray(data.names) ? data.names.filter(Boolean) : [];
+
+      queueMicrotask(() => {
+        setAttending(data.attending);
+        setAlreadyResponded(true);
+        if (data.attending) {
+          const list = names.length ? names : [""];
+          setGuestCount(Math.min(list.length, 6));
+          setGuestNames(list.slice(0, 6));
+        } else {
+          setDeclineName(names[0] ?? "");
+          setDeclineMessage(data.message ?? "");
+        }
+      });
+    } catch {
+      // ignora datos corruptos
+    }
+  }, []);
+
   const updateGuestCount = (value: number) => {
     const nextValue = Math.min(Math.max(value, 1), 6);
     setGuestCount(nextValue);
@@ -301,6 +351,19 @@ function AttendanceSection() {
 
       if (!response.ok) {
         throw new Error("submit failed");
+      }
+
+      // Recuerda la respuesta en este dispositivo para pre-llenar si reabre.
+      const key = getStoredRsvpKey();
+      if (key) {
+        try {
+          window.localStorage.setItem(
+            key,
+            JSON.stringify({ attending, names, message: attending ? null : declineMessage.trim() || null }),
+          );
+        } catch {
+          // sin almacenamiento disponible: no es crítico
+        }
       }
 
       setStatus("success");
@@ -365,6 +428,12 @@ function AttendanceSection() {
             <button type="button" className="attendance-back" onClick={() => setAttending(null)}>
               ‹ Cambiar respuesta
             </button>
+
+            {alreadyResponded ? (
+              <p className="attendance-prefilled">
+                Ya habías respondido — aquí está lo que enviaste. Puedes editarlo y volver a enviar.
+              </p>
+            ) : null}
 
             {attending ? (
               <>

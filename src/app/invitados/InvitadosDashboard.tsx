@@ -57,7 +57,7 @@ function downloadCsv(rows: RsvpRecord[]) {
 }
 
 export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigured, loadError }: Props) {
-  const [tab, setTab] = useState<"respuestas" | "invitaciones">("respuestas");
+  const [tab, setTab] = useState<"respuestas" | "invitaciones">("invitaciones");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [search, setSearch] = useState("");
   const [importText, setImportText] = useState("");
@@ -143,6 +143,19 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
     }
   };
 
+  const handleCsvFile = async (file: File | undefined) => {
+    if (!file) {
+      return;
+    }
+    const content = await file.text();
+    // Primera columna de cada fila, sin comillas; se descarta encabezado obvio.
+    const names = content
+      .split(/\r?\n/)
+      .map((line) => (line.split(/[,;]/)[0] ?? "").replace(/^["']|["']$/g, "").trim())
+      .filter((name, index) => name && !(index === 0 && /^(nombre|para|invitaci[oó]n|label)s?$/i.test(name)));
+    setImportText((current) => (current.trim() ? `${current.trim()}\n${names.join("\n")}` : names.join("\n")));
+  };
+
   const deleteInvitation = async (id: string) => {
     await fetch("/api/invitados/invitaciones", {
       method: "DELETE",
@@ -185,46 +198,42 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
       {loadError ? <div className="dash-banner dash-banner--error">{loadError}</div> : null}
 
       <section className="dash-stats" aria-label="Resumen">
-        <button
-          type="button"
-          className={`dash-stat${statusFilter === "all" && tab === "respuestas" ? " is-active" : ""}`}
-          onClick={() => selectStat("all")}
-        >
-          <span className="dash-stat-value">{stats.total}</span>
-          <span className="dash-stat-label">Respuestas</span>
-          <span className="dash-stat-hint">Formularios recibidos</span>
+        <button type="button" className="dash-stat" onClick={() => setTab("invitaciones")}>
+          <span className="dash-stat-value">{invitations.length}</span>
+          <span className="dash-stat-label">Invitaciones</span>
+          <span className="dash-stat-hint">A las que enviaste el link</span>
         </button>
         <button
           type="button"
-          className={`dash-stat dash-stat--yes${statusFilter === "yes" ? " is-active" : ""}`}
+          className={`dash-stat dash-stat--yes${statusFilter === "yes" && tab === "respuestas" ? " is-active" : ""}`}
           onClick={() => selectStat("yes")}
         >
           <span className="dash-stat-value">{stats.yes}</span>
-          <span className="dash-stat-label">Asisten</span>
-          <span className="dash-stat-hint">Dijeron que sí</span>
+          <span className="dash-stat-label">Dicen que sí</span>
+          <span className="dash-stat-hint">Confirmaron asistencia</span>
         </button>
-        <div className="dash-stat dash-stat--people" aria-hidden="false">
-          <span className="dash-stat-value">{stats.people}</span>
-          <span className="dash-stat-label">Personas</span>
-          <span className="dash-stat-hint">Total de asistentes</span>
-        </div>
         <button
           type="button"
-          className={`dash-stat dash-stat--no${statusFilter === "no" ? " is-active" : ""}`}
+          className={`dash-stat dash-stat--no${statusFilter === "no" && tab === "respuestas" ? " is-active" : ""}`}
           onClick={() => selectStat("no")}
         >
           <span className="dash-stat-value">{stats.no}</span>
-          <span className="dash-stat-label">No asisten</span>
-          <span className="dash-stat-hint">Dijeron que no</span>
+          <span className="dash-stat-label">Dicen que no</span>
+          <span className="dash-stat-hint">No podrán asistir</span>
         </button>
+        <div className="dash-stat dash-stat--people">
+          <span className="dash-stat-value">{stats.people}</span>
+          <span className="dash-stat-label">Total de asistentes</span>
+          <span className="dash-stat-hint">Personas que irán</span>
+        </div>
       </section>
 
       <nav className="dash-tabs">
-        <button type="button" className={tab === "respuestas" ? "is-active" : ""} onClick={() => setTab("respuestas")}>
-          Respuestas <span className="dash-tab-count">{rsvps.length}</span>
-        </button>
         <button type="button" className={tab === "invitaciones" ? "is-active" : ""} onClick={() => setTab("invitaciones")}>
           Invitaciones <span className="dash-tab-count">{invitations.length}</span>
+        </button>
+        <button type="button" className={tab === "respuestas" ? "is-active" : ""} onClick={() => setTab("respuestas")}>
+          Respuestas <span className="dash-tab-count">{rsvps.length}</span>
         </button>
       </nav>
 
@@ -299,13 +308,17 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
           <div className="dash-import">
             <h2>Importar invitaciones</h2>
             <p>
-              Una por línea, con el nombre tal cual va en el <code>?para=</code>. Opcional: agrega la cantidad invitada
-              separada por coma. Ej: <code>Familia Pérez, 4</code>
+              Sube un <strong>CSV</strong> con los nombres tal cual van en el <code>?para=</code> (un nombre por fila,
+              primera columna). También puedes pegarlos abajo, uno por línea.
             </p>
+            <label className="dash-csv">
+              <input type="file" accept=".csv,text/csv" onChange={(event) => handleCsvFile(event.target.files?.[0])} />
+              <span>Subir CSV</span>
+            </label>
             <textarea
               className="dash-import-text"
               rows={4}
-              placeholder={"Familia Pérez, 4\nLaura Gómez\nTíos Restrepo, 2"}
+              placeholder={"Familia Pérez\nLaura Gómez\nTíos Restrepo"}
               value={importText}
               onChange={(event) => setImportText(event.target.value)}
             />
@@ -340,7 +353,6 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
                   <tr>
                     <th>Para (invitación)</th>
                     <th>Estado</th>
-                    <th>Invitados</th>
                     <th>Respondió</th>
                     <th>Link</th>
                     <th></th>
@@ -359,7 +371,6 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
                           {status === "yes" ? "Confirmó" : status === "no" ? "Declinó" : "Pendiente"}
                         </span>
                       </td>
-                      <td>{inv.guestsPlanned ?? <span className="dash-muted">—</span>}</td>
                       <td>{response && response.attending ? `${response.guestCount} pers.` : <span className="dash-muted">—</span>}</td>
                       <td>
                         <button type="button" className="dash-link-btn" onClick={() => copyLink(inv.label)}>

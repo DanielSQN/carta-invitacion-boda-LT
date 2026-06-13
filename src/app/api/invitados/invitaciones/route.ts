@@ -9,8 +9,10 @@ async function requireAuth(): Promise<boolean> {
   return isInvitadosAuthed(cookieStore.get(INVITADOS_COOKIE)?.value);
 }
 
-// Importar invitaciones: acepta una lista de líneas "Etiqueta" o
-// "Etiqueta, cantidad" (la etiqueta es el valor de ?para=).
+// Importar invitaciones: una lista de nombres (el valor de ?para=), uno por
+// línea. Solo se toma el nombre (primera columna si viene de un CSV).
+const CSV_HEADER = /^(nombre|para|invitaci[oó]n|label|guest)s?$/i;
+
 export async function POST(request: Request) {
   if (!(await requireAuth())) {
     return Response.json({ ok: false }, { status: 401 });
@@ -28,24 +30,21 @@ export async function POST(request: Request) {
   const seen = new Set<string>();
   const inputs: InvitationInput[] = [];
 
-  for (const rawLine of text.split("\n")) {
-    const line = rawLine.trim();
-    if (!line) {
-      continue;
+  text.split(/\r?\n/).forEach((rawLine, index) => {
+    // Primera columna (por si pegan un CSV con más columnas) sin comillas.
+    const label = (rawLine.split(/[,;]/)[0] ?? "").replace(/^["']|["']$/g, "").trim();
+
+    if (!label || (index === 0 && CSV_HEADER.test(label))) {
+      return;
     }
 
-    // "Familia Pérez, 4" → label="Familia Pérez", guestsPlanned=4
-    const match = line.match(/^(.*?)(?:\s*[,;|]\s*(\d+))?$/);
-    const label = (match?.[1] ?? line).trim();
-    const planned = match?.[2] ? Number(match[2]) : null;
-
-    if (!label || seen.has(label.toLowerCase())) {
-      continue;
+    if (seen.has(label.toLowerCase())) {
+      return;
     }
 
     seen.add(label.toLowerCase());
-    inputs.push({ label: label.slice(0, 200), guestsPlanned: planned });
-  }
+    inputs.push({ label: label.slice(0, 200) });
+  });
 
   if (inputs.length === 0) {
     return Response.json({ ok: false, error: "No hay invitaciones válidas" }, { status: 400 });
