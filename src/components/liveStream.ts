@@ -8,9 +8,9 @@ export const WEDDING_LIVE_START = new Date("2026-09-26T14:00:00-05:00");
 export const WEDDING_LIVE_END = new Date("2026-09-27T02:00:00-05:00");
 
 // Vista previa: deja el banner/indicador visibles ANTES del dia del evento.
-// TODO: en produccion poner en false (o definir NEXT_PUBLIC_FORCE_LIVE=false)
-// para que solo aparezca el dia de la boda.
-const FORCE_LIVE_PREVIEW = true;
+// Apagado para produccion: el "en vivo" solo aparece el dia de la boda.
+// Para reactivar la vista previa: pon true, o define NEXT_PUBLIC_FORCE_LIVE=true.
+const FORCE_LIVE_PREVIEW = false;
 
 export function isLiveNow(now: Date = new Date()): boolean {
   const env = process.env.NEXT_PUBLIC_FORCE_LIVE;

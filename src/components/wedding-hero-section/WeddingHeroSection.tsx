@@ -174,9 +174,12 @@ function HeroSection() {
 }
 
 function AttendanceSection() {
+  const [attending, setAttending] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState(1);
   const [guestNames, setGuestNames] = useState([""]);
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [declineName, setDeclineName] = useState("");
+  const [declineMessage, setDeclineMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
@@ -209,10 +212,7 @@ function AttendanceSection() {
       );
 
       // La seccion de confirmacion se encoge hacia el sobre al hacer scroll,
-      // como si la carta se metiera dentro del sobre del footer. Arranca solo
-      // cuando el formulario completo ya se vio y se bajo un poco mas (margen
-      // amplio). transform-origin bottom fija ese borde, asi que el trigger
-      // sobre el propio elemento es estable durante el scrub.
+      // como si la carta se metiera dentro del sobre del footer.
       gsap.to(confirmInnerRef.current, {
         scale: 0.66,
         y: 22,
@@ -228,8 +228,7 @@ function AttendanceSection() {
         },
       });
 
-      // Cierre: los nombres de los novios se "escriben" de izquierda a derecha
-      // con un remate contundente cuando la carta del sobre aparece.
+      // Cierre: los nombres de los novios se "escriben" de izquierda a derecha.
       const names = sectionRef.current?.querySelector(".footer-letter-names");
       if (names) {
         gsap
@@ -258,39 +257,65 @@ function AttendanceSection() {
     return () => ctx.revert();
   }, []);
 
-  // Al cambiar la cantidad de invitados (o confirmar) el formulario cambia de
-  // alto: hay que recalcular las posiciones de ScrollTrigger para que el
-  // encogimiento siga arrancando recien cuando se ve todo el formulario.
+  // El alto del formulario cambia con el paso/cantidad: recalcular ScrollTrigger.
   useEffect(() => {
     const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => window.cancelAnimationFrame(id);
-  }, [guestCount, isConfirmed]);
+  }, [attending, guestCount, status]);
 
   const updateGuestCount = (value: number) => {
     const nextValue = Math.min(Math.max(value, 1), 6);
     setGuestCount(nextValue);
-    setGuestNames((names) =>
-      Array.from({ length: nextValue }, (_, index) => names[index] ?? ""),
-    );
-    setIsConfirmed(false);
+    setGuestNames((names) => Array.from({ length: nextValue }, (_, index) => names[index] ?? ""));
   };
 
   const updateGuestName = (index: number, value: string) => {
     setGuestNames((names) => names.map((name, nameIndex) => (nameIndex === index ? value : name)));
-    setIsConfirmed(false);
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const chooseAttending = (value: boolean) => {
+    setAttending(value);
+    setStatus("idle");
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setIsConfirmed(true);
+    setStatus("submitting");
 
-    window.requestAnimationFrame(() => {
-      sectionRef.current?.querySelector(".attendance-confirmed")?.scrollIntoView({
-        behavior: prefersReducedMotion() ? "auto" : "smooth",
-        block: "center",
+    const params = new URLSearchParams(window.location.search);
+    const invitedAs = params.get("para") || params.get("invitado") || null;
+    const names = attending ? guestNames.map((name) => name.trim()).filter(Boolean) : [declineName.trim()].filter(Boolean);
+
+    try {
+      const response = await fetch("/api/rsvp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          attending,
+          guestCount: attending ? guestCount : 0,
+          names,
+          invitedAs,
+          message: attending ? null : declineMessage.trim() || null,
+        }),
       });
-    });
+
+      if (!response.ok) {
+        throw new Error("submit failed");
+      }
+
+      setStatus("success");
+      window.requestAnimationFrame(() => {
+        sectionRef.current?.querySelector(".attendance-confirmed")?.scrollIntoView({
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+          block: "center",
+        });
+      });
+    } catch {
+      setStatus("error");
+    }
   };
+
+  const submitting = status === "submitting";
 
   return (
     <section ref={sectionRef} className="attendance-section finale-section" aria-labelledby="attendance-title">
@@ -303,87 +328,158 @@ function AttendanceSection() {
           <p>Ayudanos a preparar cada detalle con amor.</p>
         </div>
 
-        <form className="attendance-form" data-reveal onSubmit={handleSubmit}>
-          <p className="attendance-hint">
-            Completa estos dos pasos y presiona <strong>Confirmar asistencia</strong>.
-          </p>
-
-          <div className="attendance-step">
-            <div className="attendance-step-head">
-              <span className="attendance-step-number" aria-hidden="true">
-                1
-              </span>
-              <span className="attendance-step-title">¿Cuántas personas asisten?</span>
-            </div>
-
-            <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
-              <button
-                type="button"
-                onClick={() => updateGuestCount(guestCount - 1)}
-                disabled={guestCount <= 1}
-                aria-label="Disminuir cantidad de asistentes"
-              >
-                −
-              </button>
-              <output aria-live="polite" aria-label={`${guestCount} asistentes`}>
-                {guestCount}
-                <small>{guestCount === 1 ? "persona" : "personas"}</small>
-              </output>
-              <button
-                type="button"
-                onClick={() => updateGuestCount(guestCount + 1)}
-                disabled={guestCount >= 6}
-                aria-label="Aumentar cantidad de asistentes"
-              >
-                +
-              </button>
-            </div>
-
-            <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo 6).</p>
-          </div>
-
-          <div className="attendance-step">
-            <div className="attendance-step-head">
-              <span className="attendance-step-number" aria-hidden="true">
-                2
-              </span>
-              <span className="attendance-step-title">¿Quiénes asisten?</span>
-            </div>
-
-            <div className="attendance-name-grid">
-              {guestNames.map((name, index) => (
-                <label key={index} className="attendance-field">
-                  <span>{guestCount === 1 ? "Tu nombre" : index === 0 ? "Tu nombre" : `Acompañante ${index}`}</span>
-                  <span className="attendance-input-wrap">
-                    <User aria-hidden="true" strokeWidth={2} />
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(event) => updateGuestName(index, event.target.value)}
-                      placeholder="Nombre completo"
-                      required
-                    />
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {isConfirmed ? (
+        {status === "success" ? (
+          <div className="attendance-form attendance-form--result" data-reveal>
             <div className="attendance-confirmed" role="status">
-              <span className="attendance-confirmed-icon" aria-hidden="true">
+              <span className={`attendance-confirmed-icon${attending ? "" : " attendance-confirmed-icon--no"}`} aria-hidden="true">
                 <Check strokeWidth={2.6} />
               </span>
-              <p>¡Gracias por confirmar{guestCount > 1 ? ` por ${guestCount} personas` : ""}!</p>
-              <span>Nos vemos el 26 de septiembre de 2026 ♥</span>
+              {attending ? (
+                <>
+                  <p>¡Gracias por confirmar{guestCount > 1 ? ` por ${guestCount} personas` : ""}!</p>
+                  <span>Nos vemos el 26 de septiembre de 2026 ♥</span>
+                </>
+              ) : (
+                <>
+                  <p>Gracias por avisarnos 💛</p>
+                  <span>Te vamos a extrañar. ¡Estarás en nuestros corazones!</span>
+                </>
+              )}
             </div>
-          ) : (
-            <button className="attendance-submit" type="submit">
-              <Heart aria-hidden="true" strokeWidth={2.2} />
-              Confirmar asistencia
+          </div>
+        ) : attending === null ? (
+          <div className="attendance-form attendance-choice" data-reveal>
+            <p className="attendance-hint">¿Nos acompañarás en este gran día?</p>
+            <div className="attendance-choice-buttons">
+              <button type="button" className="attendance-choice-btn attendance-choice-btn--yes" onClick={() => chooseAttending(true)}>
+                <Heart aria-hidden="true" strokeWidth={2.2} />
+                ¡Sí, allí estaré!
+              </button>
+              <button type="button" className="attendance-choice-btn attendance-choice-btn--no" onClick={() => chooseAttending(false)}>
+                No podré asistir
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form className="attendance-form" data-reveal onSubmit={handleSubmit}>
+            <button type="button" className="attendance-back" onClick={() => setAttending(null)}>
+              ‹ Cambiar respuesta
             </button>
-          )}
-        </form>
+
+            {attending ? (
+              <>
+                <p className="attendance-hint">
+                  ¡Qué alegría! Cuéntanos <strong>cuántos asistirán</strong> y sus nombres.
+                </p>
+
+                <div className="attendance-step">
+                  <div className="attendance-step-head">
+                    <span className="attendance-step-number" aria-hidden="true">
+                      1
+                    </span>
+                    <span className="attendance-step-title">¿Cuántas personas asisten?</span>
+                  </div>
+
+                  <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
+                    <button
+                      type="button"
+                      onClick={() => updateGuestCount(guestCount - 1)}
+                      disabled={guestCount <= 1}
+                      aria-label="Disminuir cantidad de asistentes"
+                    >
+                      −
+                    </button>
+                    <output aria-live="polite" aria-label={`${guestCount} asistentes`}>
+                      {guestCount}
+                      <small>{guestCount === 1 ? "persona" : "personas"}</small>
+                    </output>
+                    <button
+                      type="button"
+                      onClick={() => updateGuestCount(guestCount + 1)}
+                      disabled={guestCount >= 6}
+                      aria-label="Aumentar cantidad de asistentes"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo 6).</p>
+                </div>
+
+                <div className="attendance-step">
+                  <div className="attendance-step-head">
+                    <span className="attendance-step-number" aria-hidden="true">
+                      2
+                    </span>
+                    <span className="attendance-step-title">¿Quiénes asisten?</span>
+                  </div>
+
+                  <div className="attendance-name-grid">
+                    {guestNames.map((name, index) => (
+                      <label key={index} className="attendance-field">
+                        <span>{index === 0 ? "Tu nombre" : `Acompañante ${index}`}</span>
+                        <span className="attendance-input-wrap">
+                          <User aria-hidden="true" strokeWidth={2} />
+                          <input
+                            type="text"
+                            value={name}
+                            onChange={(event) => updateGuestName(index, event.target.value)}
+                            placeholder="Nombre completo"
+                            required
+                          />
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="attendance-hint">
+                  Lamentamos que no puedas acompañarnos. <strong>¿Nos dejas tu nombre?</strong>
+                </p>
+
+                <div className="attendance-step">
+                  <label className="attendance-field">
+                    <span>Tu nombre</span>
+                    <span className="attendance-input-wrap">
+                      <User aria-hidden="true" strokeWidth={2} />
+                      <input
+                        type="text"
+                        value={declineName}
+                        onChange={(event) => setDeclineName(event.target.value)}
+                        placeholder="Nombre completo"
+                        required
+                      />
+                    </span>
+                  </label>
+
+                  <label className="attendance-field attendance-field--message">
+                    <span>Un mensaje para los novios (opcional)</span>
+                    <textarea
+                      value={declineMessage}
+                      onChange={(event) => setDeclineMessage(event.target.value)}
+                      placeholder="Les deseo lo mejor…"
+                      rows={3}
+                      maxLength={500}
+                    />
+                  </label>
+                </div>
+              </>
+            )}
+
+            {status === "error" ? (
+              <p className="attendance-error" role="alert">
+                Hubo un problema al enviar. Intenta de nuevo.
+              </p>
+            ) : null}
+
+            <button className="attendance-submit" type="submit" disabled={submitting}>
+              {attending ? <Heart aria-hidden="true" strokeWidth={2.2} /> : null}
+              {submitting ? "Enviando…" : attending ? "Confirmar asistencia" : "Enviar respuesta"}
+            </button>
+          </form>
+        )}
       </div>
 
       <div ref={footerEnvelopeRef} className="footer-letter">
