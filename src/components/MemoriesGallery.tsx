@@ -315,7 +315,7 @@ export default function MemoriesGallery() {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  loading={index < 3 ? "eager" : "lazy"}
+                  loading="lazy"
                   sizes="(max-width: 760px) 62vw, 17rem"
                   className="memories-photo"
                 />

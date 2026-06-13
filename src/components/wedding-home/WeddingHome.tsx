@@ -3,13 +3,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
 import { Music, VolumeX } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import DecorativeText from "./DecorativeText";
 import Envelope from "./Envelope";
 import FloralCorners from "./FloralCorners";
 import Verse from "./Verse";
-import WeddingHeroSection from "../wedding-hero-section/WeddingHeroSection";
+
+const WeddingHeroSection = dynamic(() => import("../wedding-hero-section/WeddingHeroSection"), {
+  ssr: false,
+});
 
 // Solo se precargan los assets consumidos por URL directa (fondos CSS).
 // El resto de imagenes pasa por next/image, que sirve URLs optimizadas
@@ -130,18 +134,30 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, [initialGuestName]);
 
   useEffect(() => {
-    const images = preloadedInvitationAssets.map((src) => {
-      const image = new window.Image();
-      image.decoding = "async";
-      image.src = src;
-      return image;
-    });
+    const images: HTMLImageElement[] = [];
+    const timer = window.setTimeout(() => {
+      preloadedInvitationAssets.forEach((src) => {
+        const image = new window.Image();
+        image.decoding = "async";
+        image.src = src;
+        images.push(image);
+      });
+    }, 900);
 
     return () => {
+      window.clearTimeout(timer);
       images.forEach((image) => {
         image.src = "";
       });
     };
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      void import("../wedding-hero-section/WeddingHeroSection");
+    }, 1600);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -431,7 +447,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
-      <audio ref={audioRef} src="/audio/song1.mp3" preload="auto" loop />
+      <audio ref={audioRef} src="/audio/song1.mp3" preload="none" loop />
       {musicControl}
       {swipeDownControl}
 

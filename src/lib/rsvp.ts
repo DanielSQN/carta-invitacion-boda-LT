@@ -29,6 +29,16 @@ export type RsvpRecord = RsvpInput & {
   created_at: string;
 };
 
+type RsvpRow = {
+  id: string;
+  created_at: string;
+  attending: boolean;
+  guest_count: number;
+  names: string[] | null;
+  invited_as: string | null;
+  message: string | null;
+};
+
 export function isSupabaseConfigured(): boolean {
   return Boolean(SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY);
 }
@@ -85,6 +95,48 @@ export async function insertRsvp(input: RsvpInput): Promise<void> {
   }
 }
 
+function mapRsvpRow(row: RsvpRow): RsvpRecord {
+  return {
+    id: row.id,
+    created_at: row.created_at,
+    attending: row.attending,
+    guestCount: row.guest_count,
+    names: row.names ?? [],
+    invitedAs: row.invited_as,
+    message: row.message,
+  };
+}
+
+export async function getRsvpByInvitation(invitedAs: string): Promise<RsvpRecord | null> {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
+  const label = invitedAs.trim();
+
+  if (!label) {
+    return null;
+  }
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/${TABLE}?select=id,created_at,attending,guest_count,names,invited_as,message&invited_as=eq.${encodeURIComponent(label)}&order=created_at.desc&limit=1`,
+    {
+      headers: restHeaders(),
+      cache: "no-store",
+    },
+  );
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    throw new Error(`Error leyendo RSVP (${response.status}): ${detail}`);
+  }
+
+  const rows = (await response.json()) as RsvpRow[];
+  const [row] = rows;
+
+  return row ? mapRsvpRow(row) : null;
+}
+
 export async function listRsvps(): Promise<RsvpRecord[]> {
   if (!isSupabaseConfigured()) {
     return [];
@@ -103,23 +155,7 @@ export async function listRsvps(): Promise<RsvpRecord[]> {
     throw new Error(`Error leyendo RSVP (${response.status}): ${detail}`);
   }
 
-  const rows = (await response.json()) as Array<{
-    id: string;
-    created_at: string;
-    attending: boolean;
-    guest_count: number;
-    names: string[] | null;
-    invited_as: string | null;
-    message: string | null;
-  }>;
+  const rows = (await response.json()) as RsvpRow[];
 
-  return rows.map((row) => ({
-    id: row.id,
-    created_at: row.created_at,
-    attending: row.attending,
-    guestCount: row.guest_count,
-    names: row.names ?? [],
-    invitedAs: row.invited_as,
-    message: row.message,
-  }));
+  return rows.map(mapRsvpRow);
 }

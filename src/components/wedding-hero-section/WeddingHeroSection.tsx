@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, Heart, User } from "lucide-react";
 import Image from "next/image";
-import { type FormEvent, useEffect, useRef, useState } from "react";
+import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
 import LiveBanner from "../LiveBanner";
@@ -173,13 +173,32 @@ function HeroSection() {
   );
 }
 
-// Clave de localStorage para recordar la respuesta de esta invitación (?para=).
-function getStoredRsvpKey(): string | null {
+type SavedRsvp = {
+  attending: boolean;
+  guestCount?: number;
+  names?: string[];
+  message?: string | null;
+};
+
+type RsvpLookupResponse = {
+  ok: boolean;
+  persisted?: boolean;
+  rsvp?: SavedRsvp | null;
+};
+
+function getInvitationParam(): string | null {
   if (typeof window === "undefined") {
     return null;
   }
+
   const params = new URLSearchParams(window.location.search);
-  const para = (params.get("para") || params.get("invitado") || "").trim().toLowerCase();
+  const para = (params.get("para") || params.get("invitado") || "").trim();
+  return para || null;
+}
+
+// Clave de localStorage para recordar la respuesta de esta invitación (?para=).
+function getStoredRsvpKey(): string | null {
+  const para = getInvitationParam()?.toLowerCase();
   return para ? `rsvp:${para}` : null;
 }
 
@@ -191,10 +210,76 @@ function AttendanceSection() {
   const [declineMessage, setDeclineMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [alreadyResponded, setAlreadyResponded] = useState(false);
+  const [hasChosenAttendance, setHasChosenAttendance] = useState(false);
+  const [rsvpLookupDone, setRsvpLookupDone] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
   const shrinkRef = useRef<gsap.core.Tween | null>(null);
+
+  const disableConfirmShrink = useCallback(() => {
+    shrinkRef.current?.scrollTrigger?.kill();
+    shrinkRef.current?.kill();
+    shrinkRef.current = null;
+
+    if (confirmInnerRef.current) {
+      gsap.set(confirmInnerRef.current, { clearProps: "transform,transformOrigin,opacity,visibility" });
+    }
+  }, []);
+
+  const scrollAttendanceToTop = useCallback(() => {
+    const section = sectionRef.current;
+
+    if (!section) {
+      return;
+    }
+
+    const scroller = getSectionScroller(section);
+    const behavior: ScrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
+
+    const align = (nextBehavior: ScrollBehavior) => {
+      if (scroller) {
+        const sectionRect = section.getBoundingClientRect();
+        const scrollerRect = scroller.getBoundingClientRect();
+
+        scroller.scrollTo({
+          top: scroller.scrollTop + sectionRect.top - scrollerRect.top,
+          behavior: nextBehavior,
+        });
+        return;
+      }
+
+      section.scrollIntoView({ behavior: nextBehavior, block: "start" });
+    };
+
+    window.requestAnimationFrame(() => {
+      align(behavior);
+      window.setTimeout(() => align("auto"), 320);
+    });
+  }, []);
+
+  const applySavedRsvp = useCallback(
+    (data: SavedRsvp) => {
+      const names = Array.isArray(data.names) ? data.names.map((name) => name.trim()).filter(Boolean) : [];
+
+      disableConfirmShrink();
+      setAttending(data.attending);
+      setAlreadyResponded(true);
+      setRsvpLookupDone(true);
+
+      if (data.attending) {
+        const savedGuestCount = data.guestCount ?? names.length;
+        const count = Math.min(Math.max(savedGuestCount || 1, 1), 6);
+        setGuestCount(count);
+        setGuestNames(Array.from({ length: count }, (_, index) => names[index] ?? ""));
+        return;
+      }
+
+      setDeclineName(names[0] ?? "");
+      setDeclineMessage(data.message ?? "");
+    },
+    [disableConfirmShrink],
+  );
 
   useEffect(() => {
     const scroller = getSectionScroller(sectionRef.current);
@@ -222,23 +307,6 @@ function AttendanceSection() {
           },
         },
       );
-
-      // La seccion de confirmacion se encoge hacia el sobre al hacer scroll,
-      // como si la carta se metiera dentro del sobre del footer.
-      shrinkRef.current = gsap.to(confirmInnerRef.current, {
-        scale: 0.66,
-        y: 22,
-        autoAlpha: 0.28,
-        ease: "none",
-        transformOrigin: "bottom center",
-        scrollTrigger: {
-          trigger: confirmInnerRef.current,
-          start: "bottom bottom-=120",
-          end: "+=240",
-          scrub: 0.6,
-          ...(scroller ? { scroller } : {}),
-        },
-      });
 
       // Cierre: los nombres de los novios se "escriben" de izquierda a derecha.
       const names = sectionRef.current?.querySelector(".footer-letter-names");
@@ -269,6 +337,45 @@ function AttendanceSection() {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    if (
+      !rsvpLookupDone ||
+      attending !== null ||
+      alreadyResponded ||
+      hasChosenAttendance ||
+      status === "success" ||
+      prefersReducedMotion()
+    ) {
+      disableConfirmShrink();
+      return;
+    }
+
+    const scroller = getSectionScroller(sectionRef.current);
+
+    const ctx = gsap.context(() => {
+      // Solo la pantalla inicial de eleccion se encoge hacia el sobre.
+      shrinkRef.current = gsap.to(confirmInnerRef.current, {
+        scale: 0.66,
+        y: 22,
+        autoAlpha: 0.28,
+        ease: "none",
+        transformOrigin: "bottom center",
+        scrollTrigger: {
+          trigger: confirmInnerRef.current,
+          start: "bottom bottom-=120",
+          end: "+=240",
+          scrub: 0.6,
+          ...(scroller ? { scroller } : {}),
+        },
+      });
+    }, sectionRef);
+
+    return () => {
+      ctx.revert();
+      shrinkRef.current = null;
+    };
+  }, [alreadyResponded, attending, disableConfirmShrink, hasChosenAttendance, rsvpLookupDone, status]);
+
   // El alto del formulario cambia con el paso/cantidad: recalcular ScrollTrigger.
   useEffect(() => {
     const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -283,50 +390,106 @@ function AttendanceSection() {
       return;
     }
 
-    shrinkRef.current?.scrollTrigger?.kill();
-    shrinkRef.current?.kill();
-    shrinkRef.current = null;
-    gsap.set(confirmInnerRef.current, { clearProps: "transform,opacity,visibility" });
-  }, [status]);
+    disableConfirmShrink();
+  }, [disableConfirmShrink, status]);
 
-  // Si esta invitación (?para=) ya respondió antes en este dispositivo, se
-  // pre-llena el formulario para que vea/edite lo que confirmó y vuelva a
-  // enviar (el servidor reemplaza su registro, no crea duplicados).
+  // Si esta invitación (?para=) ya respondió, se consulta primero el servidor.
+  // localStorage queda solo como respaldo para vista previa sin Supabase.
   useEffect(() => {
+    const readLocalRsvp = () => {
+      const key = getStoredRsvpKey();
+
+      if (!key) {
+        return null;
+      }
+
+      try {
+        const saved = window.localStorage.getItem(key);
+        return saved ? (JSON.parse(saved) as SavedRsvp) : null;
+      } catch {
+        return null;
+      }
+    };
+
     const key = getStoredRsvpKey();
-    if (!key) {
+    const invitedAs = getInvitationParam();
+
+    if (!key && !invitedAs) {
+      queueMicrotask(() => setRsvpLookupDone(true));
       return;
     }
 
-    try {
-      const saved = window.localStorage.getItem(key);
-      if (!saved) {
-        return;
-      }
-
-      const data = JSON.parse(saved) as {
-        attending: boolean;
-        names?: string[];
-        message?: string | null;
-      };
-      const names = Array.isArray(data.names) ? data.names.filter(Boolean) : [];
+    if (!invitedAs) {
+      const localRsvp = readLocalRsvp();
 
       queueMicrotask(() => {
-        setAttending(data.attending);
-        setAlreadyResponded(true);
-        if (data.attending) {
-          const list = names.length ? names : [""];
-          setGuestCount(Math.min(list.length, 6));
-          setGuestNames(list.slice(0, 6));
+        if (localRsvp) {
+          applySavedRsvp(localRsvp);
         } else {
-          setDeclineName(names[0] ?? "");
-          setDeclineMessage(data.message ?? "");
+          setRsvpLookupDone(true);
         }
       });
-    } catch {
-      // ignora datos corruptos
+
+      return;
     }
-  }, []);
+
+    const controller = new AbortController();
+    let cancelled = false;
+
+    const loadExistingRsvp = async () => {
+      try {
+        const response = await fetch(`/api/rsvp?invitedAs=${encodeURIComponent(invitedAs)}`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error("lookup failed");
+        }
+
+        const result = (await response.json()) as RsvpLookupResponse;
+
+        if (cancelled) {
+          return;
+        }
+
+        if (result.rsvp) {
+          applySavedRsvp(result.rsvp);
+          return;
+        }
+
+        if (result.persisted === false) {
+          const localRsvp = readLocalRsvp();
+
+          if (localRsvp) {
+            applySavedRsvp(localRsvp);
+            return;
+          }
+        }
+
+        setRsvpLookupDone(true);
+      } catch {
+        if (cancelled) {
+          return;
+        }
+
+        const localRsvp = readLocalRsvp();
+
+        if (localRsvp) {
+          applySavedRsvp(localRsvp);
+        } else {
+          setRsvpLookupDone(true);
+        }
+      }
+    };
+
+    void loadExistingRsvp();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+  }, [applySavedRsvp]);
 
   const updateGuestCount = (value: number) => {
     const nextValue = Math.min(Math.max(value, 1), 6);
@@ -339,8 +502,11 @@ function AttendanceSection() {
   };
 
   const chooseAttending = (value: boolean) => {
+    disableConfirmShrink();
+    setHasChosenAttendance(true);
     setAttending(value);
     setStatus("idle");
+    scrollAttendanceToTop();
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -382,12 +548,7 @@ function AttendanceSection() {
       }
 
       setStatus("success");
-      window.requestAnimationFrame(() => {
-        sectionRef.current?.querySelector(".attendance-confirmed")?.scrollIntoView({
-          behavior: prefersReducedMotion() ? "auto" : "smooth",
-          block: "center",
-        });
-      });
+      scrollAttendanceToTop();
     } catch {
       setStatus("error");
     }
