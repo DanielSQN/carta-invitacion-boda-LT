@@ -39,9 +39,11 @@ html {
   /* el documento no scrollea (lo hace .details-scroll): sin esto, arrastrar
      hacia abajo disparaba el pull-to-refresh de Android y recargaba */
   overscroll-behavior: none;
-  /* iOS ignora user-scalable=no del viewport: pan-x pan-y permite el scroll
-     pero bloquea pinch-zoom y doble tap (Safari lo respeta desde iOS 13) */
-  touch-action: pan-x pan-y;
+  /* OJO: no usar pan-x/pan-y aqui — el soporte de Safari iOS es parcial y
+     bloquea el scroll nativo. manipulation permite el scroll en ambos ejes
+     y bloquea el zoom por doble tap; el pinch lo bloquean los eventos
+     gesture* (iOS) y el viewport meta (Android). */
+  touch-action: manipulation;
 }
 
 body {
@@ -2483,9 +2485,10 @@ button {
   gap: 0;
   overflow-x: auto;
   overflow-y: hidden;
-  /* pan-y permitido: el gesto vertical sobre el carril debe encadenar al
-     scroll de la pagina, no quedarse atrapado en el carril */
-  touch-action: pan-x pan-y;
+  /* manipulation (no pan-x/pan-y, que Safari iOS no soporta bien): permite
+     deslizar horizontal el carril y que el gesto vertical encadene al
+     scroll de la pagina */
+  touch-action: manipulation;
   /* padding vertical amplio: el overflow del carril recortaba las sombras
      difusas y se veia un recuadro marcado */
   padding: 2.7rem calc(50% - var(--memories-card-w) / 2) 3.5rem;
