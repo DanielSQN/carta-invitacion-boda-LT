@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, ChevronLeft, ChevronRight, ChevronsRight, Heart, User, X } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useEffect, useRef, useState } from "react";
@@ -576,17 +577,20 @@ function AttendanceSection() {
       );
 
       // La seccion de confirmacion se encoge hacia el sobre al hacer scroll,
-      // como si la carta se metiera dentro del sobre del footer.
+      // como si la carta se metiera dentro del sobre del footer. Arranca solo
+      // cuando el formulario completo ya se vio (su borde inferior queda a un
+      // pequeño margen del fondo). transform-origin bottom fija ese borde, asi
+      // que el trigger sobre el propio elemento es estable durante el scrub.
       gsap.to(confirmInnerRef.current, {
-        scale: 0.62,
-        y: 30,
-        autoAlpha: 0.25,
+        scale: 0.66,
+        y: 22,
+        autoAlpha: 0.28,
         ease: "none",
         transformOrigin: "bottom center",
         scrollTrigger: {
-          trigger: footerEnvelopeRef.current,
-          start: "top bottom",
-          end: "top 38%",
+          trigger: confirmInnerRef.current,
+          start: "bottom bottom-=48",
+          end: "+=260",
           scrub: 0.6,
           ...(scroller ? { scroller } : {}),
         },
@@ -595,6 +599,14 @@ function AttendanceSection() {
 
     return () => ctx.revert();
   }, []);
+
+  // Al cambiar la cantidad de invitados (o confirmar) el formulario cambia de
+  // alto: hay que recalcular las posiciones de ScrollTrigger para que el
+  // encogimiento siga arrancando recien cuando se ve todo el formulario.
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    return () => window.cancelAnimationFrame(id);
+  }, [guestCount, isConfirmed]);
 
   const updateGuestCount = (value: number) => {
     const nextValue = Math.min(Math.max(value, 1), 6);
@@ -719,10 +731,10 @@ function AttendanceSection() {
       <div ref={footerEnvelopeRef} className="footer-letter">
         <div className="footer-envelope">
           <blockquote className="footer-letter-note">
-            <cite className="footer-letter-ref">1 Tesalonicenses 3:12</cite>
+            <cite className="footer-letter-ref">1 Tesalonicenses 3:12 · NVI</cite>
             <p className="footer-letter-verse">
-              &ldquo;Y el Se&ntilde;or os haga crecer y abundar en amor unos para con otros y para con todos, como tambi&eacute;n
-              lo hacemos nosotros para con vosotros.&rdquo;
+              &ldquo;Que el Se&ntilde;or los haga crecer para que se amen m&aacute;s y m&aacute;s unos a otros, y a todos, tal como
+              nosotros los amamos a ustedes.&rdquo;
             </p>
             <p className="footer-letter-sign">
               Con amor <span className="footer-letter-heart" aria-hidden="true">♥</span>
