@@ -3262,13 +3262,13 @@ button {
   width: 100%;
 }
 
-/* la "carta" con el versiculo, detras del frente, asomando por la boca */
+/* la "carta" con el versiculo + firma, detras del frente, asomando por la boca */
 .footer-letter-note {
   position: relative;
   z-index: 1;
   width: min(86%, 27rem);
-  margin: 0 auto -2.8rem;
-  padding: clamp(1.35rem, 6vw, 1.9rem) clamp(1.2rem, 5vw, 1.9rem) clamp(3rem, 10vw, 3.8rem);
+  margin: 0 auto -2.6rem;
+  padding: clamp(1.35rem, 6vw, 1.9rem) clamp(1.2rem, 5vw, 1.9rem) clamp(2.8rem, 9vw, 3.4rem);
   border-radius: 0.3rem 0.3rem 0.12rem 0.12rem;
   background: linear-gradient(180deg, #fffdf6 0%, #fbf3e2 100%);
   box-shadow:
@@ -3308,77 +3308,78 @@ button {
   text-wrap: balance;
 }
 
-/* frente del sobre a todo el ancho; el borde superior es la boca abierta */
-.footer-envelope-front {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  height: clamp(8.5rem, 32vw, 12.5rem);
-  background: linear-gradient(180deg, #f5e9d2 0%, #e6d3b0 100%);
-  /* boca del sobre: el borde superior baja en suave V hacia el centro */
-  clip-path: polygon(0 9%, 50% 17%, 100% 9%, 100% 100%, 0 100%);
-  box-shadow: inset 0 0.12rem 0 rgba(255, 252, 243, 0.5);
-}
-
-/* costuras diagonales (esquinas inferiores hacia el centro) del frente */
-.footer-envelope-front::before,
-.footer-envelope-front::after {
-  position: absolute;
-  bottom: 0;
-  width: 58%;
-  height: 100%;
-  content: "";
-  pointer-events: none;
-}
-
-.footer-envelope-front::before {
-  left: 0;
-  background: linear-gradient(to top right, transparent calc(50% - 0.7px), rgba(122, 92, 52, 0.2) 50%, transparent calc(50% + 0.7px));
-}
-
-.footer-envelope-front::after {
-  right: 0;
-  background: linear-gradient(to top left, transparent calc(50% - 0.7px), rgba(122, 92, 52, 0.2) 50%, transparent calc(50% + 0.7px));
-}
-
-/* sello de cera reutilizado, centrado en el frente del sobre */
-.footer-envelope-seal {
-  position: absolute;
-  top: 56%;
-  left: 50%;
-  z-index: 3;
-  width: clamp(3.3rem, 15vw, 4.2rem);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 0.5rem 0.7rem rgba(48, 30, 12, 0.45));
-}
-
-.footer-signature {
-  margin: clamp(1.4rem, 6vw, 2.1rem) 0 calc(env(safe-area-inset-bottom) + clamp(1.4rem, 6vw, 2.2rem));
-  color: rgba(237, 243, 250, 0.72);
+/* firma dentro de la carta */
+.footer-letter-sign {
+  margin: clamp(1rem, 4.4vw, 1.4rem) 0 0;
+  color: rgba(63, 79, 60, 0.66);
   font-family: var(--font-display), Georgia, serif;
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
   line-height: 1.2;
-  text-align: center;
   text-transform: uppercase;
 }
 
-.footer-signature-heart {
-  color: #8fc1e9;
+.footer-letter-heart {
+  color: #2f6f9f;
 }
 
-.footer-signature-names {
+.footer-letter-names {
   display: block;
-  margin-top: 0.5rem;
-  color: #cfe4f6;
+  margin-top: 0.42rem;
+  color: #2f6f9f;
   font-family: var(--font-script), "Brush Script MT", cursive;
   font-size: 1.85rem;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
   white-space: nowrap;
+}
+
+/* frente del sobre a todo el ancho; el borde superior es la boca abierta y
+   la solapa triangular (apex al centro) ancla el sello */
+.footer-envelope-front {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: clamp(9rem, 33vw, 13rem);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: linear-gradient(180deg, #f5e9d2 0%, #e6d3b0 100%);
+  clip-path: polygon(0 9%, 50% 17%, 100% 9%, 100% 100%, 0 100%);
+  box-shadow: inset 0 0.12rem 0 rgba(255, 252, 243, 0.5);
+}
+
+/* solapa frontal triangular: apex al centro, base en las esquinas inferiores */
+.footer-envelope-front::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(180deg, rgba(122, 92, 52, 0.13), rgba(122, 92, 52, 0.02) 60%);
+  clip-path: polygon(0 100%, 50% 42%, 100% 100%);
+  pointer-events: none;
+}
+
+/* costuras superiores del sobre (boca) hacia el apex de la solapa */
+.footer-envelope-front::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(to bottom right, transparent calc(50% - 0.6px), rgba(122, 92, 52, 0.16) 50%, transparent calc(50% + 0.6px)) left / 50% 42% no-repeat,
+    linear-gradient(to bottom left, transparent calc(50% - 0.6px), rgba(122, 92, 52, 0.16) 50%, transparent calc(50% + 0.6px)) right / 50% 42% no-repeat;
+  pointer-events: none;
+}
+
+/* sello de cera reutilizado, en el apex de la solapa (cierre del sobre) */
+.footer-envelope-seal {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  z-index: 3;
+  width: clamp(3.3rem, 15vw, 4.2rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0.5rem 0.7rem rgba(48, 30, 12, 0.45));
 }
 
 @media (max-width: 430px) {

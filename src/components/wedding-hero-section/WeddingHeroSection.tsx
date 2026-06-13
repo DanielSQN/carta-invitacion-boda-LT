@@ -545,6 +545,7 @@ function AttendanceSection() {
   const [guestNames, setGuestNames] = useState([""]);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -573,6 +574,23 @@ function AttendanceSection() {
           },
         },
       );
+
+      // La seccion de confirmacion se encoge hacia el sobre al hacer scroll,
+      // como si la carta se metiera dentro del sobre del footer.
+      gsap.to(confirmInnerRef.current, {
+        scale: 0.62,
+        y: 30,
+        autoAlpha: 0.25,
+        ease: "none",
+        transformOrigin: "bottom center",
+        scrollTrigger: {
+          trigger: footerEnvelopeRef.current,
+          start: "top bottom",
+          end: "top 38%",
+          scrub: 0.6,
+          ...(scroller ? { scroller } : {}),
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -608,7 +626,7 @@ function AttendanceSection() {
     <section ref={sectionRef} className="attendance-section finale-section" aria-labelledby="attendance-title">
       <SectionFrameDecor variant="attendance" />
       <div className="finale-section-bg finale-section-bg--attendance" aria-hidden="true" />
-      <div className="finale-inner attendance-inner">
+      <div ref={confirmInnerRef} className="finale-inner attendance-inner">
         <div className="finale-heading" data-reveal>
           <span>RSVP</span>
           <h2 id="attendance-title">Confirmar tu asistencia</h2>
@@ -706,6 +724,10 @@ function AttendanceSection() {
               &ldquo;Y el Se&ntilde;or os haga crecer y abundar en amor unos para con otros y para con todos, como tambi&eacute;n
               lo hacemos nosotros para con vosotros.&rdquo;
             </p>
+            <p className="footer-letter-sign">
+              Con amor <span className="footer-letter-heart" aria-hidden="true">♥</span>
+              <span className="footer-letter-names">Luisa &amp; Jhonnatan</span>
+            </p>
           </blockquote>
 
           <div className="footer-envelope-front" aria-hidden="true">
@@ -714,11 +736,6 @@ function AttendanceSection() {
             </span>
           </div>
         </div>
-
-        <p className="footer-signature">
-          Con amor <span className="footer-signature-heart" aria-hidden="true">♥</span>
-          <span className="footer-signature-names">Luisa &amp; Jhonnatan</span>
-        </p>
       </div>
     </section>
   );
