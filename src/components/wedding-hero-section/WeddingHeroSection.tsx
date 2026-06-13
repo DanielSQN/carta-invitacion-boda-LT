@@ -194,6 +194,7 @@ function AttendanceSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
+  const shrinkRef = useRef<gsap.core.Tween | null>(null);
 
   useEffect(() => {
     const scroller = getSectionScroller(sectionRef.current);
@@ -224,7 +225,7 @@ function AttendanceSection() {
 
       // La seccion de confirmacion se encoge hacia el sobre al hacer scroll,
       // como si la carta se metiera dentro del sobre del footer.
-      gsap.to(confirmInnerRef.current, {
+      shrinkRef.current = gsap.to(confirmInnerRef.current, {
         scale: 0.66,
         y: 22,
         autoAlpha: 0.28,
@@ -273,6 +274,20 @@ function AttendanceSection() {
     const id = window.requestAnimationFrame(() => ScrollTrigger.refresh());
     return () => window.cancelAnimationFrame(id);
   }, [attending, guestCount, status]);
+
+  // Tras confirmar, la pantalla de éxito NO debe encogerse hacia el sobre
+  // (si no, el mensaje queda diminuto/oculto al hacer scroll). Se desactiva el
+  // encogimiento y se restablece el tamaño normal.
+  useEffect(() => {
+    if (status !== "success" || !confirmInnerRef.current) {
+      return;
+    }
+
+    shrinkRef.current?.scrollTrigger?.kill();
+    shrinkRef.current?.kill();
+    shrinkRef.current = null;
+    gsap.set(confirmInnerRef.current, { clearProps: "transform,opacity,visibility" });
+  }, [status]);
 
   // Si esta invitación (?para=) ya respondió antes en este dispositivo, se
   // pre-llena el formulario para que vea/edite lo que confirmó y vuelva a

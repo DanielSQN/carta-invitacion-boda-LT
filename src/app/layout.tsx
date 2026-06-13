@@ -2,14 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Great_Vibes, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-// Sin pinch-zoom: la invitacion usa un contenedor de scroll propio y el
-// zoom del visual viewport en Android causaba estados rotos / recargas
-// (pull-to-refresh) al volver a la escala normal.
+// Se permite el zoom nativo (pinch) por accesibilidad y para que funcionen
+// los gestos de iOS (p. ej. pellizcar para ver las pestañas).
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#071827",
 };
 

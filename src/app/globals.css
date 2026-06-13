@@ -36,11 +36,9 @@
 html {
   height: 100%;
   background: var(--paper);
-  /* OJO: no usar pan-x/pan-y aqui — el soporte de Safari iOS es parcial y
-     bloquea el scroll nativo. manipulation permite el scroll en ambos ejes
-     y bloquea el zoom por doble tap; el pinch lo bloquean los eventos
-     gesture* (iOS) y el viewport meta (Android).
-     Sin overscroll-behavior: el pull-to-refresh nativo debe funcionar. */
+  /* manipulation: permite scroll y pinch-zoom (gesto nativo de iOS, incluido
+     pellizcar para ver las pestañas); solo desactiva el doble-tap zoom. No usar
+     pan-x/pan-y (Safari iOS los soporta parcial y rompen el scroll). */
   touch-action: manipulation;
 }
 
