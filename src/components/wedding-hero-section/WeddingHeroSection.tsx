@@ -9,6 +9,8 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
+import LiveBanner from "../LiveBanner";
+import LiveStreamSection from "../LiveStreamSection";
 import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
@@ -578,9 +580,9 @@ function AttendanceSection() {
 
       // La seccion de confirmacion se encoge hacia el sobre al hacer scroll,
       // como si la carta se metiera dentro del sobre del footer. Arranca solo
-      // cuando el formulario completo ya se vio (su borde inferior queda a un
-      // pequeño margen del fondo). transform-origin bottom fija ese borde, asi
-      // que el trigger sobre el propio elemento es estable durante el scrub.
+      // cuando el formulario completo ya se vio y se bajo un poco mas (margen
+      // amplio). transform-origin bottom fija ese borde, asi que el trigger
+      // sobre el propio elemento es estable durante el scrub.
       gsap.to(confirmInnerRef.current, {
         scale: 0.66,
         y: 22,
@@ -589,12 +591,38 @@ function AttendanceSection() {
         transformOrigin: "bottom center",
         scrollTrigger: {
           trigger: confirmInnerRef.current,
-          start: "bottom bottom-=48",
-          end: "+=260",
+          start: "bottom bottom-=120",
+          end: "+=240",
           scrub: 0.6,
           ...(scroller ? { scroller } : {}),
         },
       });
+
+      // Cierre: los nombres de los novios se "escriben" de izquierda a derecha
+      // con un remate contundente cuando la carta del sobre aparece.
+      const names = sectionRef.current?.querySelector(".footer-letter-names");
+      if (names) {
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: ".footer-letter-note",
+              start: "top 82%",
+              toggleActions: "play none none none",
+              ...(scroller ? { scroller } : {}),
+            },
+          })
+          .fromTo(
+            names,
+            { clipPath: "inset(0 100% 0 0)", opacity: 1 },
+            { clipPath: "inset(0 0% 0 0)", duration: 1.05, ease: "power1.inOut" },
+          )
+          .fromTo(
+            names,
+            { scale: 1.07 },
+            { scale: 1, duration: 0.5, ease: "back.out(2.6)", transformOrigin: "center bottom" },
+            "-=0.22",
+          );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -762,12 +790,14 @@ export default function WeddingHeroSection() {
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
+      <LiveBanner />
       <HeroSection />
       <CountdownSection />
       <CelebrationSection />
       <OurStorySection />
       <DressCodeSection />
       <DetailsSection />
+      <LiveStreamSection />
       <MemoriesSection />
       <AttendanceSection />
     </motion.div>
