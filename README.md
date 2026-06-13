@@ -43,7 +43,7 @@ confirmación visual pero **no** guarda los datos (modo vista previa).
 
 - Muestra quién confirmó, cuántas personas y quién no asiste.
 - Protegido con la clave `INVITADOS_PASSWORD` (definir en `.env.local`).
-- Por defecto (sin definir) la clave es `boda-lt-2026` — cámbiala en producción.
+- Por defecto (sin definir) la clave es `boda-lj-2026` — cámbiala en producción.
 
 ## Variables de entorno
 

@@ -8,7 +8,7 @@
 export const INVITADOS_COOKIE = "invitados_auth";
 
 export function getInvitadosPassword(): string {
-  return process.env.INVITADOS_PASSWORD?.trim() || "boda-lt-2026";
+  return process.env.INVITADOS_PASSWORD?.trim() || "boda-lj-2026";
 }
 
 export function isInvitadosAuthed(cookieValue: string | undefined): boolean {
