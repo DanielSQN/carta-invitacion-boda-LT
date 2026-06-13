@@ -1798,10 +1798,38 @@ button {
   min-height: 100svh;
   width: min(100%, 58rem);
   align-content: center;
-  gap: clamp(0.78rem, 3svh, 1.25rem);
+  gap: clamp(1.4rem, 5svh, 2.6rem);
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 4rem) clamp(1.25rem, 5vw, 3rem) calc(env(safe-area-inset-bottom) + 4.2rem);
+  padding: calc(env(safe-area-inset-top) + 5rem) clamp(1.25rem, 5vw, 3rem) calc(env(safe-area-inset-bottom) + 5rem);
   text-align: center;
+}
+
+/* subtitulo descriptivo de la galeria de recuerdos integrada en la historia */
+.memories-subheading {
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  margin-top: clamp(0.8rem, 3vw, 1.6rem);
+}
+
+.memories-subheading .section-kicker {
+  font-size: clamp(1.5rem, 7vw, 2.1rem);
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #bcd9f0;
+  text-shadow: 0 0.3rem 0.7rem rgba(3, 12, 22, 0.6);
+}
+
+.memories-subheading p {
+  max-width: 22rem;
+  margin: 0 auto;
+  color: rgba(237, 243, 250, 0.86);
+  font-size: clamp(0.94rem, 3.9vw, 1.08rem);
+  font-weight: 600;
+  line-height: 1.35;
+  text-shadow: 0 0.5rem 1rem rgba(3, 12, 22, 0.5);
 }
 
 .story-heading h2 {
@@ -3398,7 +3426,6 @@ button {
 --------------------------------------------------------------------------- */
 .live-section {
   position: relative;
-  min-height: 100svh;
   overflow: hidden;
   isolation: isolate;
   background:
@@ -3421,13 +3448,12 @@ button {
   position: relative;
   z-index: 3;
   display: grid;
-  min-height: 100svh;
   width: min(100%, 40rem);
   align-content: center;
   justify-items: center;
   gap: clamp(1.6rem, 6vw, 2.6rem);
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 4.5rem) clamp(1.35rem, 5vw, 3rem) calc(env(safe-area-inset-bottom) + 4.5rem);
+  padding: clamp(4rem, 14vw, 6rem) clamp(1.35rem, 5vw, 3rem) clamp(4rem, 14vw, 6rem);
   text-align: center;
 }
 
@@ -3571,39 +3597,58 @@ button {
   fill: rgba(255, 250, 241, 0.5);
 }
 
-/* banner fijo del dia del evento */
+/* banner fijo del dia del evento (dos lineas, centrado) */
 .live-banner {
   position: fixed;
   inset-block-start: 0;
   inset-inline: 0;
   z-index: 95;
   display: flex;
-  align-items: center;
-  min-height: calc(env(safe-area-inset-top) + 2.6rem);
-  padding: calc(env(safe-area-inset-top) + 0.2rem) 0.6rem 0.2rem;
+  align-items: stretch;
+  padding: calc(env(safe-area-inset-top) + 0.42rem) 2.4rem 0.5rem;
   background: linear-gradient(90deg, #c00, #ff2a2a, #c00);
   box-shadow: 0 0.4rem 1.1rem rgba(120, 0, 0, 0.5);
   will-change: transform;
 }
 
 .live-banner-link {
-  display: inline-flex;
+  display: grid;
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  justify-items: center;
+  gap: 0.16rem;
   color: #fff;
+  text-decoration: none;
+}
+
+.live-banner-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.44rem;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.72rem, 3.2vw, 0.86rem);
+  font-size: clamp(0.74rem, 3.2vw, 0.88rem);
   font-weight: 800;
   letter-spacing: 0.08em;
-  text-decoration: none;
+  line-height: 1;
   text-transform: uppercase;
 }
 
+.live-banner-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.12rem;
+  border-radius: 0.24rem;
+  background: #fff;
+}
+
+.live-banner-yt {
+  width: 1.18rem;
+  height: 0.84rem;
+}
+
 .live-banner-dot {
-  width: 0.62rem;
-  height: 0.62rem;
+  width: 0.58rem;
+  height: 0.58rem;
   border-radius: 999px;
   background: #fff;
   box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.9);
@@ -3616,14 +3661,23 @@ button {
   text-transform: none;
 }
 
-.live-banner-play {
-  font-size: 0.7rem;
+.live-banner-sub {
+  color: rgba(255, 255, 255, 0.94);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(0.6rem, 2.7vw, 0.68rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: none;
 }
 
 .live-banner-close {
-  flex: 0 0 auto;
-  width: 2rem;
-  height: 2rem;
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 0.32rem);
+  right: 0.5rem;
+  width: 1.9rem;
+  height: 1.9rem;
   border: 0;
   background: transparent;
   color: rgba(255, 255, 255, 0.85);
@@ -3632,7 +3686,7 @@ button {
   line-height: 1;
 }
 
-@media (max-width: 460px) {
+@media (max-width: 380px) {
   .live-banner-text {
     display: none;
   }

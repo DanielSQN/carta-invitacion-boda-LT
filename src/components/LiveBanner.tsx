@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { isLiveNow, YOUTUBE_LIVE_URL } from "./liveStream";
+import YouTubeIcon from "./YouTubeIcon";
 
 export default function LiveBanner() {
   const [isLive, setIsLive] = useState(false);
@@ -28,10 +29,15 @@ export default function LiveBanner() {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <a className="live-banner-link" href={YOUTUBE_LIVE_URL} target="_blank" rel="noopener noreferrer">
-            <span className="live-banner-dot" aria-hidden="true" />
-            <strong>EN VIVO</strong>
-            <span className="live-banner-text">Ver transmisión del evento</span>
-            <span className="live-banner-play" aria-hidden="true">▶</span>
+            <span className="live-banner-line">
+              <span className="live-banner-chip" aria-hidden="true">
+                <YouTubeIcon className="live-banner-yt" />
+              </span>
+              <span className="live-banner-dot" aria-hidden="true" />
+              <strong>EN VIVO</strong>
+              <span className="live-banner-text">· Transmisión del evento</span>
+            </span>
+            <span className="live-banner-sub">da clic aquí para ingresar a la transmisión</span>
           </a>
           <button
             type="button"

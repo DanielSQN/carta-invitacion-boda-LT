@@ -4,7 +4,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import MemoriesGallery from "./MemoriesGallery";
 import SectionFrameDecor from "./SectionFrameDecor";
+import { createSectionReveal } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -90,6 +92,9 @@ export default function OurStorySection() {
           { opacity: 1, x: 0, duration: 0.62, ease: "power2.out", scrollTrigger: { ...itemTrigger } },
         );
       });
+
+      // Revela los bloques [data-reveal] de la galeria de recuerdos integrada.
+      createSectionReveal(sectionRef.current, { start: "top 60%" });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -126,6 +131,8 @@ export default function OurStorySection() {
             </div>
           ))}
         </div>
+
+        <MemoriesGallery />
       </div>
     </section>
   );
