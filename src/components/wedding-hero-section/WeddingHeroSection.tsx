@@ -698,14 +698,32 @@ function AttendanceSection() {
         </form>
       </div>
 
-      <div ref={footerEnvelopeRef} className="attendance-footer-envelope" aria-hidden="true">
-        <Image
-          src="/images/ui/footer-envelope.webp"
-          alt=""
-          width={900}
-          height={640}
-          sizes="100vw"
-        />
+      <div ref={footerEnvelopeRef} className="footer-letter">
+        <div className="footer-letter-stage">
+          <blockquote className="footer-letter-note">
+            <span className="footer-letter-quote" aria-hidden="true">
+              &ldquo;
+            </span>
+            <p className="footer-letter-verse">
+              Y sobre todo, v&iacute;stanse de amor,
+              <br />
+              que es el v&iacute;nculo perfecto.
+            </p>
+            <span className="footer-letter-ref">Colosenses 3:14</span>
+          </blockquote>
+
+          <div className="footer-envelope" aria-hidden="true">
+            <span className="footer-envelope-back" />
+            <span className="footer-envelope-pocket" />
+            <span className="footer-envelope-seal">
+              <Image src="/images/ui/wax-seal.webp?v=20260601-assets-1" alt="" fill sizes="92px" className="object-contain" />
+            </span>
+          </div>
+        </div>
+
+        <p className="footer-signature">
+          Con amor, <span>Luisa &amp; Jhonnatan</span>
+        </p>
       </div>
     </section>
   );

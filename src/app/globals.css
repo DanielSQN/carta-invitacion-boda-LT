@@ -2245,15 +2245,15 @@ button {
   align-content: center;
   justify-items: center;
   padding: clamp(0.78rem, 3vw, 1.35rem) clamp(0.6rem, 2.6vw, 1.35rem);
-  border: 1px solid rgba(95, 143, 180, 0.42);
+  border: 1px solid rgba(143, 193, 233, 0.42);
   border-radius: 0.42rem;
-  background: rgba(247, 243, 234, 0.42);
+  background: rgba(247, 243, 234, 0.26);
   box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
     0 0.8rem 1.6rem rgba(7, 24, 39, 0.3);
   text-align: center;
-  backdrop-filter: blur(9px) saturate(1.08);
-  -webkit-backdrop-filter: blur(9px) saturate(1.08);
+  backdrop-filter: blur(11px) saturate(1.1);
+  -webkit-backdrop-filter: blur(11px) saturate(1.1);
 }
 
 .details-info-card--wide {
@@ -3241,32 +3241,158 @@ button {
   }
 }
 
-.attendance-footer-envelope {
+/* ---------------------------------------------------------------------------
+   Footer: sobre construido en CSS (sin imagen) del que "sale" una nota con
+   el versiculo, rematado con el sello de cera reutilizado.
+--------------------------------------------------------------------------- */
+.footer-letter {
   position: relative;
-  align-self: end;
   z-index: 2;
+  display: grid;
+  justify-items: center;
   width: 100%;
   margin-top: auto;
-  overflow: hidden;
+  padding: clamp(2.6rem, 10vw, 4.2rem) clamp(1.25rem, 5vw, 2rem) calc(env(safe-area-inset-bottom) + clamp(1.6rem, 6vw, 2.4rem));
+}
+
+.footer-letter-stage {
+  position: relative;
+  width: min(100%, 23rem);
+}
+
+/* nota/carta con el versiculo que emerge del sobre */
+.footer-letter-note {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  margin: 0 auto -9%;
+  padding: clamp(1.3rem, 6vw, 1.85rem) clamp(1.1rem, 5vw, 1.6rem) clamp(1.5rem, 6.5vw, 2rem);
+  border-radius: 0.28rem 0.28rem 0.12rem 0.12rem;
+  background: linear-gradient(180deg, #fffdf6 0%, #fbf3e2 100%);
+  box-shadow:
+    0 -0.1rem 0 1px rgba(122, 92, 52, 0.08),
+    0 -1.1rem 1.8rem -0.6rem rgba(3, 12, 22, 0.42);
+  text-align: center;
+}
+
+.footer-letter-quote {
+  display: block;
+  margin-bottom: -0.65rem;
+  color: rgba(95, 143, 180, 0.6);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.footer-letter-verse {
+  margin: 0;
+  color: #3f4f3c;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(0.96rem, 4.2vw, 1.12rem);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.footer-letter-ref {
+  display: block;
+  margin-top: 0.7rem;
+  color: #2f6f9f;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.footer-envelope {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  aspect-ratio: 7 / 4;
+}
+
+/* cuerpo del sobre (panel trasero) */
+.footer-envelope-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.35rem;
+  background: linear-gradient(180deg, #f3e6cd 0%, #e9d8b8 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(122, 92, 52, 0.16),
+    0 1.4rem 2.6rem -0.8rem rgba(3, 12, 22, 0.55);
+}
+
+/* solapa frontal triangular (punta hacia arriba) que tapa la base de la nota */
+.footer-envelope-pocket {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.35rem;
+  background:
+    linear-gradient(120deg, rgba(122, 92, 52, 0.12), transparent 42%),
+    linear-gradient(240deg, rgba(122, 92, 52, 0.12), transparent 42%),
+    linear-gradient(180deg, #fbf1da 0%, #efdfc0 100%);
+  clip-path: polygon(0 100%, 50% 34%, 100% 100%);
+  box-shadow: inset 0 0 0 1px rgba(122, 92, 52, 0.14);
+}
+
+/* costuras laterales del sobre */
+.footer-envelope-back::before,
+.footer-envelope-back::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  content: "";
   pointer-events: none;
 }
 
-.attendance-footer-envelope img {
-  display: block;
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-  object-position: center bottom;
+.footer-envelope-back::before {
+  left: 0;
+  background: linear-gradient(to top right, transparent 49.5%, rgba(122, 92, 52, 0.16) 50%, transparent 50.5%);
+}
+
+.footer-envelope-back::after {
+  right: 0;
+  background: linear-gradient(to top left, transparent 49.5%, rgba(122, 92, 52, 0.16) 50%, transparent 50.5%);
+}
+
+/* sello de cera reutilizado, en la punta de la solapa */
+.footer-envelope-seal {
+  position: absolute;
+  top: 34%;
+  left: 50%;
+  z-index: 4;
+  width: clamp(3.1rem, 15vw, 3.9rem);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0.5rem 0.7rem rgba(48, 30, 12, 0.42));
+}
+
+.footer-signature {
+  margin: clamp(1.5rem, 6vw, 2.2rem) 0 0;
+  color: rgba(237, 243, 250, 0.66);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.footer-signature span {
+  color: #8fc1e9;
+  font-family: var(--font-script), "Brush Script MT", cursive;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 @media (max-width: 430px) {
   .attendance-inner {
     padding-right: clamp(1rem, 4vw, 1.25rem);
     padding-left: clamp(1rem, 4vw, 1.25rem);
-  }
-
-  .attendance-footer-envelope {
-    margin-top: clamp(1.2rem, 5vw, 2rem);
   }
 }
 
@@ -3933,9 +4059,9 @@ button {
   }
 
   .details-info-card {
-    background: rgba(247, 243, 234, 0.56);
-    backdrop-filter: blur(3px) saturate(1.02);
-    -webkit-backdrop-filter: blur(3px) saturate(1.02);
+    background: rgba(247, 243, 234, 0.4);
+    backdrop-filter: blur(5px) saturate(1.04);
+    -webkit-backdrop-filter: blur(5px) saturate(1.04);
   }
 }
 
