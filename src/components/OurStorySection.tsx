@@ -73,26 +73,38 @@ export default function OurStorySection() {
       );
 
       // Cada hito aparece uno a uno al bajar y se retira al subir
-      // (play al entrar, reverse al salir, en ambas direcciones).
-      gsap.utils.toArray<HTMLElement>(".story-item").forEach((item) => {
+      // (play al entrar, reverse al salir, en ambas direcciones). En desktop
+      // los 4 hitos comparten altura, asi que se escalonan de izquierda a
+      // derecha (delay por indice) siguiendo el llenado de la linea.
+      gsap.utils.toArray<HTMLElement>(".story-item").forEach((item, index) => {
         const icon = item.querySelector(".story-icon-wrap");
         const copy = item.querySelector(".story-copy");
         const itemTrigger = {
-          trigger: item,
-          start: "top 88%",
+          // En desktop dispara con la seccion para que el escalonado se vea;
+          // en mobile/tablet cada hito se dispara al entrar al viewport.
+          trigger: isHorizontalTimeline ? ".story-timeline" : item,
+          start: isHorizontalTimeline ? "top 78%" : "top 88%",
           toggleActions: "play reverse play reverse",
           ...triggerDefaults,
         };
+        const delay = isHorizontalTimeline ? index * 0.13 : 0;
 
         gsap.fromTo(
           icon,
           { opacity: 0, scale: 0.35 },
-          { opacity: 1, scale: 1, duration: 0.55, ease: "back.out(2.2)", scrollTrigger: itemTrigger },
+          { opacity: 1, scale: 1, duration: 0.55, delay, ease: "back.out(2.2)", scrollTrigger: itemTrigger },
         );
         gsap.fromTo(
           copy,
-          { opacity: 0, x: -30 },
-          { opacity: 1, x: 0, duration: 0.62, ease: "power2.out", scrollTrigger: { ...itemTrigger } },
+          isHorizontalTimeline ? { opacity: 0, y: 24 } : { opacity: 0, x: -30 },
+          {
+            opacity: 1,
+            ...(isHorizontalTimeline ? { y: 0 } : { x: 0 }),
+            duration: 0.62,
+            delay,
+            ease: "power2.out",
+            scrollTrigger: { ...itemTrigger },
+          },
         );
       });
 
