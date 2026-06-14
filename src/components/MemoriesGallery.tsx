@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ChevronsRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsRight, Hand, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -87,13 +87,22 @@ export default function MemoriesGallery() {
   const stripRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  // Pista de "desliza" al abrir el detalle; se oculta al primer gesto o sola.
+  const [showSwipeCue, setShowSwipeCue] = useState(false);
 
   const showPreviousLightboxPhoto = useCallback(() => {
+    setShowSwipeCue(false);
     setLightboxIndex((index) => (index === null ? index : normalizeMemoryIndex(index - 1)));
   }, []);
 
   const showNextLightboxPhoto = useCallback(() => {
+    setShowSwipeCue(false);
     setLightboxIndex((index) => (index === null ? index : normalizeMemoryIndex(index + 1)));
+  }, []);
+
+  const openLightbox = useCallback((index: number) => {
+    setLightboxIndex(index);
+    setShowSwipeCue(true);
   }, []);
 
   useEffect(() => {
@@ -170,6 +179,15 @@ export default function MemoriesGallery() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [lightboxIndex, showNextLightboxPhoto, showPreviousLightboxPhoto]);
+
+  useEffect(() => {
+    if (!showSwipeCue) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setShowSwipeCue(false), 3400);
+    return () => window.clearTimeout(timer);
+  }, [showSwipeCue]);
 
   useEffect(() => {
     preloadMemoryNeighbors(activeIndex);
@@ -317,6 +335,7 @@ export default function MemoriesGallery() {
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.18}
+            onDragStart={() => setShowSwipeCue(false)}
             onDragEnd={(_, info) => {
               const swipeDistance = 58;
               const swipeVelocity = 450;
@@ -352,6 +371,29 @@ export default function MemoriesGallery() {
           <button type="button" className="memories-lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="Cerrar foto">
             <X strokeWidth={2.2} />
           </button>
+
+          <AnimatePresence>
+            {showSwipeCue ? (
+              <motion.div
+                key="memories-lightbox-cue"
+                className="memories-lightbox-cue"
+                aria-hidden="true"
+                initial={{ opacity: 0, x: "-50%", y: 12 }}
+                animate={{ opacity: 1, x: "-50%", y: 0 }}
+                exit={{ opacity: 0, x: "-50%", y: 8 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+              >
+                <span className="memories-lightbox-cue-track">
+                  <ChevronLeft className="memories-cue-arrow" strokeWidth={2.4} aria-hidden="true" />
+                  <span className="memories-cue-runner">
+                    <Hand strokeWidth={1.9} aria-hidden="true" />
+                  </span>
+                  <ChevronRight className="memories-cue-arrow" strokeWidth={2.4} aria-hidden="true" />
+                </span>
+                <span className="memories-lightbox-cue-text">Desliza para cambiar de foto</span>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </motion.div>
       ) : null}
     </AnimatePresence>
@@ -379,7 +421,7 @@ export default function MemoriesGallery() {
             <button
               type="button"
               className="memories-card-trigger"
-              onClick={() => setLightboxIndex(index)}
+              onClick={() => openLightbox(index)}
               aria-label={`Ampliar foto: ${photo.caption} (${photo.year})`}
             >
               <span className="memories-card-photo">

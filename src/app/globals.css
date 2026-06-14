@@ -40,6 +40,10 @@ html {
      pellizcar para ver las pestañas); solo desactiva el doble-tap zoom. No usar
      pan-x/pan-y (Safari iOS los soporta parcial y rompen el scroll). */
   touch-action: manipulation;
+  /* Evita que, al hacer pinch-zoom y arrastrar, el gesto se encadene al
+     documento y dispare el pull-to-refresh (recarga) o la navegacion atras
+     ("no se puede abrir esta pagina"). */
+  overscroll-behavior: none;
 }
 
 body {
@@ -49,6 +53,7 @@ body {
   background: var(--paper);
   color: var(--foreground);
   font-family: var(--font-cormorant), Georgia, serif;
+  overscroll-behavior: none;
 }
 
 button,
@@ -489,8 +494,10 @@ button {
 
 .details-scroll {
   -webkit-overflow-scrolling: touch;
-  /* sin overscroll-behavior contain: al llegar al tope, el gesto encadena
-     al documento y permite el pull-to-refresh nativo del navegador */
+  /* overscroll-behavior: none -> al llegar al tope/fondo el gesto NO se encadena
+     al documento. Asi, al hacer pinch-zoom y arrastrar dentro de una seccion no
+     se dispara el pull-to-refresh (recarga) ni la navegacion nativa. */
+  overscroll-behavior: none;
   scrollbar-width: none;
 }
 
@@ -2926,6 +2933,74 @@ button {
   -webkit-backdrop-filter: blur(8px);
   overscroll-behavior: contain;
   touch-action: none !important;
+}
+
+/* Pista de "desliza para cambiar de foto" al abrir el detalle, con un icono
+   que se mueve horizontalmente entre dos flechas. */
+.memories-lightbox-cue {
+  position: absolute;
+  left: 50%;
+  bottom: calc(env(safe-area-inset-bottom) + clamp(1rem, 4vw, 1.8rem));
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.05rem 0.62rem;
+  border: 1px solid rgba(243, 237, 227, 0.2);
+  border-radius: 999px;
+  background: rgba(7, 17, 31, 0.55);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  color: #f3ede3;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.memories-lightbox-cue-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.memories-cue-arrow {
+  width: 1.05rem;
+  height: 1.05rem;
+  opacity: 0.5;
+}
+
+.memories-cue-runner {
+  display: inline-flex;
+  color: #d8b56b;
+  animation: memoriesCueSwipe 1.5s ease-in-out infinite;
+}
+
+.memories-cue-runner svg {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.memories-lightbox-cue-text {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: 0.92;
+}
+
+@keyframes memoriesCueSwipe {
+  0%,
+  100% {
+    transform: translateX(-0.5rem);
+  }
+  50% {
+    transform: translateX(0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memories-cue-runner {
+    animation: none;
+  }
 }
 
 .memories-lightbox-card {
