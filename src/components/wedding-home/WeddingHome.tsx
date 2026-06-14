@@ -171,50 +171,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, []);
 
   useEffect(() => {
-    // El pull-to-refresh y la "recarga al quitar el zoom" son el MISMO gesto
-    // nativo (overscroll en el tope), asi que no se pueden separar con CSS fijo.
-    // Solucion: mientras hay pinch-zoom (visualViewport.scale > 1) se suprime el
-    // overscroll (overscroll-behavior-y: none) para que al quitar el zoom no se
-    // recargue; al volver a escala 1 se restaura para que el pull-to-refresh
-    // deliberado siga funcionando.
-    const vv = window.visualViewport;
-
-    if (!vv) {
-      return;
-    }
-
-    const root = document.documentElement;
-    const body = document.body;
-    let restoreTimer = 0;
-
-    const apply = (value: string) => {
-      root.style.overscrollBehaviorY = value;
-      body.style.overscrollBehaviorY = value;
-    };
-
-    const onViewportChange = () => {
-      window.clearTimeout(restoreTimer);
-
-      if (vv.scale > 1.01) {
-        apply("none");
-      } else {
-        // pequeño margen tras volver a escala 1 para que el gesto de "quitar
-        // zoom" termine por completo antes de re-armar el pull-to-refresh.
-        restoreTimer = window.setTimeout(() => apply(""), 500);
-      }
-    };
-
-    vv.addEventListener("resize", onViewportChange);
-    onViewportChange();
-
-    return () => {
-      vv.removeEventListener("resize", onViewportChange);
-      window.clearTimeout(restoreTimer);
-      apply("");
-    };
-  }, []);
-
-  useEffect(() => {
     if (!showWeddingHero) {
       return;
     }

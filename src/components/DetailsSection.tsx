@@ -6,7 +6,7 @@ import { Check, Copy, Gift, Mail } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "./sectionFx";
+import { createBgParallax, createSectionReveal, getSectionScroller, prefersReducedMotion } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -41,6 +41,8 @@ export default function DetailsSection() {
     const scroller = getSectionScroller(sectionRef.current);
 
     const ctx = gsap.context(() => {
+      // Parallax nativo del fondo (sin position: fixed).
+      createBgParallax(sectionRef.current, bgRef.current, { amplitude: 8, scale: 1.1 });
       createSectionReveal(sectionRef.current, { stagger: 0.16 });
 
       // Las tarjetas usan backdrop-filter: se revelan solo con transform
