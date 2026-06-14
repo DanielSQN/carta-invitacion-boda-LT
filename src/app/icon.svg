@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Boda Luisa y Jhonnatan">
+  <defs>
+    <linearGradient id="bodaBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#163a5c"/>
+      <stop offset="1" stop-color="#0a1c30"/>
+    </linearGradient>
+    <linearGradient id="bodaHeart" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e7c6"/>
+      <stop offset="1" stop-color="#d8b56b"/>
+    </linearGradient>
+  </defs>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="url(#bodaBg)"/>
+  <rect x="2.5" y="2.5" width="59" height="59" rx="14" fill="none" stroke="#5f8fb4" stroke-opacity="0.4"/>
+  <path d="M32 47.6C32 47.6 15.8 38.7 15.8 27.6C15.8 22.4 19.9 18.8 24.3 18.8C28 18.8 30.6 21.1 32 23.5C33.4 21.1 36 18.8 39.7 18.8C44.1 18.8 48.2 22.4 48.2 27.6C48.2 38.7 32 47.6 32 47.6Z" fill="url(#bodaHeart)"/>
+  <circle cx="13.5" cy="15" r="1.1" fill="#f6e7c6" fill-opacity="0.85"/>
+  <circle cx="51" cy="14" r="0.9" fill="#f6e7c6" fill-opacity="0.7"/>
+  <circle cx="49.5" cy="46" r="0.9" fill="#f6e7c6" fill-opacity="0.7"/>
+</svg>
