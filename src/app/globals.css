@@ -2584,6 +2584,15 @@ button {
   display: none;
 }
 
+/* En desktop se muestran varias polaroids a la vez: menos padding lateral y
+   cartas un poco más grandes (la activa sigue centrada por el scroll-snap). */
+@media (min-width: 900px) {
+  .memories-strip {
+    --memories-card-w: clamp(14rem, 22vw, 18rem);
+    padding-inline: calc(50% - var(--memories-card-w) * 1.7);
+  }
+}
+
 .memories-card {
   position: relative;
   z-index: 1;
