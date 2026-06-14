@@ -1027,6 +1027,8 @@ button {
   isolation: isolate;
   background: #071827;
   color: #f3ede3;
+  /* sin contain: crearia un containing block y romperia el fondo fixed */
+  clip-path: inset(0);
 }
 
 .countdown-bg,
@@ -1038,8 +1040,14 @@ button {
 }
 
 .countdown-bg {
-  /* Fondo NATIVO (absolute) + parallax GSAP; sin position: fixed (rompe el
-     pinch-zoom en iOS). */
+  /* 100lvh estable: con inset 0 el fondo fixed se redimensionaba (saltos)
+     cuando la barra de URL de Android aparece/desaparece */
+  position: fixed;
+  inset: auto;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100lvh;
   z-index: 1;
   overflow: hidden;
   backface-visibility: hidden;
@@ -1047,8 +1055,10 @@ button {
 
 .countdown-bg-image {
   object-fit: cover;
-  object-position: 50% 28%;
+  object-position: 50% 32%;
   transform: translateZ(0);
+  inset: 150px 10px 3px 10px;
+  
 }
 
 .countdown-overlay {
@@ -1828,6 +1838,8 @@ button {
   isolation: isolate;
   background: #071827;
   color: #f3ede3;
+  /* recorta el fondo fixed al area de la seccion (efecto background fijo) */
+  clip-path: inset(0);
 }
 
 .story-bg,
@@ -1838,9 +1850,15 @@ button {
 }
 
 .story-bg {
-  /* Fondo NATIVO (position: absolute) con parallax via GSAP, igual que
-     celebración. Se evita position: fixed, que en iOS rompe el pinch-zoom
-     (recarga al quitar el zoom). */
+  /* fixed + clip-path en la seccion = fondo fijo que se revela con el scroll
+     (funciona en iOS, a diferencia de background-attachment: fixed);
+     100lvh estable frente a la barra de URL de Android */
+  position: fixed;
+  inset: auto;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100lvh;
   z-index: 1;
   overflow: hidden;
 }
@@ -2319,6 +2337,7 @@ button {
   isolation: isolate;
   background: #071827;
   color: #fffaf1;
+  clip-path: inset(0);
 }
 
 .details-bg,
@@ -2329,10 +2348,13 @@ button {
 }
 
 .details-bg {
-  /* Fondo NATIVO (absolute) + parallax GSAP; sin position: fixed (rompe el
-     pinch-zoom en iOS). */
+  position: fixed;
+  inset: auto;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100lvh;
   z-index: 1;
-  overflow: hidden;
 }
 
 .details-bg-image {

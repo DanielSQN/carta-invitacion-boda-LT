@@ -6,7 +6,6 @@ import { CalendarPlus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createBgParallax } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,9 +78,6 @@ export default function CountdownSection() {
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
-      // Parallax nativo del fondo (sin position: fixed).
-      createBgParallax(sectionRef.current, imageRef.current, { amplitude: 7, scale: 1.12 });
-
       gsap.set(topRef.current, { opacity: 1 });
       gsap.set([titleRef.current, metaRef.current, ...itemRefs.current], { opacity: 0 });
 

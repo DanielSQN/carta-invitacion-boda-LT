@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useEffect, useRef } from "react";
 import MemoriesGallery from "./MemoriesGallery";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createBgParallax, createSectionReveal } from "./sectionFx";
+import { createSectionReveal } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,9 +31,6 @@ export default function OurStorySection() {
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
-      // Parallax nativo del fondo (sin position: fixed).
-      createBgParallax(sectionRef.current, imageRef.current, { amplitude: 8, scale: 1.1 });
-
       if (reduceMotion) {
         gsap.set([titleRef.current, ".story-item"], { opacity: 1, y: 0 });
         gsap.set(".story-line-fill", { scaleX: 1, scaleY: 1 });
