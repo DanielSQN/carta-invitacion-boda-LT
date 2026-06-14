@@ -52,7 +52,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
               className="hero-transition-image object-cover"
             />
           </div>
-          <div className="envelope-letter-wash hero-transition-blue-wash" aria-hidden="true" />
+          <div className="envelope-letter-wash" aria-hidden="true" />
         </motion.div>
 
         <div className="envelope-shell absolute inset-0 z-[5]">

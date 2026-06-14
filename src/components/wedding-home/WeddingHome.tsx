@@ -150,7 +150,17 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const homeSceneRef = useRef<HTMLElement>(null);
   const envelopeLetterRef = useRef<HTMLDivElement>(null);
   const transitionCardRef = useRef<HTMLDivElement>(null);
-  const transitionWashRef = useRef<HTMLDivElement>(null);
+
+  // [MVP revertible] Partículas blancas que cubren la foto al salir del sobre
+  // y se dispersan al revelarla a pantalla completa. Posiciones/tamaños fijos.
+  const [revealParticles] = useState(() =>
+    Array.from({ length: 48 }, (_, id) => ({
+      id,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: 1 + Math.random() * 3.2,
+    })),
+  );
 
   useEffect(() => {
     const handleIntroComplete = () => setIsHeroIntroDone(true);
@@ -285,7 +295,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         x: 0,
         y: 0,
       });
-      gsap.set(transitionWashRef.current, { autoAlpha: 0 });
+      // La foto nace cubierta de negro + partículas blancas (cine).
+      gsap.set(".hero-transition-black", { opacity: 1 });
+      gsap.set(".hero-transition-particle", { opacity: 0, scale: 0.6 });
 
       gsap
         .timeline({
@@ -407,7 +419,35 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           },
           2.32,
         )
-        .to(transitionWashRef.current, { autoAlpha: 0.54, duration: 0.78, ease: "sine.inOut" }, 2.62);
+        // Las partículas aparecen al salir del sobre (titilan al frente)...
+        .to(
+          ".hero-transition-particle",
+          {
+            opacity: "random(0.5, 1)",
+            scale: 1,
+            duration: 0.5,
+            ease: "power1.out",
+            stagger: { each: 0.012, from: "random" },
+          },
+          1.5,
+        )
+        // ...aguantan durante el centrado y, al disparar el zoom a pantalla
+        // completa, el negro se disuelve y las partículas se dispersan para
+        // "revelar" la foto (el revelado va sincronizado con el zoom).
+        .to(".hero-transition-black", { opacity: 0, duration: 1.3, ease: "power2.inOut" }, 2.28)
+        .to(
+          ".hero-transition-particle",
+          {
+            opacity: 0,
+            scale: "random(1.4, 2.6)",
+            x: "random(-70, 70)",
+            y: "random(-90, 50)",
+            duration: 1.15,
+            ease: "power2.out",
+            stagger: { each: 0.006, from: "center" },
+          },
+          2.34,
+        );
     });
 
     return () => ctx.revert();
@@ -600,8 +640,24 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
               className="hero-transition-image object-cover"
               priority
             />
+            <div className="hero-transition-reveal">
+              <div className="hero-transition-black" />
+              <div className="hero-transition-particles">
+                {revealParticles.map((particle) => (
+                  <span
+                    key={particle.id}
+                    className="hero-transition-particle"
+                    style={{
+                      top: `${particle.top}%`,
+                      left: `${particle.left}%`,
+                      width: `${particle.size}px`,
+                      height: `${particle.size}px`,
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-          <div ref={transitionWashRef} className="hero-transition-blue-wash" />
         </div>
       ) : null}
 

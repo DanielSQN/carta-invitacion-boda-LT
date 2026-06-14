@@ -193,13 +193,8 @@ button {
   will-change: opacity, transform, width, height, top;
 }
 
-.hero-transition-photo,
-.hero-transition-blue-wash {
-  position: absolute;
-  inset: 0;
-}
-
 .hero-transition-photo {
+  position: absolute;
   inset: var(--photo-frame) var(--photo-frame) var(--photo-frame-bottom);
   overflow: hidden;
   background: #071827;
@@ -209,11 +204,38 @@ button {
   object-position: 52% 28%;
 }
 
-.hero-transition-blue-wash {
-  background:
-    linear-gradient(180deg, rgba(7, 24, 39, 0.24) 0%, rgba(7, 24, 39, 0.1) 42%, rgba(7, 24, 39, 0.78) 100%),
-    linear-gradient(90deg, rgba(7, 24, 39, 0.44), rgba(20, 55, 86, 0.14), rgba(7, 24, 39, 0.48));
+/* [MVP revertible] Capa de "revelado" cinematográfico: la foto sale del sobre
+   cubierta por un velo negro con partículas blancas que se disuelven con GSAP
+   mientras la tarjeta avanza y hace zoom a pantalla completa. */
+.hero-transition-reveal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-transition-black {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(6, 11, 20, 0.86) 0%, #02060c 80%);
   opacity: 0;
+  will-change: opacity;
+}
+
+.hero-transition-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-transition-particle {
+  position: absolute;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0.4rem 0.05rem rgba(255, 255, 255, 0.9),
+    0 0 0.85rem 0.12rem rgba(190, 218, 245, 0.5);
+  opacity: 0;
+  will-change: opacity, transform;
 }
 
 .decorative-text {
@@ -380,6 +402,16 @@ button {
      "aparecia de golpe" al desvanecerse el sobre; la sombra entra luego
      con fade en la tarjeta de transicion */
   box-shadow: none;
+}
+
+/* [MVP revertible] La foto sale del sobre ya cubierta por el velo negro para
+   dar continuidad con la tarjeta de transicion (negro -> negro + particulas
+   -> revelado). Sin este velo se veria la foto limpia y luego un salto. */
+.envelope-letter-wash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(6, 11, 20, 0.86) 0%, #02060c 80%);
+  pointer-events: none;
 }
 
 .envelope-top-flap > div {
