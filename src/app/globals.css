@@ -40,10 +40,17 @@ html {
      pellizcar para ver las pestañas); solo desactiva el doble-tap zoom. No usar
      pan-x/pan-y (Safari iOS los soporta parcial y rompen el scroll). */
   touch-action: manipulation;
-  /* Evita que, al hacer pinch-zoom y arrastrar, el gesto se encadene al
-     documento y dispare el pull-to-refresh (recarga) o la navegacion atras
-     ("no se puede abrir esta pagina"). */
-  overscroll-behavior: none;
+  /* Scroll NATIVO del documento (no un contenedor interno): el pinch-zoom se
+     comporta como en cualquier pagina larga y el pull-to-refresh nativo sigue
+     funcionando. overflow-x: clip recorta el desborde horizontal de los fondos
+     100vw SIN convertir el documento en un contenedor de scroll. */
+  overflow-x: clip;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 body {
@@ -53,7 +60,6 @@ body {
   background: var(--paper);
   color: var(--foreground);
   font-family: var(--font-cormorant), Georgia, serif;
-  overscroll-behavior: none;
 }
 
 button,
@@ -490,20 +496,6 @@ button {
 
 .paper-stack {
   isolation: isolate;
-}
-
-.details-scroll {
-  -webkit-overflow-scrolling: touch;
-  /* overscroll-behavior: none -> al llegar al tope/fondo el gesto NO se encadena
-     al documento. Asi, al hacer pinch-zoom y arrastrar dentro de una seccion no
-     se dispara el pull-to-refresh (recarga) ni la navegacion nativa. */
-  overscroll-behavior: none;
-  scrollbar-width: none;
-}
-
-.details-scroll::-webkit-scrollbar {
-  width: 0;
-  height: 0;
 }
 
 .hero {
@@ -3108,20 +3100,11 @@ button {
   height: 1.25rem;
 }
 
-.details-scroll.is-scroll-locked {
-  overflow-y: hidden !important;
-}
-
-html.is-lightbox-scroll-locked,
-body.is-lightbox-scroll-locked {
-  overflow: hidden !important;
-  overscroll-behavior: none;
-  touch-action: none;
-}
-
-/* con el lightbox abierto, los controles flotantes no deben taparlo */
-.is-scroll-locked .fixed-swipe-down,
-.is-scroll-locked .music-control-button {
+/* Bloqueo de scroll del documento con el lightbox abierto (tecnica iOS-safe:
+   body position:fixed desde JS). Aqui solo se ocultan los controles flotantes
+   para que no tapen la foto ampliada. */
+html.is-lightbox-open .fixed-swipe-down,
+html.is-lightbox-open .music-control-button {
   opacity: 0 !important;
   pointer-events: none !important;
 }

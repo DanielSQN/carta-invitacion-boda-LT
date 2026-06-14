@@ -110,42 +110,29 @@ export default function MemoriesGallery() {
       return;
     }
 
-    const scroller = (galleryRef.current?.closest(".details-scroll") ?? document.querySelector(".details-scroll")) as HTMLElement | null;
+    // Bloqueo del scroll NATIVO del documento mientras el lightbox esta abierto.
+    // Tecnica iOS-safe: se fija el body en su posicion actual (position:fixed +
+    // top negativo) para que el fondo no se mueva y al cerrar se restaura el
+    // scroll exacto. No se toca ningun contenedor interno (ya no existe).
     const html = document.documentElement;
     const body = document.body;
-    const lockedScrollTop = scroller?.scrollTop ?? 0;
-    const previousHtmlOverflow = html.style.overflow;
-    const previousHtmlTouchAction = html.style.touchAction;
-    const previousBodyOverflow = body.style.overflow;
-    const previousBodyTouchAction = body.style.touchAction;
-    const previousScrollerOverflowY = scroller?.style.overflowY ?? "";
-    const previousScrollerOverscrollBehavior = scroller?.style.overscrollBehavior ?? "";
-
-    const keepScrollPosition = () => {
-      if (scroller && scroller.scrollTop !== lockedScrollTop) {
-        scroller.scrollTop = lockedScrollTop;
-      }
-
-      if (window.scrollY !== 0) {
-        window.scrollTo(0, 0);
-      }
+    const scrollY = window.scrollY;
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+      overflow: body.style.overflow,
     };
 
-    scroller?.classList.add("is-scroll-locked");
-    html.classList.add("is-lightbox-scroll-locked");
-    body.classList.add("is-lightbox-scroll-locked");
-    html.style.overflow = "hidden";
-    html.style.touchAction = "none";
+    html.classList.add("is-lightbox-open");
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
     body.style.overflow = "hidden";
-    body.style.touchAction = "none";
-
-    if (scroller) {
-      scroller.style.overflowY = "hidden";
-      scroller.style.overscrollBehavior = "none";
-      scroller.addEventListener("scroll", keepScrollPosition, { passive: true });
-    }
-
-    window.addEventListener("scroll", keepScrollPosition, { passive: true });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -160,22 +147,14 @@ export default function MemoriesGallery() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      scroller?.classList.remove("is-scroll-locked");
-      html.classList.remove("is-lightbox-scroll-locked");
-      body.classList.remove("is-lightbox-scroll-locked");
-      html.style.overflow = previousHtmlOverflow;
-      html.style.touchAction = previousHtmlTouchAction;
-      body.style.overflow = previousBodyOverflow;
-      body.style.touchAction = previousBodyTouchAction;
-
-      if (scroller) {
-        scroller.style.overflowY = previousScrollerOverflowY;
-        scroller.style.overscrollBehavior = previousScrollerOverscrollBehavior;
-        scroller.scrollTop = lockedScrollTop;
-        scroller.removeEventListener("scroll", keepScrollPosition);
-      }
-
-      window.removeEventListener("scroll", keepScrollPosition);
+      html.classList.remove("is-lightbox-open");
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.left = previous.left;
+      body.style.right = previous.right;
+      body.style.width = previous.width;
+      body.style.overflow = previous.overflow;
+      window.scrollTo(0, scrollY);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [lightboxIndex, showNextLightboxPhoto, showPreviousLightboxPhoto]);

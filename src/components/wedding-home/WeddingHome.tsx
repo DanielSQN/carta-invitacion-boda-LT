@@ -183,7 +183,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     let attempts = 0;
 
     const attach = () => {
-      const scroller = document.querySelector(".details-scroll");
       const attendanceSection = document.querySelector(".attendance-section");
 
       if (!attendanceSection) {
@@ -194,8 +193,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         return;
       }
 
+      // Scroll nativo del documento: el root del observer es el viewport (null).
       observer = new IntersectionObserver(([entry]) => setIsAttendanceVisible(entry.isIntersecting), {
-        root: scroller,
+        root: null,
         threshold: 0.05,
       });
       observer.observe(attendanceSection);
@@ -574,7 +574,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     <main
       className={
         showWeddingHero
-          ? "details-scroll relative h-svh overflow-x-hidden overflow-y-auto bg-[#07111f] text-olive"
+          ? "relative w-full bg-[#07111f] text-olive"
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
