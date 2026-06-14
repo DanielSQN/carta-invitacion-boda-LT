@@ -24,13 +24,16 @@ export default function OurStorySection() {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // En desktop la linea es horizontal (se rellena en X); en mobile/tablet
+    // es vertical (se rellena en Y).
+    const isHorizontalTimeline = window.matchMedia("(min-width: 1024px)").matches;
     const scroller = sectionRef.current?.closest(".details-scroll") as HTMLElement | null;
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
       if (reduceMotion) {
         gsap.set([titleRef.current, ".story-item"], { opacity: 1, y: 0 });
-        gsap.set(".story-line-fill", { scaleY: 1 });
+        gsap.set(".story-line-fill", { scaleX: 1, scaleY: 1 });
         return;
       }
 
@@ -54,9 +57,9 @@ export default function OurStorySection() {
       // La linea conectora se va llenando con el scroll (y se vacia al subir).
       gsap.fromTo(
         ".story-line-fill",
-        { scaleY: 0 },
+        isHorizontalTimeline ? { scaleX: 0 } : { scaleY: 0 },
         {
-          scaleY: 1,
+          ...(isHorizontalTimeline ? { scaleX: 1 } : { scaleY: 1 }),
           ease: "none",
           scrollTrigger: {
             trigger: ".story-timeline",

@@ -2042,6 +2042,51 @@ button {
   }
 }
 
+/* En desktop la linea de tiempo pasa a ser horizontal: los 4 hitos en
+   una fila (icono arriba, texto debajo) conectados por una linea que se
+   llena de izquierda a derecha con el scroll. Aprovecha el ancho y evita
+   el bloque estrecho y descentrado. */
+@media (min-width: 1024px) {
+  .story-timeline {
+    width: min(100%, 52rem);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 3vw, 2.6rem);
+    row-gap: 0;
+    padding: 0.6rem 0 0;
+    align-items: start;
+  }
+
+  .story-line {
+    top: 2.1rem;
+    bottom: auto;
+    left: 10%;
+    right: 10%;
+    width: auto;
+    height: 2px;
+    transform: none;
+  }
+
+  .story-line-fill {
+    transform-origin: left center;
+  }
+
+  .story-item {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: clamp(0.7rem, 1.5vw, 1.05rem);
+    text-align: center;
+  }
+
+  .story-copy {
+    width: 100%;
+    text-align: center;
+  }
+
+  .story-flourish {
+    margin-inline: auto;
+  }
+}
+
 .paper-section {
   position: relative;
   min-height: auto;
