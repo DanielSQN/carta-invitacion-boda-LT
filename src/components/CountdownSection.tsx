@@ -152,33 +152,35 @@ export default function CountdownSection() {
             <span aria-hidden="true" />
           </div>
 
-          <div className="countdown-grid" aria-label="Cuenta regresiva para la boda">
-            {items.map((item, index) => (
-              <div
-                key={item.label}
-                ref={(node) => {
-                  itemRefs.current[index] = node;
-                }}
-                className="countdown-unit"
-              >
-                <strong key={`${item.label}-${item.value}`} className="countdown-unit-value">
-                  {String(item.value).padStart(2, "0")}
-                </strong>
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          <div className="countdown-row">
+            <div className="countdown-grid" aria-label="Cuenta regresiva para la boda">
+              {items.map((item, index) => (
+                <div
+                  key={item.label}
+                  ref={(node) => {
+                    itemRefs.current[index] = node;
+                  }}
+                  className="countdown-unit"
+                >
+                  <strong key={`${item.label}-${item.value}`} className="countdown-unit-value">
+                    {String(item.value).padStart(2, "0")}
+                  </strong>
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </div>
 
-          <div ref={metaRef} className="countdown-meta">
-            <p className="countdown-date">26 · SEP · 2026</p>
-            <div className="countdown-actions" aria-label="Agregar la fecha al calendario">
-              <a
-                href={calendarHref}
-                {...(isIcsCalendar ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-              >
-                <CalendarPlus className="countdown-action-icon" aria-hidden="true" strokeWidth={1.8} />
-                Agregar al calendario
-              </a>
+            <div ref={metaRef} className="countdown-meta">
+              <p className="countdown-date">26 · SEP · 2026</p>
+              <div className="countdown-actions" aria-label="Agregar la fecha al calendario">
+                <a
+                  href={calendarHref}
+                  {...(isIcsCalendar ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                >
+                  <CalendarPlus className="countdown-action-icon" aria-hidden="true" strokeWidth={1.8} />
+                  Agregar al calendario
+                </a>
+              </div>
             </div>
           </div>
         </div>

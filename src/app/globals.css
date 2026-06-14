@@ -1075,7 +1075,7 @@ button {
   position: relative;
   display: grid;
   min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   justify-items: center;
   padding: clamp(0.9rem, 3.4svh, 1.6rem) clamp(1rem, 4vw, 3rem) 0;
   text-align: center;
@@ -1083,6 +1083,17 @@ button {
 
 .countdown-title-block {
   align-self: start;
+}
+
+/* fila con el cronómetro y la fecha/botón (en desktop apilados y centrados;
+   en móvil pasa a dos columnas: cronómetro a la izquierda, fecha+botón a la
+   derecha — ver media query) */
+.countdown-row {
+  display: grid;
+  align-self: center;
+  justify-items: center;
+  gap: clamp(1rem, 3svh, 1.7rem);
+  width: 100%;
 }
 
 .countdown-grid {
@@ -1243,10 +1254,8 @@ button {
 
 .countdown-meta {
   display: grid;
-  align-self: end;
   justify-items: center;
   gap: clamp(0.62rem, 2.2svh, 0.95rem);
-  margin-top: clamp(1.05rem, 3.2svh, 1.6rem);
 }
 
 .countdown-date {
@@ -1329,6 +1338,56 @@ button {
   color: #7f9dbb;
   font-size: clamp(0.68rem, 2.6vw, 0.82rem);
   font-weight: 700;
+}
+
+/* Móvil: cronómetro más grande, en dos columnas — cronómetro (2x2) a la
+   izquierda y fecha + botón a la derecha. */
+@media (max-width: 767px) {
+  .countdown-row {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    justify-items: stretch;
+    gap: clamp(0.9rem, 4vw, 1.5rem);
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+
+  .countdown-grid {
+    width: auto;
+    grid-template-columns: repeat(2, minmax(3.6rem, 1fr));
+    gap: 0.5rem;
+  }
+
+  .countdown-unit {
+    padding: 0.95rem 0.35rem 0.78rem;
+  }
+
+  .countdown-unit strong {
+    font-size: clamp(2.7rem, 13vw, 3.6rem);
+  }
+
+  .countdown-unit span {
+    margin-top: 0.4rem;
+    font-size: 0.58rem;
+  }
+
+  .countdown-meta {
+    justify-items: start;
+    gap: 0.85rem;
+    text-align: left;
+  }
+
+  .countdown-date {
+    font-size: clamp(0.95rem, 4.4vw, 1.18rem);
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+  }
+
+  .countdown-actions {
+    justify-content: flex-start;
+    margin-top: 0;
+  }
 }
 
 @media (min-width: 768px) {
