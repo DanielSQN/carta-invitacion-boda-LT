@@ -561,29 +561,27 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           <motion.section
             ref={homeSceneRef}
             key="home"
-            className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full max-w-[430px] grid-rows-[minmax(0,1fr)_auto] place-items-center px-6"
+            className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full px-6"
           >
-            <div className="invitation-hero-stack">
-              <DecorativeText guestName={guestName} />
+            <DecorativeText guestName={guestName} />
 
-              <div className="wedding-envelope-stage relative z-[5] grid w-full place-items-center">
-                <Envelope isOpen={isEnvelopeOpen} letterRef={envelopeLetterRef} onOpen={openInvitation} />
+            <div className="wedding-envelope-stage relative z-[5] grid w-full place-items-center">
+              <Envelope isOpen={isEnvelopeOpen} letterRef={envelopeLetterRef} onOpen={openInvitation} />
 
-                {!isEnvelopeOpen ? (
-                  <motion.button
-                    type="button"
-                    className="open-cta relative z-[7] grid place-items-center border-0 bg-transparent font-script leading-none text-olive outline-none"
-                    onClick={openInvitation}
-                    initial={{ opacity: 0, x: "7%", y: 12, rotate: -7 }}
-                    animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ delay: 1.18, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-                    aria-label="Clic para abrir"
-                  >
-                    <span>Clic para abrir</span>
-                  </motion.button>
-                ) : null}
-              </div>
+              {!isEnvelopeOpen ? (
+                <motion.button
+                  type="button"
+                  className="open-cta relative z-[7] grid place-items-center border-0 bg-transparent font-script leading-none text-olive outline-none"
+                  onClick={openInvitation}
+                  initial={{ opacity: 0, x: "7%", y: 12, rotate: -7 }}
+                  animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ delay: 1.18, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+                  aria-label="Clic para abrir"
+                >
+                  <span>Clic para abrir</span>
+                </motion.button>
+              ) : null}
             </div>
 
             <Verse />
