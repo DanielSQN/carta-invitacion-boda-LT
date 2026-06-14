@@ -2,11 +2,15 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Great_Vibes, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
-// Se permite el zoom nativo (pinch) por accesibilidad y para que funcionen
-// los gestos de iOS (p. ej. pellizcar para ver las pestañas).
+// Zoom (pinch) deshabilitado en toda la invitación. En Android lo respeta el
+// viewport (maximumScale/userScalable); en iOS, que ignora esas propiedades, se
+// bloquea por JS (ver bloqueo de gestos en WeddingHome). El pull-to-refresh del
+// tope se mantiene intacto.
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: "#071827",
 };
 

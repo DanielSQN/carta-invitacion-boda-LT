@@ -171,6 +171,31 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, []);
 
   useEffect(() => {
+    // Deshabilita el pinch-zoom en toda la invitación. iOS ignora el viewport
+    // maximumScale/userScalable, así que se bloquean sus gestos de pellizco
+    // (gesturestart/change/end) y el touchmove con 2+ dedos. El scroll (1 dedo)
+    // y el pull-to-refresh del tope NO se ven afectados.
+    const preventGesture = (event: Event) => event.preventDefault();
+    const preventMultiTouch = (event: TouchEvent) => {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    };
+
+    document.addEventListener("gesturestart", preventGesture);
+    document.addEventListener("gesturechange", preventGesture);
+    document.addEventListener("gestureend", preventGesture);
+    document.addEventListener("touchmove", preventMultiTouch, { passive: false });
+
+    return () => {
+      document.removeEventListener("gesturestart", preventGesture);
+      document.removeEventListener("gesturechange", preventGesture);
+      document.removeEventListener("gestureend", preventGesture);
+      document.removeEventListener("touchmove", preventMultiTouch);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!showWeddingHero) {
       return;
     }
