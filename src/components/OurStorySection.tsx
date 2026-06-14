@@ -104,7 +104,7 @@ export default function OurStorySection() {
     <section ref={sectionRef} className="story-section" aria-labelledby="story-title">
       <SectionFrameDecor variant="story" />
       <div ref={imageRef} className="story-bg" aria-hidden="true">
-        <Image src="/images/couple/_DSC0953.webp" alt="" fill sizes="100vw" className="story-bg-image" />
+        <Image src="/images/couple/_DSC0953.webp" alt="" fill sizes="100vw" quality={50} className="story-bg-image" />
       </div>
       <div className="story-bg-overlay" aria-hidden="true" />
 

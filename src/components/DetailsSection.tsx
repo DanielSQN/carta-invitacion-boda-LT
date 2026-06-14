@@ -94,7 +94,7 @@ export default function DetailsSection() {
     <section ref={sectionRef} className="details-section" aria-labelledby="details-title">
       <SectionFrameDecor variant="details" />
       <div ref={bgRef} className="details-bg" aria-hidden="true">
-        <Image src="/images/couple/_DSC1252.webp" alt="" fill sizes="100vw" className="details-bg-image" />
+        <Image src="/images/couple/_DSC1252.webp" alt="" fill sizes="100vw" quality={50} className="details-bg-image" />
       </div>
       <div className="details-overlay" aria-hidden="true" />
 

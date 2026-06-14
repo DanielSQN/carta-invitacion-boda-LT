@@ -139,6 +139,7 @@ export default function CelebrationSection() {
           alt=""
           fill
           sizes="100vw"
+          quality={50}
           className="celebration-bg-image"
         />
       </div>

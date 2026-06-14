@@ -77,7 +77,7 @@ export default function DressCodeSection() {
     <section ref={sectionRef} className="dress-section" aria-labelledby="dress-title">
       <SectionFrameDecor variant="dress" />
       <div ref={bgRef} className="dress-bg" aria-hidden="true">
-        <Image src="/images/details/background-dress-code.webp" alt="" fill sizes="100vw" className="dress-bg-image" />
+        <Image src="/images/details/background-dress-code.webp" alt="" fill sizes="100vw" quality={50} className="dress-bg-image" />
       </div>
       <div className="dress-overlay" aria-hidden="true" />
 

@@ -131,6 +131,7 @@ export default function CountdownSection() {
           alt=""
           fill
           sizes="100vw"
+          quality={50}
           className="countdown-bg-image"
           priority={false}
         />

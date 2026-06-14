@@ -509,8 +509,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     </AnimatePresence>
   );
 
-  const canScrollInvitation = !showWeddingHero || isHeroIntroDone;
-  const showSwipePrompt = showWeddingHero && canScrollInvitation && !isAttendanceVisible;
+  // El scroll está disponible siempre que se muestre el hero (la animación de
+  // intro NO bloquea la navegación). El swipe aparece al terminar el intro.
+  const showSwipePrompt = showWeddingHero && isHeroIntroDone && !isAttendanceVisible;
 
   const swipeDownControl = (
     <AnimatePresence>
@@ -531,12 +532,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   return (
     <main
-      aria-busy={showWeddingHero && !canScrollInvitation}
       className={
         showWeddingHero
-          ? `details-scroll relative h-svh overflow-x-hidden bg-[#07111f] text-olive ${
-              canScrollInvitation ? "overflow-y-auto" : "overflow-y-hidden"
-            }`
+          ? "details-scroll relative h-svh overflow-x-hidden overflow-y-auto bg-[#07111f] text-olive"
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
