@@ -388,7 +388,8 @@ export default function MemoriesGallery() {
                   alt={photo.alt}
                   fill
                   loading={index < 3 ? "eager" : "lazy"}
-                  sizes="(max-width: 760px) 62vw, 17rem"
+                  sizes="(max-width: 760px) 62vw, 18rem"
+                  quality={60}
                   className="memories-photo"
                 />
               </span>

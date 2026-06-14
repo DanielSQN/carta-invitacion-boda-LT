@@ -1342,51 +1342,24 @@ button {
 
 /* Móvil: cronómetro más grande, en dos columnas — cronómetro (2x2) a la
    izquierda y fecha + botón a la derecha. */
-@media (max-width: 767px) {
+/* Desktop: cronómetro y fecha/botón en dos columnas (móvil queda apilado:
+   título arriba, cronómetro al centro, info abajo). */
+@media (min-width: 1024px) {
   .countdown-row {
-    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-columns: auto auto;
     align-items: center;
-    justify-items: stretch;
-    gap: clamp(0.9rem, 4vw, 1.5rem);
-    width: 100%;
-    max-width: 24rem;
-    margin: 0 auto;
-  }
-
-  .countdown-grid {
+    justify-content: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
     width: auto;
-    grid-template-columns: repeat(2, minmax(3.6rem, 1fr));
-    gap: 0.5rem;
-  }
-
-  .countdown-unit {
-    padding: 0.95rem 0.35rem 0.78rem;
-  }
-
-  .countdown-unit strong {
-    font-size: clamp(2.7rem, 13vw, 3.6rem);
-  }
-
-  .countdown-unit span {
-    margin-top: 0.4rem;
-    font-size: 0.58rem;
   }
 
   .countdown-meta {
     justify-items: start;
-    gap: 0.85rem;
     text-align: left;
-  }
-
-  .countdown-date {
-    font-size: clamp(0.95rem, 4.4vw, 1.18rem);
-    letter-spacing: 0.18em;
-    text-indent: 0.18em;
   }
 
   .countdown-actions {
     justify-content: flex-start;
-    margin-top: 0;
   }
 }
 
@@ -4620,6 +4593,34 @@ body.is-lightbox-scroll-locked {
     background: rgba(247, 243, 234, 0.22);
     backdrop-filter: blur(1.25px) saturate(1.01);
     -webkit-backdrop-filter: blur(1.25px) saturate(1.01);
+  }
+}
+
+/* Desktop: el sobre inicial se agranda para no verse pequeño y perdido en
+   pantallas anchas (se mantiene centrado y elegante). */
+@media (min-width: 1024px) {
+  main .wedding-home-scene {
+    max-width: 34rem;
+  }
+
+  .decorative-label {
+    font-size: clamp(2rem, 2.4vw, 2.6rem);
+  }
+
+  .decorative-name {
+    font-size: clamp(5.75rem, 7vw, 7.2rem);
+  }
+
+  .envelope-button {
+    width: min(80vw, 34rem);
+  }
+
+  .verse-copy {
+    font-size: clamp(1.4rem, 1.6vw, 1.6rem);
+  }
+
+  .verse-reference {
+    font-size: clamp(1.3rem, 1.4vw, 1.45rem);
   }
 }
 
