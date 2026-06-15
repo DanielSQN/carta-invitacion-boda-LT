@@ -1124,9 +1124,10 @@ button {
   position: relative;
   display: grid;
   min-height: 0;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: start;
   justify-items: center;
-  gap: clamp(1rem, 3.5svh, 2rem);
+  gap: clamp(1.6rem, 5svh, 3.2rem);
   padding: clamp(1.4rem, 5svh, 2.6rem) clamp(1rem, 4vw, 3rem) 0;
   text-align: center;
 }
@@ -1141,15 +1142,15 @@ button {
    desktop pasa a dos columnas (cronómetro izquierda, fecha+botón derecha). */
 .countdown-row {
   display: grid;
-  align-self: stretch;
-  grid-template-rows: 1fr auto;
+  align-self: start;
+  grid-template-rows: auto auto;
   justify-items: center;
   gap: clamp(1.3rem, 4svh, 2.4rem);
   width: 100%;
 }
 
 .countdown-grid {
-  align-self: center;
+  align-self: start;
 }
 
 .countdown-orbit-wrap {
