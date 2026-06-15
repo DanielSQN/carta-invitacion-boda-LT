@@ -26,6 +26,8 @@ export default function SectionFrameDecor({ variant }: SectionFrameDecorProps) {
           alt=""
           width={691}
           height={760}
+          sizes="(max-width: 480px) 44vw, 272px"
+          quality={50}
           className="section-blue-floral section-blue-floral--corner-top"
         />
         <Image
@@ -33,6 +35,8 @@ export default function SectionFrameDecor({ variant }: SectionFrameDecorProps) {
           alt=""
           width={507}
           height={760}
+          sizes="(max-width: 480px) 44vw, 272px"
+          quality={50}
           className="section-blue-floral section-blue-floral--sprig"
         />
         <Image
@@ -40,6 +44,8 @@ export default function SectionFrameDecor({ variant }: SectionFrameDecorProps) {
           alt=""
           width={507}
           height={760}
+          sizes="(max-width: 480px) 44vw, 272px"
+          quality={50}
           className="section-blue-floral section-blue-floral--corner-bottom"
         />
       </div>

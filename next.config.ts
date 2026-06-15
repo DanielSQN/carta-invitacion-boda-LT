@@ -16,6 +16,39 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Caché de larga duración para los assets estáticos de /public (imágenes
+  // servidas por URL directa como los fondos CSS, y el audio). Por defecto se
+  // entregaban con `max-age=0, must-revalidate`, así que cada visita los
+  // revalidaba contra el servidor; ahora el navegador los reutiliza sin pedir
+  // nada de vuelta. (No afecta a /_next/image, que ya cachea por minimumCacheTTL.)
+  //
+  // Al REEMPLAZAR un asset: con `immutable` el navegador no vuelve a pedir un
+  // archivo de la misma ruta hasta que expire el año. Para que tome uno nuevo,
+  // usa un nombre distinto o súbele la versión en la query (`?v=...`), como ya
+  // se hace con `couple-photo.webp?v=...`. Subir fotos *nuevas* con nombres
+  // nuevos (p. ej. 34 fotos de galería) las toma automáticamente.
+  async headers() {
+    return [
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/audio/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

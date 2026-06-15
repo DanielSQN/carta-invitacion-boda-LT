@@ -17,6 +17,8 @@ export default function FloralCorners() {
           alt=""
           width={691}
           height={760}
+          sizes="(max-width: 480px) 74vw, 320px"
+          quality={50}
           priority
         />
       </motion.div>
@@ -31,6 +33,8 @@ export default function FloralCorners() {
           alt=""
           width={507}
           height={760}
+          sizes="(max-width: 480px) 60vw, 280px"
+          quality={50}
           priority
         />
       </motion.div>
@@ -45,6 +49,8 @@ export default function FloralCorners() {
           alt=""
           width={507}
           height={760}
+          sizes="(max-width: 480px) 42vw, 205px"
+          quality={50}
           priority
         />
       </motion.div>
