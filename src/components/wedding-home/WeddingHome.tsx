@@ -438,6 +438,34 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     };
   }, []);
 
+  useEffect(() => {
+    // App-shell: con el hero visible, el scroll vive dentro del <main> fijo
+    // (.details-scroll), no en el documento. Bloquear el scroll de html/body
+    // evita que Chrome móvil oculte/muestre su barra al desplazarse, que es lo
+    // que hacía saltar el contenido. Se restaura al desmontar.
+    if (!showWeddingHero) {
+      return;
+    }
+
+    const html = document.documentElement;
+    const body = document.body;
+    const previous = {
+      htmlOverflow: html.style.overflow,
+      bodyOverflow: body.style.overflow,
+      bodyHeight: body.style.height,
+    };
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.height = "100%";
+
+    return () => {
+      html.style.overflow = previous.htmlOverflow;
+      body.style.overflow = previous.bodyOverflow;
+      body.style.height = previous.bodyHeight;
+    };
+  }, [showWeddingHero]);
+
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
       setIsHeroIntroDone(false);
@@ -530,7 +558,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     <main
       className={
         showWeddingHero
-          ? "relative w-full bg-[#07111f] text-olive"
+          ? "details-scroll fixed inset-0 w-full overflow-y-auto overflow-x-hidden overscroll-y-contain bg-[#07111f] text-olive"
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
