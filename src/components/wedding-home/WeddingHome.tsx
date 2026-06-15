@@ -91,6 +91,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const homeSceneRef = useRef<HTMLElement>(null);
   const envelopeLetterRef = useRef<HTMLDivElement>(null);
   const transitionCardRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const pullIndicatorRef = useRef<HTMLDivElement>(null);
 
   // [MVP revertible] Partículas blancas que cubren la foto al salir del sobre
   // y se dispersan al revelarla a pantalla completa. Posiciones/tamaños fijos.
@@ -466,6 +468,110 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     };
   }, [showWeddingHero]);
 
+  useEffect(() => {
+    // Pull-to-refresh propio. El app-shell bloquea el scroll del documento, así
+    // que el PTR nativo de Chrome no se dispara; este lo reemplaza dentro del
+    // contenedor de scroll fijo: al jalar hacia abajo desde el tope, muestra un
+    // indicador y recarga al soltar si se supera el umbral.
+    if (!showWeddingHero) {
+      return;
+    }
+
+    const scroller = mainRef.current;
+    const indicator = pullIndicatorRef.current;
+
+    if (!scroller || !indicator) {
+      return;
+    }
+
+    const THRESHOLD = 70;
+    const MAX = 130;
+    let startY = 0;
+    let pulling = false;
+    let distance = 0;
+    let refreshing = false;
+
+    const paint = (d: number) => {
+      indicator.style.opacity = String(Math.min(d / 26, 1));
+      indicator.style.transform = `translateX(-50%) translateY(${Math.min(d, MAX)}px)`;
+    };
+
+    const reset = () => {
+      indicator.style.transition = "opacity 0.25s ease, transform 0.25s ease";
+      indicator.style.opacity = "0";
+      indicator.style.transform = "translateX(-50%) translateY(0)";
+      window.setTimeout(() => {
+        if (indicator) {
+          indicator.style.transition = "";
+        }
+      }, 280);
+    };
+
+    const onStart = (event: TouchEvent) => {
+      if (refreshing || event.touches.length !== 1 || scroller.scrollTop > 0) {
+        pulling = false;
+        return;
+      }
+
+      startY = event.touches[0].clientY;
+      pulling = true;
+      distance = 0;
+      indicator.style.transition = "";
+    };
+
+    const onMove = (event: TouchEvent) => {
+      if (!pulling || refreshing) {
+        return;
+      }
+
+      const dy = event.touches[0].clientY - startY;
+
+      if (dy <= 0 || scroller.scrollTop > 0) {
+        pulling = false;
+        reset();
+        return;
+      }
+
+      distance = dy * 0.5;
+      paint(distance);
+
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+    };
+
+    const onEnd = () => {
+      if (!pulling || refreshing) {
+        return;
+      }
+
+      pulling = false;
+
+      if (distance >= THRESHOLD) {
+        refreshing = true;
+        indicator.querySelector("svg")?.classList.add("animate-spin");
+        indicator.style.transition = "transform 0.2s ease";
+        indicator.style.opacity = "1";
+        indicator.style.transform = `translateX(-50%) translateY(${THRESHOLD}px)`;
+        window.setTimeout(() => window.location.reload(), 220);
+      } else {
+        reset();
+      }
+    };
+
+    scroller.addEventListener("touchstart", onStart, { passive: true });
+    scroller.addEventListener("touchmove", onMove, { passive: false });
+    scroller.addEventListener("touchend", onEnd, { passive: true });
+    scroller.addEventListener("touchcancel", onEnd, { passive: true });
+
+    return () => {
+      scroller.removeEventListener("touchstart", onStart);
+      scroller.removeEventListener("touchmove", onMove);
+      scroller.removeEventListener("touchend", onEnd);
+      scroller.removeEventListener("touchcancel", onEnd);
+    };
+  }, [showWeddingHero]);
+
   const openInvitation = () => {
     if (!isEnvelopeOpen) {
       setIsHeroIntroDone(false);
@@ -556,6 +662,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   return (
     <main
+      ref={mainRef}
       className={
         showWeddingHero
           ? "details-scroll fixed inset-0 w-full overflow-y-auto overflow-x-hidden overscroll-y-contain bg-[#07111f] text-olive"
@@ -565,6 +672,20 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       <audio ref={audioRef} src="/audio/song1.mp3" preload="none" loop />
       {musicControl}
       {swipeDownControl}
+
+      {showWeddingHero ? (
+        <div
+          ref={pullIndicatorRef}
+          aria-hidden="true"
+          className="pointer-events-none fixed left-1/2 top-2 z-[85] grid size-9 place-items-center rounded-full border border-[#f3ede3]/25 bg-[#07111f]/90 text-[#cfe4f6] opacity-0 shadow-[0_0.5rem_1.2rem_rgba(7,17,31,0.42)]"
+          style={{ transform: "translateX(-50%) translateY(0)" }}
+        >
+          <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 12a9 9 0 1 1-3-6.7" />
+            <path d="M21 4v5h-5" />
+          </svg>
+        </div>
+      ) : null}
 
       {showWeddingHero ? (
         <WeddingHeroSection />
