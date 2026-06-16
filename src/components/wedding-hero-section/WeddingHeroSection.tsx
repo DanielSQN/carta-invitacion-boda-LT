@@ -455,8 +455,15 @@ function AttendanceSection() {
   const showConfirmation = status === "success" || (alreadyResponded && !editing);
 
   const startEditing = () => {
-    setEditing(true);
     setStatus("idle");
+    setEditing(true);
+
+    // Si había confirmado que SÍ, va directo al formulario de asistentes (para
+    // ajustar cantidad/nombres). Si había declinado, vuelve a la pregunta
+    // inicial (sí/no) por si ahora quiere cambiar a "sí".
+    if (!attending) {
+      setAttending(null);
+    }
   };
 
   return (
@@ -503,15 +510,17 @@ function AttendanceSection() {
                 <span className="rsvp-done-row-text">
                   {attending
                     ? `Asistirán ${guestCount} ${guestCount === 1 ? "persona" : "personas"}`
-                    : "No podrás acompañarnos"}
+                    : "Lamentamos que no puedas asistir"}
                 </span>
               </div>
-              <div className="rsvp-done-row">
-                <span className="rsvp-done-row-icon" aria-hidden="true">
-                  <CalendarPlus strokeWidth={1.9} />
-                </span>
-                <span className="rsvp-done-row-text">26 de septiembre de 2026</span>
-              </div>
+              {attending ? (
+                <div className="rsvp-done-row">
+                  <span className="rsvp-done-row-icon" aria-hidden="true">
+                    <CalendarPlus strokeWidth={1.9} />
+                  </span>
+                  <span className="rsvp-done-row-text">26 de septiembre de 2026</span>
+                </div>
+              ) : null}
             </div>
 
             <div className="rsvp-done-actions">
@@ -532,7 +541,8 @@ function AttendanceSection() {
             </div>
 
             <p className="rsvp-done-footer">
-              Nos vemos pronto <span aria-hidden="true">♥</span>
+              {attending ? "Nos vemos pronto " : "Con cariño "}
+              <span aria-hidden="true">♥</span>
             </p>
           </div>
         ) : attending === null ? (
@@ -549,11 +559,12 @@ function AttendanceSection() {
             </div>
           </div>
         ) : (
-          <form className="attendance-form" data-reveal onSubmit={handleSubmit}>
+          <div className="attendance-edit" data-reveal>
             <button type="button" className="attendance-back" onClick={() => setAttending(null)}>
               ‹ Cambiar respuesta
             </button>
 
+            <form className="attendance-form" onSubmit={handleSubmit}>
             {attending ? (
               <>
                 <p className="attendance-hint">
@@ -668,7 +679,8 @@ function AttendanceSection() {
             </button>
 
             <p className="attendance-privacy">Tu respuesta es confidencial y segura.</p>
-          </form>
+            </form>
+          </div>
         )}
       </div>
 
