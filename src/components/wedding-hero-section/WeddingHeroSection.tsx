@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { Check, Heart, User } from "lucide-react";
+import { CalendarPlus, Check, Heart, Pencil, User, Users } from "lucide-react";
 import Image from "next/image";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
@@ -27,6 +27,42 @@ function EditorialRule({ className = "" }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+// Rama de laurel para el sello de confirmación. Se dibuja una vez y se refleja
+// con CSS (scaleX) para el lado opuesto.
+function LaurelBranch({ className = "" }: { className?: string }) {
+  const leaves = [
+    { cx: 27, cy: 66, rot: -58 },
+    { cx: 21, cy: 56, rot: -50 },
+    { cx: 16.5, cy: 45, rot: -40 },
+    { cx: 13.5, cy: 34, rot: -28 },
+    { cx: 13, cy: 23, rot: -15 },
+    { cx: 15.5, cy: 12.5, rot: -2 },
+  ];
+
+  return (
+    <svg className={`rsvp-laurel ${className}`} viewBox="0 0 34 74" fill="currentColor" aria-hidden="true" focusable="false">
+      <path
+        d="M30 72C16 58 11 32 21 5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+      {leaves.map((leaf, index) => (
+        <ellipse
+          key={index}
+          cx={leaf.cx}
+          cy={leaf.cy}
+          rx="5.4"
+          ry="2.2"
+          transform={`rotate(${leaf.rot} ${leaf.cx} ${leaf.cy})`}
+        />
+      ))}
     </svg>
   );
 }
@@ -204,6 +240,10 @@ function getStoredRsvpKey(): string | null {
   return para ? `rsvp:${para}` : null;
 }
 
+const googleCalendarUrl =
+  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda%20Luisa%20%26%20Tattan&dates=20260926T200000Z/20260927T050000Z&details=Celebramos%20nuestra%20boda%20con%20ustedes.&location=Hacienda%20Santa%20Elena%2C%20Cota%2C%20Cundinamarca";
+const icsCalendarUrl = "/boda-luisa-jhonnatan.ics";
+
 function AttendanceSection() {
   const [attending, setAttending] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState(1);
@@ -213,6 +253,8 @@ function AttendanceSection() {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [alreadyResponded, setAlreadyResponded] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [calendarHref, setCalendarHref] = useState(googleCalendarUrl);
+  const [isIcsCalendar, setIsIcsCalendar] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
@@ -242,6 +284,21 @@ function AttendanceSection() {
     }, sectionRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // En iOS el botón "Agregar al calendario" abre el .ics (Apple Calendar); en
+  // Android/escritorio abre Google Calendar.
+  useEffect(() => {
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.userAgent.includes("Mac") && navigator.maxTouchPoints > 1);
+
+    if (isIOS) {
+      queueMicrotask(() => {
+        setCalendarHref(icsCalendarUrl);
+        setIsIcsCalendar(true);
+      });
+    }
   }, []);
 
   // Si esta invitación (?para=) ya respondió, se consulta primero el servidor.
@@ -393,6 +450,15 @@ function AttendanceSection() {
 
   const submitting = status === "submitting";
 
+  // La misma pantalla de confirmación se muestra justo al enviar el formulario
+  // y cuando esta invitación vuelve a entrar habiendo respondido antes.
+  const showConfirmation = status === "success" || (alreadyResponded && !editing);
+
+  const startEditing = () => {
+    setEditing(true);
+    setStatus("idle");
+  };
+
   return (
     <section ref={sectionRef} className="attendance-section finale-section" aria-labelledby="attendance-title">
       <SectionFrameDecor variant="attendance" />
@@ -400,51 +466,74 @@ function AttendanceSection() {
       <div ref={confirmInnerRef} className="finale-inner attendance-inner">
         <div className="finale-heading" data-reveal>
           <span>RSVP</span>
-          <h2 id="attendance-title">Confirmar tu asistencia</h2>
-          <p>Ayudanos a preparar cada detalle con amor.</p>
+          {showConfirmation ? (
+            <h2 id="attendance-title" className="sr-only">
+              Confirmación de asistencia
+            </h2>
+          ) : (
+            <>
+              <h2 id="attendance-title">Confirmar tu asistencia</h2>
+              <p>Ayudanos a preparar cada detalle con amor.</p>
+            </>
+          )}
         </div>
 
-        {status === "success" ? (
-          <div className="attendance-form attendance-form--result" data-reveal>
-            <div className="attendance-confirmed" role="status">
-              <span className={`attendance-confirmed-icon${attending ? "" : " attendance-confirmed-icon--no"}`} aria-hidden="true">
-                <Check strokeWidth={2.6} />
+        {showConfirmation ? (
+          <div className="rsvp-done" data-reveal>
+            <div className={`rsvp-done-badge${attending ? "" : " rsvp-done-badge--no"}`} role="status">
+              <LaurelBranch className="rsvp-laurel--left" />
+              <span className="rsvp-done-check" aria-hidden="true">
+                {attending ? <Check strokeWidth={2.8} /> : <Heart strokeWidth={2.4} />}
               </span>
-              {attending ? (
-                <>
-                  <p>¡Gracias por confirmar{guestCount > 1 ? ` por ${guestCount} personas` : ""}!</p>
-                  <span>Nos vemos el 26 de septiembre de 2026 ♥</span>
-                </>
-              ) : (
-                <>
-                  <p>Gracias por avisarnos 💛</p>
-                  <span>Te vamos a extrañar. ¡Estarás en nuestros corazones!</span>
-                </>
-              )}
+              <LaurelBranch className="rsvp-laurel--right" />
             </div>
-          </div>
-        ) : alreadyResponded && !editing ? (
-          <div className="attendance-form attendance-summary" data-reveal>
-            <div className="attendance-summary-card" role="status">
-              <span
-                className={`attendance-summary-icon${attending ? "" : " attendance-summary-icon--no"}`}
-                aria-hidden="true"
-              >
-                {attending ? <Check strokeWidth={2.6} /> : <Heart strokeWidth={2.2} />}
-              </span>
+
+            <h3 className="rsvp-done-title">{attending ? "¡Gracias por confirmar!" : "Gracias por avisarnos"}</h3>
+            <p className="rsvp-done-subtitle">
+              {attending
+                ? "Tu respuesta nos ayuda a seguir preparando este día tan especial."
+                : "Te vamos a extrañar. Estarás en nuestros corazones."}
+            </p>
+
+            <div className="rsvp-done-card">
+              <div className="rsvp-done-row">
+                <span className="rsvp-done-row-icon" aria-hidden="true">
+                  {attending ? <Users strokeWidth={1.9} /> : <Heart strokeWidth={1.9} />}
+                </span>
+                <span className="rsvp-done-row-text">
+                  {attending
+                    ? `Asistirán ${guestCount} ${guestCount === 1 ? "persona" : "personas"}`
+                    : "No podrás acompañarnos"}
+                </span>
+              </div>
+              <div className="rsvp-done-row">
+                <span className="rsvp-done-row-icon" aria-hidden="true">
+                  <CalendarPlus strokeWidth={1.9} />
+                </span>
+                <span className="rsvp-done-row-text">26 de septiembre de 2026</span>
+              </div>
+            </div>
+
+            <div className="rsvp-done-actions">
               {attending ? (
-                <p>
-                  Ya confirmaste tu asistencia
-                  {guestCount > 0 ? ` por ${guestCount} ${guestCount === 1 ? "persona" : "personas"}` : ""}.
-                </p>
-              ) : (
-                <p>Habías indicado que no podrás acompañarnos.</p>
-              )}
-              <span>¿Deseas modificar tu respuesta?</span>
-              <button type="button" className="attendance-summary-edit" onClick={() => setEditing(true)}>
+                <a
+                  className="rsvp-done-action rsvp-done-action--primary"
+                  href={calendarHref}
+                  {...(isIcsCalendar ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                >
+                  <CalendarPlus aria-hidden="true" strokeWidth={1.9} />
+                  Agregar al calendario
+                </a>
+              ) : null}
+              <button type="button" className="rsvp-done-action rsvp-done-action--ghost" onClick={startEditing}>
+                <Pencil aria-hidden="true" strokeWidth={1.9} />
                 Modificar respuesta
               </button>
             </div>
+
+            <p className="rsvp-done-footer">
+              Nos vemos pronto <span aria-hidden="true">♥</span>
+            </p>
           </div>
         ) : attending === null ? (
           <div className="attendance-form attendance-choice" data-reveal>
@@ -577,6 +666,8 @@ function AttendanceSection() {
               {attending ? <Heart aria-hidden="true" strokeWidth={2.2} /> : null}
               {submitting ? "Enviando…" : attending ? "Confirmar asistencia" : "Enviar respuesta"}
             </button>
+
+            <p className="attendance-privacy">Tu respuesta es confidencial y segura.</p>
           </form>
         )}
       </div>

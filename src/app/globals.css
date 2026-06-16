@@ -3644,6 +3644,195 @@ html.is-lightbox-open .music-control-button {
   box-shadow: 0 0.9rem 1.6rem rgba(23, 58, 92, 0.36);
 }
 
+/* ===== Pantalla de confirmación unificada (RSVP) =====
+   La misma vista se muestra al enviar el formulario y al volver a entrar. */
+.rsvp-done {
+  display: grid;
+  justify-items: center;
+  gap: clamp(0.85rem, 3.2vw, 1.2rem);
+  width: min(100%, 26rem);
+  margin: 0 auto;
+  text-align: center;
+  animation: attendance-rise-in 460ms ease both;
+}
+
+.rsvp-done-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  margin-bottom: 0.1rem;
+  color: #c6a24f;
+}
+
+.rsvp-laurel {
+  width: clamp(1.15rem, 5vw, 1.5rem);
+  height: auto;
+}
+
+.rsvp-laurel--right {
+  transform: scaleX(-1);
+}
+
+.rsvp-done-check {
+  display: grid;
+  width: clamp(3.2rem, 14vw, 3.8rem);
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 50% 35%, #fdf7ec, #efe3cd);
+  color: #1f4e7d;
+  box-shadow:
+    0 0 0 0.42rem rgba(143, 193, 233, 0.12),
+    0 0.5rem 1.1rem rgba(7, 24, 39, 0.45);
+}
+
+.rsvp-done-badge--no .rsvp-done-check {
+  color: #b07f1f;
+}
+
+.rsvp-done-check svg {
+  width: 45%;
+  height: 45%;
+}
+
+.rsvp-done-title {
+  margin: 0;
+  color: #fffaf1;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.55rem, 6.6vw, 2.05rem);
+  font-weight: 600;
+  line-height: 1.1;
+  text-shadow: 0 0.5rem 1.2rem rgba(7, 24, 39, 0.5);
+}
+
+.rsvp-done-subtitle {
+  max-width: 21rem;
+  margin: 0;
+  color: rgba(243, 237, 227, 0.82);
+  font-size: clamp(0.92rem, 3.8vw, 1.02rem);
+  font-weight: 500;
+  line-height: 1.34;
+}
+
+.rsvp-done-card {
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+  margin-top: 0.2rem;
+  padding: clamp(0.95rem, 4vw, 1.25rem) clamp(1rem, 4.5vw, 1.4rem);
+  border: 1px solid rgba(143, 193, 233, 0.26);
+  border-radius: 0.85rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(143, 193, 233, 0.12), transparent 70%),
+    rgba(255, 253, 246, 0.05);
+}
+
+.rsvp-done-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  text-align: left;
+}
+
+.rsvp-done-row-icon {
+  display: grid;
+  flex: none;
+  width: 2.1rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(143, 193, 233, 0.3);
+  background: rgba(143, 193, 233, 0.12);
+  color: #9cc3e6;
+}
+
+.rsvp-done-row-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.rsvp-done-row-text {
+  color: #f3ede3;
+  font-size: clamp(0.96rem, 4vw, 1.08rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.rsvp-done-actions {
+  display: grid;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.rsvp-done-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.7rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+}
+
+.rsvp-done-action svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.rsvp-done-action--primary {
+  border: 1px solid rgba(143, 193, 233, 0.55);
+  background: linear-gradient(135deg, #1f4e7d, #0d2438);
+  color: #fff8eb;
+  box-shadow: 0 0.6rem 1.2rem rgba(7, 24, 39, 0.4);
+}
+
+.rsvp-done-action--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.9rem 1.6rem rgba(7, 24, 39, 0.5);
+}
+
+.rsvp-done-action--ghost {
+  border: 1px solid rgba(243, 237, 227, 0.32);
+  background: rgba(255, 253, 246, 0.04);
+  color: #f3ede3;
+}
+
+.rsvp-done-action--ghost:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 253, 246, 0.08);
+}
+
+.rsvp-done-footer {
+  margin: 0.35rem 0 0;
+  color: #cfe0f0;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.05rem, 4.4vw, 1.25rem);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.rsvp-done-footer span {
+  color: #e0566a;
+}
+
+.attendance-privacy {
+  margin: 0.1rem 0 0;
+  color: rgba(243, 237, 227, 0.6);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-align: center;
+}
+
 @keyframes attendance-rise-in {
   from {
     opacity: 0;
