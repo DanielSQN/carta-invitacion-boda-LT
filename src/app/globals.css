@@ -2691,6 +2691,14 @@ button {
     box-shadow 420ms ease;
 }
 
+.memories-card.is-landscape {
+  flex-basis: calc(var(--memories-card-w) * 1.34);
+}
+
+.memories-card.is-square {
+  flex-basis: calc(var(--memories-card-w) * 1.08);
+}
+
 .memories-card.is-active {
   box-shadow:
     0 0.5rem 1rem -0.25rem rgba(2, 8, 15, 0.32),
@@ -2717,6 +2725,14 @@ button {
   background:
     linear-gradient(180deg, rgba(243, 237, 227, 0.72), rgba(95, 143, 180, 0.18)),
     #e9edf0;
+}
+
+.memories-card.is-landscape .memories-card-photo {
+  aspect-ratio: 4 / 3;
+}
+
+.memories-card.is-square .memories-card-photo {
+  aspect-ratio: 1 / 1;
 }
 
 .memories-card-trigger {
@@ -2772,7 +2788,7 @@ button {
 }
 
 .memories-photo {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
   filter: saturate(0.94) contrast(0.98) sepia(0.06);
   transform: translateZ(0);
@@ -3016,6 +3032,14 @@ button {
   user-select: none;
 }
 
+.memories-lightbox-card.is-landscape {
+  width: min(94vw, 48rem);
+}
+
+.memories-lightbox-card.is-square {
+  width: min(92vw, 38rem);
+}
+
 .memories-lightbox-card:active {
   cursor: grabbing;
 }
@@ -3030,6 +3054,18 @@ button {
   /* sin fondo oscuro: las bandas del object-fit:contain se funden con el
      papel del polaroid en vez de verse como bordes azules */
   background: transparent;
+}
+
+.memories-lightbox-card.is-landscape .memories-lightbox-photo {
+  height: min(58svh, 31rem);
+}
+
+.memories-lightbox-card.is-portrait .memories-lightbox-photo {
+  height: min(66svh, 34rem);
+}
+
+.memories-lightbox-card.is-square .memories-lightbox-photo {
+  height: min(62svh, 34rem);
 }
 
 /* barra de año a todo el ancho, arriba de la foto */

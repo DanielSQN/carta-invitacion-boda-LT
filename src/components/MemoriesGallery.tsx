@@ -11,32 +11,15 @@ import { prefersReducedMotion } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// RECUERDOS (28 fotos, 2016-2026).
-// Estructura de simulacion: cada año tiene su cantidad real de fotos, pero
-// las imagenes son placeholders (se reciclan las 4 fotos existentes).
-// Para poner las definitivas: sube los webp optimizados a
-// public/images/memories/ y reemplaza src/alt/caption de cada entrada.
-const memoryPlaceholderSources = [
-  { src: "/images/couple/couple-photo.webp?v=20260601-assets-2", alt: "Recuerdo de Luisa y Jhonnatan" },
-  { src: "/images/couple/_DSC0723.webp?v=20260601-assets-1", alt: "Luisa y Jhonnatan sonriendo juntos" },
-  { src: "/images/couple/_DSC0953.webp", alt: "Recuerdo de Luisa y Jhonnatan" },
-  { src: "/images/couple/_DSC1252.webp", alt: "Luisa y Jhonnatan en una foto especial" },
-];
-
-// [año, cantidad de fotos de ese año] — total: 28
-const memoryYearCounts: Array<[string, number]> = [
-  ["2016", 2],
-  ["2017", 2],
-  ["2018", 2],
-  ["2019", 2],
-  ["2020", 3],
-  ["2021", 2],
-  ["2022", 3],
-  ["2023", 3],
-  ["2024", 4],
-  ["2025", 3],
-  ["2026", 2],
-];
+type MemoryPhoto = {
+  src: string;
+  alt: string;
+  year: string;
+  caption: string;
+  width: number;
+  height: number;
+  orientation: "landscape" | "portrait" | "square";
+};
 
 // Leyendas amorosas para el marco de cada foto (el año va solo en el badge).
 const memoryCaptions = [
@@ -56,16 +39,54 @@ const memoryCaptions = [
   "Momentos que atesoramos",
 ];
 
-let memoryPhotoCursor = 0;
-const memoryPhotos = memoryYearCounts.flatMap(([year, count]) =>
-  Array.from({ length: count }, () => {
-    const source = memoryPlaceholderSources[memoryPhotoCursor % memoryPlaceholderSources.length];
-    const caption = memoryCaptions[memoryPhotoCursor % memoryCaptions.length];
-    memoryPhotoCursor += 1;
+const galleryPhotos = [
+  { file: "2016-1.webp", year: "2016", width: 1600, height: 1200, orientation: "landscape" },
+  { file: "2016-2.webp", year: "2016", width: 720, height: 720, orientation: "square" },
+  { file: "2016.webp", year: "2016", width: 960, height: 1280, orientation: "portrait" },
+  { file: "2017-1.webp", year: "2017", width: 1280, height: 720, orientation: "landscape" },
+  { file: "2017-2.webp", year: "2017", width: 960, height: 1280, orientation: "portrait" },
+  { file: "2018-1.webp", year: "2018", width: 1280, height: 720, orientation: "landscape" },
+  { file: "2018-2.webp", year: "2018", width: 4608, height: 3456, orientation: "landscape" },
+  { file: "2018-2(1).webp", year: "2018", width: 4496, height: 3000, orientation: "landscape" },
+  { file: "2019-1.webp", year: "2019", width: 4608, height: 3456, orientation: "landscape" },
+  { file: "2019-2.webp", year: "2019", width: 4608, height: 3456, orientation: "landscape" },
+  { file: "2020-1.webp", year: "2020", width: 4618, height: 3464, orientation: "landscape" },
+  { file: "2020-2.webp", year: "2020", width: 960, height: 1280, orientation: "portrait" },
+  { file: "2021-1.webp", year: "2021", width: 664, height: 1297, orientation: "portrait" },
+  { file: "2021-2.webp", year: "2021", width: 664, height: 1297, orientation: "portrait" },
+  { file: "2022-1.webp", year: "2022", width: 3468, height: 4624, orientation: "portrait" },
+  { file: "2022-1(1).webp", year: "2022", width: 3000, height: 4000, orientation: "portrait" },
+  { file: "2022-2.webp", year: "2022", width: 1200, height: 1600, orientation: "portrait" },
+  { file: "2022-4.webp", year: "2022", width: 640, height: 1324, orientation: "portrait" },
+  { file: "2023-1.webp", year: "2023", width: 3468, height: 4624, orientation: "portrait" },
+  { file: "2023-1(1).webp", year: "2023", width: 3468, height: 4624, orientation: "portrait" },
+  { file: "2023-2.webp", year: "2023", width: 3468, height: 4624, orientation: "portrait" },
+  { file: "2023-2(1).webp", year: "2023", width: 720, height: 1280, orientation: "portrait" },
+  { file: "2024-1.webp", year: "2024", width: 1280, height: 960, orientation: "landscape" },
+  { file: "2024-1(1).webp", year: "2024", width: 960, height: 1280, orientation: "portrait" },
+  { file: "2024-1(2).webp", year: "2024", width: 720, height: 1280, orientation: "portrait" },
+  { file: "2024-2.webp", year: "2024", width: 1600, height: 1200, orientation: "landscape" },
+  { file: "2024-3.webp", year: "2024", width: 1200, height: 1600, orientation: "portrait" },
+  { file: "2024-6.webp", year: "2024", width: 1280, height: 960, orientation: "landscape" },
+  { file: "2025-1.webp", year: "2025", width: 4032, height: 3024, orientation: "landscape" },
+  { file: "2025-2.webp", year: "2025", width: 960, height: 1280, orientation: "portrait" },
+  { file: "2025-2(1).webp", year: "2025", width: 1280, height: 853, orientation: "landscape" },
+  { file: "2026-1.webp", year: "2026", width: 2316, height: 3088, orientation: "portrait" },
+  { file: "2026-2.webp", year: "2026", width: 439, height: 589, orientation: "portrait" },
+  { file: "2026.webp", year: "2026", width: 4032, height: 3024, orientation: "landscape" },
+] satisfies Array<Omit<MemoryPhoto, "src" | "alt" | "caption"> & { file: string }>;
 
-    return { ...source, year, caption };
-  }),
-);
+const memoryPhotos: MemoryPhoto[] = galleryPhotos
+  .sort((a, b) => Number(a.year) - Number(b.year) || a.file.localeCompare(b.file, undefined, { numeric: true }))
+  .map((photo, index) => ({
+    src: `/images/story/gallery/${photo.file}`,
+    alt: `Luisa y Jhonnatan, recuerdo de ${photo.year}`,
+    year: photo.year,
+    caption: memoryCaptions[index % memoryCaptions.length],
+    width: photo.width,
+    height: photo.height,
+    orientation: photo.orientation,
+  }));
 
 const memoryYears = Array.from(new Set(memoryPhotos.map((photo) => photo.year)));
 
@@ -307,7 +328,7 @@ export default function MemoriesGallery() {
         >
           <motion.figure
             key={`memories-lightbox-card-${lightboxIndex}`}
-            className="memories-lightbox-card"
+            className={`memories-lightbox-card is-${memoryPhotos[lightboxIndex].orientation}`}
             initial={{ scale: 0.88, y: 22 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.92, y: 12 }}
@@ -396,7 +417,10 @@ export default function MemoriesGallery() {
 
       <div ref={stripRef} className="memories-strip" aria-label="Galeria de recuerdos">
         {memoryPhotos.map((photo, index) => (
-          <figure key={`${photo.year}-${index}`} className={`memories-card ${index === activeIndex ? "is-active" : ""}`}>
+          <figure
+            key={photo.src}
+            className={`memories-card is-${photo.orientation} ${index === activeIndex ? "is-active" : ""}`}
+          >
             <button
               type="button"
               className="memories-card-trigger"
