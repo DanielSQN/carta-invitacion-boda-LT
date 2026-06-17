@@ -7,7 +7,6 @@ import Image from "next/image";
 import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
-import LiveBanner from "../LiveBanner";
 import LiveStreamSection from "../LiveStreamSection";
 import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
@@ -718,7 +717,6 @@ export default function WeddingHeroSection() {
       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       aria-labelledby="wedding-hero-title"
     >
-      <LiveBanner />
       <HeroSection />
       <CountdownSection />
       <CelebrationSection />
