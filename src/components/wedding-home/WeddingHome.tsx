@@ -6,6 +6,7 @@ import { Music, VolumeX } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import LiveBanner from "../LiveBanner";
 import DecorativeText from "./DecorativeText";
 import Envelope from "./Envelope";
 import FloralCorners from "./FloralCorners";
@@ -670,6 +671,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       }
     >
       <audio ref={audioRef} src="/audio/song1.mp3" preload="none" loop />
+      <LiveBanner />
       {musicControl}
       {swipeDownControl}
 
