@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { blurData } from "@/lib/blur";
 import MemoriesGallery from "./MemoriesGallery";
 import SectionFrameDecor from "./SectionFrameDecor";
 import { createSectionReveal } from "./sectionFx";
@@ -119,7 +120,16 @@ export default function OurStorySection() {
     <section ref={sectionRef} className="story-section" aria-labelledby="story-title">
       <SectionFrameDecor variant="story" />
       <div ref={imageRef} className="story-bg" aria-hidden="true">
-        <Image src="/images/couple/_DSC0953.webp" alt="" fill sizes="100vw" quality={50} className="story-bg-image" />
+        <Image
+          src="/images/couple/_DSC0953.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={50}
+          placeholder="blur"
+          blurDataURL={blurData["couple/_DSC0953"]}
+          className="story-bg-image"
+        />
       </div>
       <div className="story-bg-overlay" aria-hidden="true" />
 

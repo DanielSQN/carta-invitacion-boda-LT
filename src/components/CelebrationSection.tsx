@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CalendarDays, Clock } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
+import { blurData } from "@/lib/blur";
 import SectionFrameDecor from "./SectionFrameDecor";
 import { createBgParallax } from "./sectionFx";
 
@@ -140,6 +141,8 @@ export default function CelebrationSection() {
           fill
           sizes="100vw"
           quality={50}
+          placeholder="blur"
+          blurDataURL={blurData["venues/lugar-celebracion"]}
           className="celebration-bg-image"
         />
       </div>
@@ -164,6 +167,8 @@ export default function CelebrationSection() {
                   alt="Hacienda Santa Elena"
                   fill
                   sizes="(max-width: 760px) 88vw, 26rem"
+                  placeholder="blur"
+                  blurDataURL={blurData["venues/hacienda_SH"]}
                   className="celebration-venue-photo"
                 />
               </span>

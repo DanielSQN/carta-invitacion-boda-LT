@@ -5109,3 +5109,63 @@ html.is-lightbox-open .music-control-button {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ===== Menú superior de navegación (aparece al pasar el hero) ===== */
+.section-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 82;
+  padding: calc(env(safe-area-inset-top) + 0.45rem) 0 0.5rem;
+  background: linear-gradient(180deg, rgba(7, 17, 31, 0.97), rgba(7, 17, 31, 0.85) 68%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translateY(-105%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.36s ease, opacity 0.36s ease;
+}
+
+.section-nav--visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.section-nav-list {
+  display: flex;
+  gap: 0.4rem;
+  width: 100%;
+  margin: 0;
+  padding: 0 0.85rem;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.section-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav-link {
+  white-space: nowrap;
+  padding: 0.42rem 0.9rem;
+  border: 1px solid rgba(143, 193, 233, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 253, 246, 0.05);
+  color: rgba(243, 237, 227, 0.82);
+  cursor: pointer;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.section-nav-link--active {
+  border-color: rgba(143, 193, 233, 0.7);
+  background: rgba(143, 193, 233, 0.16);
+  color: #fffaf1;
+}

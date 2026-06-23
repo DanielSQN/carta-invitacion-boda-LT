@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CalendarPlus } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { blurData } from "@/lib/blur";
 import SectionFrameDecor from "./SectionFrameDecor";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -132,6 +133,8 @@ export default function CountdownSection() {
           fill
           sizes="100vw"
           quality={50}
+          placeholder="blur"
+          blurDataURL={blurData["couple/_DSC0723"]}
           className="countdown-bg-image"
           priority={false}
         />

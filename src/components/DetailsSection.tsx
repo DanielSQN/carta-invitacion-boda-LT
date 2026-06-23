@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Check, Copy, Gift, Mail } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { blurData } from "@/lib/blur";
 import SectionFrameDecor from "./SectionFrameDecor";
 import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "./sectionFx";
 
@@ -94,7 +95,16 @@ export default function DetailsSection() {
     <section ref={sectionRef} className="details-section" aria-labelledby="details-title">
       <SectionFrameDecor variant="details" />
       <div ref={bgRef} className="details-bg" aria-hidden="true">
-        <Image src="/images/couple/_DSC1252.webp" alt="" fill sizes="100vw" quality={50} className="details-bg-image" />
+        <Image
+          src="/images/couple/_DSC1252.webp"
+          alt=""
+          fill
+          sizes="100vw"
+          quality={50}
+          placeholder="blur"
+          blurDataURL={blurData["couple/_DSC1252"]}
+          className="details-bg-image"
+        />
       </div>
       <div className="details-overlay" aria-hidden="true" />
 
