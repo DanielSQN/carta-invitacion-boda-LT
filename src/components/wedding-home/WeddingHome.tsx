@@ -46,13 +46,13 @@ function SwipeDownIcon() {
 function SwipeDownPrompt() {
   return (
     <div className="fixed-swipe-down-content">
-      <SwipeDownIcon />
-      <span>Desliza para continuar</span>
       <span className="fixed-swipe-rule" aria-hidden="true">
         <i />
         <b>♥</b>
         <i />
       </span>
+      <span>Desliza para continuar</span>
+      <SwipeDownIcon />
     </div>
   );
 }
