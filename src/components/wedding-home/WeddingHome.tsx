@@ -47,7 +47,7 @@ function SwipeDownPrompt() {
   return (
     <div className="fixed-swipe-down-content">
       <SwipeDownIcon />
-      <span>Confirmar asistencia</span>
+      <span>Desliza para continuar</span>
       <span className="fixed-swipe-rule" aria-hidden="true">
         <i />
         <b>♥</b>
