@@ -531,7 +531,13 @@ button {
 
 .hero-image {
   z-index: 1;
+  /* Respaldo WebP para navegadores sin image-set; los modernos toman el AVIF
+     (451 KB -> ~199 KB en la primera pantalla del hero). */
   background-image: url("/images/couple/couple-photo.webp?v=20260601-assets-2");
+  background-image: image-set(
+    url("/images/couple/couple-photo.avif?v=20260616") type("image/avif"),
+    url("/images/couple/couple-photo.webp?v=20260601-assets-2") type("image/webp")
+  );
   background-position: 52% 28%;
   background-size: cover;
   background-repeat: no-repeat;

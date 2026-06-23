@@ -22,7 +22,9 @@ const WeddingHeroSection = dynamic(() => import("../wedding-hero-section/Wedding
 // El resto de imagenes pasa por next/image, que sirve URLs optimizadas
 // distintas: precargar el archivo original lo descargaria dos veces.
 const preloadedInvitationAssets = [
-  "/images/couple/couple-photo.webp?v=20260601-assets-2",
+  // El hero usa AVIF vía image-set (con respaldo WebP); se precarga el AVIF, que
+  // es lo que descargan los navegadores modernos (evita malgastar el WebP).
+  "/images/couple/couple-photo.avif?v=20260616",
   "/images/paper/paper-texture.webp?v=20260525-wedding-home",
   "/images/paper/paper-texture-old.webp",
 ];
