@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 
 const assetVersion = "20260601-assets-1";
@@ -9,7 +9,7 @@ type WaxSealProps = {
 
 export default function WaxSeal({ isOpen }: WaxSealProps) {
   return (
-    <motion.div
+    <m.div
       className="wax-seal absolute left-1/2 top-[58.5%] z-[8] grid aspect-square place-items-center"
       initial={{ opacity: 0, scale: 0.72, x: "-50%", y: "calc(-50% + 8px)" }}
       animate={
@@ -29,6 +29,6 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
         priority
       />
       <span className="sr-only">L&amp;T</span>
-    </motion.div>
+    </m.div>
   );
 }

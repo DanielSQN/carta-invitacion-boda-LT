@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 export default function Verse() {
   return (
-    <motion.blockquote
+    <m.blockquote
       className="verse-block relative z-[3] mx-auto w-full text-center font-serif text-olive"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
@@ -22,6 +22,6 @@ export default function Verse() {
       <span className="verse-reference block font-semibold">
         &ndash; Colosenses 3:14 &ndash;
       </span>
-    </motion.blockquote>
+    </m.blockquote>
   );
 }

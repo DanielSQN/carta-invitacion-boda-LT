@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 import type { RefObject } from "react";
 import WaxSeal from "./WaxSeal";
@@ -13,7 +13,7 @@ type EnvelopeProps = {
 
 export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
   return (
-    <motion.button
+    <m.button
       type="button"
       className="envelope-button group relative z-[5] block cursor-pointer border-0 bg-transparent p-0 outline-none"
       data-open={isOpen ? "true" : "false"}
@@ -24,7 +24,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
       transition={{ delay: 0.45, duration: 0.78, ease: [0.18, 1, 0.28, 1] }}
       whileTap={isOpen ? undefined : { scale: 0.985 }}
     >
-      <motion.div
+      <m.div
         className="envelope-float relative aspect-[1186/829] w-full"
         animate={isOpen ? { y: -34, scale: 1.08 } : { y: [0, -5, 0] }}
         transition={
@@ -35,7 +35,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
       >
         <div className="envelope-shell envelope-ground-shadow absolute inset-x-[5%] bottom-[-10%] h-[34%]" />
 
-        <motion.div
+        <m.div
           ref={letterRef}
           className="envelope-letter-insert absolute left-1/2 top-[8%] z-[4] h-[78%] w-[77%] -translate-x-1/2 overflow-hidden rounded-sm"
           initial={false}
@@ -53,7 +53,7 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
             />
           </div>
           <div className="envelope-letter-wash" aria-hidden="true" />
-        </motion.div>
+        </m.div>
 
         <div className="envelope-shell absolute inset-0 z-[5]">
           <Image
@@ -66,17 +66,17 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
           />
         </div>
 
-        <motion.div
+        <m.div
           className="envelope-top-flap absolute left-[6%] top-[7%] z-[7] h-[47%] w-[88%]"
           initial={false}
           animate={isOpen ? { rotateX: -118, y: -8, opacity: 0.96 } : { rotateX: 0, y: 0, opacity: 0 }}
           transition={{ duration: 0.78, delay: isOpen ? 0.18 : 0, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="h-full w-full bg-[#fbf1dc] shadow-[inset_0_-10px_18px_rgba(123,91,52,0.08)]" />
-        </motion.div>
+        </m.div>
 
         <WaxSeal isOpen={isOpen} />
-      </motion.div>
-    </motion.button>
+      </m.div>
+    </m.button>
   );
 }

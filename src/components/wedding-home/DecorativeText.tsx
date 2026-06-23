@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 type DecorativeTextProps = {
   guestName: string;
@@ -6,7 +6,7 @@ type DecorativeTextProps = {
 
 export default function DecorativeText({ guestName }: DecorativeTextProps) {
   return (
-    <motion.header
+    <m.header
       className="decorative-text relative z-[3] w-full text-olive"
       initial={{ opacity: 0, y: 10, rotate: -7 }}
       animate={{ opacity: 1, y: 0, rotate: -7 }}
@@ -60,6 +60,6 @@ export default function DecorativeText({ guestName }: DecorativeTextProps) {
         </svg>
         <span className="h-px flex-1 bg-gradient-to-r from-soft-gold to-transparent" />
       </div>
-    </motion.header>
+    </m.header>
   );
 }

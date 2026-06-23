@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
 import gsap from "gsap";
 import { Music, VolumeX } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -624,7 +624,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const musicControl = (
     <AnimatePresence>
       {hasMusicStarted ? (
-        <motion.button
+        <m.button
           key="music-control"
           type="button"
           className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-white shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
@@ -637,7 +637,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           aria-pressed={isMusicPlaying}
         >
           <MusicToggleIcon isPlaying={isMusicPlaying} />
-        </motion.button>
+        </m.button>
       ) : null}
     </AnimatePresence>
   );
@@ -649,7 +649,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const swipeDownControl = (
     <AnimatePresence>
       {showSwipePrompt ? (
-        <motion.div
+        <m.div
           key="swipe-down"
           className="fixed-swipe-down"
           initial={{ opacity: 0, y: 18, scale: 0.92 }}
@@ -658,12 +658,13 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
         >
           <SwipeDownPrompt />
-        </motion.div>
+        </m.div>
       ) : null}
     </AnimatePresence>
   );
 
   return (
+    <LazyMotion features={domAnimation}>
     <main
       ref={mainRef}
       className={
@@ -672,7 +673,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
-      <audio ref={audioRef} src="/audio/song1.mp3" preload="none" loop />
+      <audio ref={audioRef} src="/audio/song1.mp3?v=20260616-64k" preload="none" loop />
       <LiveBanner />
       {showWeddingHero ? <SectionNav /> : null}
       {musicControl}
@@ -708,7 +709,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           </div>
           <FloralCorners />
 
-          <motion.section
+          <m.section
             ref={homeSceneRef}
             key="home"
             className="wedding-home-scene absolute inset-x-0 top-0 z-[3] mx-auto grid h-svh w-full px-6"
@@ -719,7 +720,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
               <Envelope isOpen={isEnvelopeOpen} letterRef={envelopeLetterRef} onOpen={openInvitation} />
 
               {!isEnvelopeOpen ? (
-                <motion.button
+                <m.button
                   type="button"
                   className="open-cta relative z-[7] grid place-items-center border-0 bg-transparent font-script leading-none text-olive outline-none"
                   onClick={openInvitation}
@@ -730,12 +731,12 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
                   aria-label="Clic para abrir"
                 >
                   <span>Clic para abrir</span>
-                </motion.button>
+                </m.button>
               ) : null}
             </div>
 
             <Verse />
-          </motion.section>
+          </m.section>
         </>
       )}
 
@@ -775,5 +776,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       ) : null}
 
     </main>
+    </LazyMotion>
   );
 }

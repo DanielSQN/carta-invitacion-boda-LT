@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 
 const assetVersion = "20260604-metal-blue";
@@ -6,7 +6,7 @@ const assetVersion = "20260604-metal-blue";
 export default function FloralCorners() {
   return (
     <div className="pointer-events-none absolute inset-0 z-[2] overflow-hidden" aria-hidden="true">
-      <motion.div
+      <m.div
         className="floral-corner floral-corner-top"
         initial={{ opacity: 0, x: 20, y: -16, scale: 0.96 }}
         animate={{ opacity: 0.42, x: 0, y: 0, scale: 1 }}
@@ -21,8 +21,8 @@ export default function FloralCorners() {
           quality={50}
           priority
         />
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         className="floral-corner floral-corner-bottom"
         initial={{ opacity: 0, x: -24, y: 22, scale: 0.96 }}
         animate={{ opacity: 0.36, x: 0, y: 0, scale: 1 }}
@@ -37,8 +37,8 @@ export default function FloralCorners() {
           quality={50}
           priority
         />
-      </motion.div>
-      <motion.div
+      </m.div>
+      <m.div
         className="floral-corner floral-corner-bottom-right"
         initial={{ opacity: 0, x: 22, y: 24, scale: 0.96 }}
         animate={{ opacity: 0.32, x: 0, y: 0, scale: 1 }}
@@ -53,7 +53,7 @@ export default function FloralCorners() {
           quality={50}
           priority
         />
-      </motion.div>
+      </m.div>
     </div>
   );
 }

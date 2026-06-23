@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { isLiveNow, YOUTUBE_LIVE_URL } from "./liveStream";
@@ -21,7 +21,7 @@ export default function LiveBanner() {
   const banner = (
     <AnimatePresence>
       {isLive && !dismissed ? (
-        <motion.div
+        <m.div
           className="live-banner"
           initial={{ y: "-100%" }}
           animate={{ y: 0 }}
@@ -47,7 +47,7 @@ export default function LiveBanner() {
           >
             ✕
           </button>
-        </motion.div>
+        </m.div>
       ) : null}
     </AnimatePresence>
   );

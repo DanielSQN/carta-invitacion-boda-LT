@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronLeft, ChevronRight, ChevronsRight, Hand, X } from "lucide-react";
@@ -314,7 +314,7 @@ export default function MemoriesGallery() {
   const lightbox = (
     <AnimatePresence>
       {lightboxIndex !== null ? (
-        <motion.div
+        <m.div
           key="memories-lightbox"
           className="memories-lightbox"
           role="dialog"
@@ -326,7 +326,7 @@ export default function MemoriesGallery() {
           transition={{ duration: 0.28, ease: "easeOut" }}
           onClick={() => setLightboxIndex(null)}
         >
-          <motion.figure
+          <m.figure
             key={`memories-lightbox-card-${lightboxIndex}`}
             className={`memories-lightbox-card is-${memoryPhotos[lightboxIndex].orientation}`}
             initial={{ scale: 0.88, y: 22 }}
@@ -366,7 +366,7 @@ export default function MemoriesGallery() {
             <figcaption>
               <strong>{memoryPhotos[lightboxIndex].caption}</strong>
             </figcaption>
-          </motion.figure>
+          </m.figure>
 
           <button type="button" className="memories-lightbox-close" onClick={() => setLightboxIndex(null)} aria-label="Cerrar foto">
             <X strokeWidth={2.2} />
@@ -374,7 +374,7 @@ export default function MemoriesGallery() {
 
           <AnimatePresence>
             {showSwipeCue ? (
-              <motion.div
+              <m.div
                 key="memories-lightbox-cue"
                 className="memories-lightbox-cue"
                 aria-hidden="true"
@@ -391,10 +391,10 @@ export default function MemoriesGallery() {
                   <ChevronRight className="memories-cue-arrow" strokeWidth={2.4} aria-hidden="true" />
                 </span>
                 <span className="memories-lightbox-cue-text">Desliza para cambiar de foto</span>
-              </motion.div>
+              </m.div>
             ) : null}
           </AnimatePresence>
-        </motion.div>
+        </m.div>
       ) : null}
     </AnimatePresence>
   );

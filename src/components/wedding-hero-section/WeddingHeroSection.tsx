@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import gsap from "gsap";
 import { CalendarPlus, Check, Heart, Pencil, User, Users } from "lucide-react";
 import Image from "next/image";
@@ -710,7 +710,7 @@ function AttendanceSection() {
 
 export default function WeddingHeroSection() {
   return (
-    <motion.div
+    <m.div
       className="paper-stack relative z-[8] mx-auto w-full bg-[#07111f] text-olive"
       initial={{ opacity: 1, scale: 1 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -725,6 +725,6 @@ export default function WeddingHeroSection() {
       <DetailsSection />
       <LiveStreamSection />
       <AttendanceSection />
-    </motion.div>
+    </m.div>
   );
 }
