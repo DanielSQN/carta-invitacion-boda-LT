@@ -117,7 +117,6 @@ export default function SectionNav() {
         tabIndex={visible ? 0 : -1}
       >
         {open ? <X strokeWidth={2} aria-hidden="true" /> : <Menu strokeWidth={2} aria-hidden="true" />}
-        <span>Secciones</span>
       </button>
 
       {open ? (
