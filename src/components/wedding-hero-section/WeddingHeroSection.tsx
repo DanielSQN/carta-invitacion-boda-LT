@@ -4,7 +4,8 @@ import { m } from "framer-motion";
 import gsap from "gsap";
 import { CalendarPlus, Check, Heart, Pencil, User, Users } from "lucide-react";
 import Image from "next/image";
-import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type CSSProperties, type FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
 import LiveStreamSection from "../LiveStreamSection";
@@ -63,6 +64,55 @@ function LaurelBranch({ className = "" }: { className?: string }) {
         />
       ))}
     </svg>
+  );
+}
+
+// Confeti celebratorio (CSS, sin librería) que se dispara una sola vez al
+// confirmar la asistencia. Posiciones/colores fijos por montaje.
+function ConfettiBurst() {
+  const [pieces] = useState(() =>
+    Array.from({ length: 48 }, (_, id) => ({
+      id,
+      left: Math.random() * 100,
+      delay: Math.random() * 0.8,
+      duration: 2.6 + Math.random() * 1.6,
+      drift: (Math.random() - 0.5) * 150,
+      rotate: (Math.random() - 0.5) * 720,
+      size: 0.85 + Math.random() * 0.9,
+      symbol: ["♥", "❀", "•", "♥"][Math.floor(Math.random() * 4)],
+      color: ["#e0566a", "#5f8fb4", "#c6a24f", "#fffaf1"][Math.floor(Math.random() * 4)],
+    })),
+  );
+
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  // Portal a <body> para que el confeti quede sobre todo y no lo recorte el
+  // overflow/stacking del contenedor de scroll del app-shell.
+  return createPortal(
+    <div className="rsvp-confetti" aria-hidden="true">
+      {pieces.map((piece) => (
+        <span
+          key={piece.id}
+          className="rsvp-confetti-piece"
+          style={
+            {
+              left: `${piece.left}%`,
+              color: piece.color,
+              fontSize: `${piece.size}rem`,
+              animationDelay: `${piece.delay}s`,
+              animationDuration: `${piece.duration}s`,
+              "--confetti-drift": `${piece.drift}px`,
+              "--confetti-rot": `${piece.rotate}deg`,
+            } as CSSProperties
+          }
+        >
+          {piece.symbol}
+        </span>
+      ))}
+    </div>,
+    document.body,
   );
 }
 
@@ -486,6 +536,7 @@ function AttendanceSection() {
 
         {showConfirmation ? (
           <div className="rsvp-done" data-reveal>
+            {status === "success" && attending ? <ConfettiBurst /> : null}
             <div className={`rsvp-done-badge${attending ? "" : " rsvp-done-badge--no"}`} role="status">
               <LaurelBranch className="rsvp-laurel--left" />
               <span className="rsvp-done-check" aria-hidden="true">

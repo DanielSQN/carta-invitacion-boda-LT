@@ -1,5 +1,6 @@
 "use client";
 
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 // Accesos rápidos a las secciones. El scroll vive en el contenedor fijo del
@@ -18,6 +19,7 @@ const NAV_ITEMS: Array<{ label: string; selector: string }> = [
 
 export default function SectionNav() {
   const [visible, setVisible] = useState(false);
+  const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
 
   useEffect(() => {
@@ -27,14 +29,20 @@ export default function SectionNav() {
       return;
     }
 
-    // Aparece al pasar el hero (más del ~65% del alto de pantalla).
-    const onScroll = () => setVisible(scroller.scrollTop > window.innerHeight * 0.65);
+    // El botón aparece al pasar el hero (más del ~65% del alto de pantalla).
+    // Al ocultarse (volver al hero) también se cierra el panel.
+    const onScroll = () => {
+      const show = scroller.scrollTop > window.innerHeight * 0.65;
+      setVisible(show);
+      if (!show) {
+        setOpen(false);
+      }
+    };
     onScroll();
     scroller.addEventListener("scroll", onScroll, { passive: true });
 
-    // El hero se carga de forma diferida, así que las secciones aparecen después
-    // de montarse este menú: se reintenta hasta que existan para conectar el
-    // observer que marca la sección activa (la que cruza el centro del viewport).
+    // El hero se carga de forma diferida: se reintenta hasta que existan las
+    // secciones para conectar el observer que marca la sección activa.
     let observer: IntersectionObserver | undefined;
     let raf = 0;
     let attempts = 0;
@@ -86,6 +94,8 @@ export default function SectionNav() {
     const scroller = document.querySelector<HTMLElement>(".details-scroll");
     const target = document.querySelector<HTMLElement>(selector);
 
+    setOpen(false);
+
     if (!scroller || !target) {
       return;
     }
@@ -97,21 +107,45 @@ export default function SectionNav() {
   };
 
   return (
-    <nav className={`section-nav${visible ? " section-nav--visible" : ""}`} aria-label="Secciones de la invitación" aria-hidden={!visible}>
-      <ul className="section-nav-list">
-        {NAV_ITEMS.map((item) => (
-          <li key={item.selector}>
-            <button
-              type="button"
-              className={`section-nav-link${active === item.selector ? " section-nav-link--active" : ""}`}
-              onClick={() => goTo(item.selector)}
-              tabIndex={visible ? 0 : -1}
-            >
-              {item.label}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <div className={`section-nav${visible ? " section-nav--visible" : ""}`}>
+      <button
+        type="button"
+        className="section-nav-toggle"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        aria-label={open ? "Cerrar menú de secciones" : "Abrir menú de secciones"}
+        tabIndex={visible ? 0 : -1}
+      >
+        {open ? <X strokeWidth={2} aria-hidden="true" /> : <Menu strokeWidth={2} aria-hidden="true" />}
+        <span>Secciones</span>
+      </button>
+
+      {open ? (
+        <>
+          <button
+            type="button"
+            className="section-nav-backdrop"
+            aria-label="Cerrar menú"
+            onClick={() => setOpen(false)}
+          />
+          <div className="section-nav-panel" role="menu" aria-label="Secciones de la invitación">
+            <ul>
+              {NAV_ITEMS.map((item) => (
+                <li key={item.selector}>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    className={`section-nav-item${active === item.selector ? " section-nav-item--active" : ""}`}
+                    onClick={() => goTo(item.selector)}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      ) : null}
+    </div>
   );
 }

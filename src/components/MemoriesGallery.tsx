@@ -7,12 +7,14 @@ import { ChevronLeft, ChevronRight, ChevronsRight, Hand, X } from "lucide-react"
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { galleryBlur } from "@/lib/galleryBlur";
 import { prefersReducedMotion } from "./sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 
 type MemoryPhoto = {
   src: string;
+  file: string;
   alt: string;
   year: string;
   caption: string;
@@ -80,6 +82,7 @@ const memoryPhotos: MemoryPhoto[] = galleryPhotos
   .sort((a, b) => Number(a.year) - Number(b.year) || a.file.localeCompare(b.file, undefined, { numeric: true }))
   .map((photo, index) => ({
     src: `/images/story/gallery/${photo.file}`,
+    file: photo.file,
     alt: `Luisa y Jhonnatan, recuerdo de ${photo.year}`,
     year: photo.year,
     caption: memoryCaptions[index % memoryCaptions.length],
@@ -360,6 +363,8 @@ export default function MemoriesGallery() {
                 alt={memoryPhotos[lightboxIndex].alt}
                 fill
                 sizes="92vw"
+                placeholder="blur"
+                blurDataURL={galleryBlur[memoryPhotos[lightboxIndex].file]}
                 className="memories-lightbox-image"
               />
             </span>
@@ -435,6 +440,8 @@ export default function MemoriesGallery() {
                   loading={index < 3 ? "eager" : "lazy"}
                   sizes="(max-width: 760px) 62vw, 18rem"
                   quality={60}
+                  placeholder="blur"
+                  blurDataURL={galleryBlur[photo.file]}
                   className="memories-photo"
                 />
               </span>
