@@ -101,14 +101,22 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   // [MVP revertible] Partículas blancas que cubren la foto al salir del sobre
   // y se dispersan al revelarla a pantalla completa. Posiciones/tamaños fijos.
-  const [revealParticles] = useState(() =>
-    Array.from({ length: 48 }, (_, id) => ({
+  // En equipos de pocos núcleos/memoria se reduce la cantidad: animar muchas a
+  // la vez es lo que más baja los FPS de la transición en celulares lentos.
+  const [revealParticles] = useState(() => {
+    const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency || 8 : 8;
+    const memory =
+      typeof navigator !== "undefined" ? (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 8 : 8;
+    const lowEnd = cores <= 4 || memory <= 4;
+    const count = lowEnd ? 16 : 48;
+
+    return Array.from({ length: count }, (_, id) => ({
       id,
       top: Math.random() * 100,
       left: Math.random() * 100,
       size: 1 + Math.random() * 3.2,
-    })),
-  );
+    }));
+  });
 
   useEffect(() => {
     const handleIntroComplete = () => setIsHeroIntroDone(true);
@@ -629,7 +637,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         <m.button
           key="music-control"
           type="button"
-          className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] right-4 z-[80] size-14 overflow-hidden rounded-full border border-[#f3ede3]/30 bg-[#07111f] p-0 text-white shadow-[0_0.85rem_1.8rem_rgba(7,17,31,0.32)] outline-none"
+          className="music-control-button fixed bottom-[calc(env(safe-area-inset-bottom)+1.1rem)] left-4 z-[80] grid size-[2.7rem] place-items-center overflow-hidden rounded-full p-0 outline-none"
           onClick={toggleMusic}
           initial={{ opacity: 0, y: 18, scale: 0.86 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
