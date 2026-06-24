@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { blurData } from "@/lib/blur";
+import { isLowEndDevice } from "@/lib/device";
 import LiveBanner from "../LiveBanner";
 import SectionNav from "../SectionNav";
 import DecorativeText from "./DecorativeText";
@@ -101,14 +102,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   // [MVP revertible] Partículas blancas que cubren la foto al salir del sobre
   // y se dispersan al revelarla a pantalla completa. Posiciones/tamaños fijos.
-  // En equipos de pocos núcleos/memoria se reduce la cantidad: animar muchas a
-  // la vez es lo que más baja los FPS de la transición en celulares lentos.
+  // En gama baja (modo lite) no se generan: la transición se simplifica.
   const [revealParticles] = useState(() => {
-    const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency || 8 : 8;
-    const memory =
-      typeof navigator !== "undefined" ? (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 8 : 8;
-    const lowEnd = cores <= 4 || memory <= 4;
-    const count = lowEnd ? 16 : 48;
+    const count = isLowEndDevice() ? 0 : 48;
 
     return Array.from({ length: count }, (_, id) => ({
       id,
@@ -124,6 +120,19 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     window.addEventListener("hero-intro-complete", handleIntroComplete);
 
     return () => window.removeEventListener("hero-intro-complete", handleIntroComplete);
+  }, []);
+
+  useEffect(() => {
+    // Modo lite en gama baja: marca el documento para que el CSS quite el
+    // backdrop-filter (desenfoque) de los controles flotantes, costoso en GPUs
+    // viejas.
+    if (!isLowEndDevice()) {
+      return;
+    }
+
+    document.documentElement.classList.add("lite-mode");
+
+    return () => document.documentElement.classList.remove("lite-mode");
   }, []);
 
   useEffect(() => {
@@ -234,7 +243,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // En gama baja se trata como "reducir movimiento": se omite la transición
+    // cinematográfica pesada (timeline + partículas) y se muestra el hero con un
+    // cambio simple, para que no baje los FPS.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isLowEndDevice();
 
     if (reduceMotion) {
       const timer = window.setTimeout(() => {

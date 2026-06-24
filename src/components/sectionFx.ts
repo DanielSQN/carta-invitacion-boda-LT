@@ -2,6 +2,7 @@
 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { isLowEndDevice } from "@/lib/device";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,7 +37,9 @@ export function createBgParallax(
     return;
   }
 
-  if (prefersReducedMotion()) {
+  // En gama baja (o con "reducir movimiento") el fondo queda estático: el
+  // parallax con scrub es de lo que más cuesta durante el scroll en GPUs viejas.
+  if (prefersReducedMotion() || isLowEndDevice()) {
     gsap.set(bg, { yPercent: 0, scale: 1 });
     return;
   }
