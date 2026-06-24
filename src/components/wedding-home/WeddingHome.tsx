@@ -751,7 +751,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
                   initial={{ opacity: 0, x: "7%", y: 12, rotate: -7 }}
                   animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
                   exit={{ opacity: 0, y: -8 }}
-                  transition={{ delay: 1.18, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{ delay: 0.55, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
                   aria-label="Clic para abrir"
                 >
                   <span>Clic para abrir</span>
