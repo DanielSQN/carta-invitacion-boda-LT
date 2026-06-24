@@ -18,18 +18,18 @@ const detailCards = [
   {
     icon: Gift,
     title: "Tu presencia",
-    text: "Compartir este día contigo es el regalo que más nos ilusiona",
-    wide: true,
-  },
-  {
-    title: "Opción virtual",
-    text: "Escanea el QR y transfiere desde tu celular",
-    qr: true,
+    text: "Tu compañía es el regalo que más nos ilusiona.",
   },
   {
     icon: Mail,
     title: "Lluvia de sobres",
-    text: "Tu cariño en un sobre, el día del evento",
+    text: "Tu cariño en un sobre, el día del evento.",
+  },
+  {
+    title: "Opción virtual",
+    text: "Escanea el QR y transfiere desde tu celular.",
+    qr: true,
+    wide: true,
   },
 ];
 
@@ -119,14 +119,18 @@ export default function DetailsSection() {
               {qr ? (
                 <>
                   <h3>{title}</h3>
-                  <div className="details-card-qr-block" aria-label="QR llave Bre-B">
-                    <Image className="details-card-qr-image" src={virtualQrSrc} alt="QR para transferencia" width={148} height={148} />
-                    <button className="details-card-qr-badge" type="button" onClick={copyBrebKey} aria-label="Copiar llave Bre-B @miBodaLT">
-                      {hasCopiedBrebKey ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
-                      {hasCopiedBrebKey ? "Copiado" : `Llave: ${brebKey}`}
-                    </button>
+                  <div className="details-qr-split">
+                    <div className="details-qr-col details-qr-col--left">
+                      <Image className="details-card-qr-image" src={virtualQrSrc} alt="QR para transferencia" width={148} height={148} />
+                    </div>
+                    <div className="details-qr-col details-qr-col--right">
+                      <button className="details-card-qr-badge" type="button" onClick={copyBrebKey} aria-label="Copiar llave Bre-B @miBodaLT">
+                        {hasCopiedBrebKey ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+                        {hasCopiedBrebKey ? "Copiado" : `Llave: ${brebKey}`}
+                      </button>
+                      <p>{text}</p>
+                    </div>
                   </div>
-                  <p>{text}</p>
                 </>
               ) : (
                 <>

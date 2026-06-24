@@ -5285,3 +5285,42 @@ html.is-lightbox-open .music-control-button {
 .lite-mode .section-nav-panel {
   background: #0a1424;
 }
+
+/* "Opción virtual": título arriba y debajo dos columnas (QR izquierda, textos
+   derecha). */
+.details-qr-split {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.5rem) 1fr;
+  align-items: center;
+  gap: clamp(0.85rem, 4vw, 1.5rem);
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.details-qr-col--left {
+  display: grid;
+  place-items: center;
+}
+
+.details-qr-col--left .details-card-qr-image {
+  max-width: 100%;
+  margin: 0;
+}
+
+.details-qr-col--right {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.details-qr-col--right .details-card-qr-badge {
+  width: 100%;
+  max-width: 13rem;
+}
+
+.details-qr-col--right p {
+  margin: 0;
+  text-align: left;
+}
