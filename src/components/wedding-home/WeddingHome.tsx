@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, domAnimation, LazyMotion, m } from "framer-motion";
+import { AnimatePresence, domMax, LazyMotion, m } from "framer-motion";
 import gsap from "gsap";
 import { Music, VolumeX } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -688,7 +688,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   );
 
   return (
-    <LazyMotion features={domAnimation}>
+    <LazyMotion features={domMax}>
     <main
       ref={mainRef}
       className={
