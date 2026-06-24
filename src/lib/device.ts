@@ -9,5 +9,9 @@ export function isLowEndDevice(): boolean {
   const cores = navigator.hardwareConcurrency || 8;
   const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory || 8;
 
-  return cores <= 4 || memory <= 4;
+  // Criterio conservador: solo equipos realmente débiles (pocos núcleos Y poca
+  // memoria). Muchos celulares normales tienen 4 núcleos o reportan 4 GB (el
+  // valor está limitado por privacidad), así que se exige que ambos sean bajos
+  // para no degradar la experiencia en gama media.
+  return cores <= 4 && memory <= 4;
 }

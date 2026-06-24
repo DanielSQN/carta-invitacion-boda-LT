@@ -102,9 +102,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
 
   // [MVP revertible] Partículas blancas que cubren la foto al salir del sobre
   // y se dispersan al revelarla a pantalla completa. Posiciones/tamaños fijos.
-  // En gama baja (modo lite) no se generan: la transición se simplifica.
+  // En gama baja se reducen (no se eliminan) para aligerar la transición sin
+  // perder el efecto de revelado.
   const [revealParticles] = useState(() => {
-    const count = isLowEndDevice() ? 0 : 48;
+    const count = isLowEndDevice() ? 14 : 48;
 
     return Array.from({ length: count }, (_, id) => ({
       id,
@@ -243,10 +244,11 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
-    // En gama baja se trata como "reducir movimiento": se omite la transición
-    // cinematográfica pesada (timeline + partículas) y se muestra el hero con un
-    // cambio simple, para que no baje los FPS.
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches || isLowEndDevice();
+    // La transición cinematográfica del sobre (la foto que sale y llena la
+    // pantalla) SIEMPRE debe reproducirse; solo se omite si el usuario activó
+    // "reducir movimiento" en su sistema. En gama baja se aligera reduciendo las
+    // partículas (ver revealParticles), no quitando la animación.
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion) {
       const timer = window.setTimeout(() => {
