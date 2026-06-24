@@ -5324,3 +5324,33 @@ html.is-lightbox-open .music-control-button {
   margin: 0;
   text-align: left;
 }
+
+/* Iconos de las tarjetas de detalles con un balanceo sutil */
+.details-card-icon {
+  animation: details-icon-float 3.4s ease-in-out infinite;
+  transform-origin: 50% 80%;
+}
+
+.details-info-card:nth-child(2) .details-card-icon {
+  animation-delay: 0.7s;
+}
+
+@keyframes details-icon-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-0.3rem) rotate(-3.5deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .details-card-icon {
+    animation: none;
+  }
+}
+
+.lite-mode .details-card-icon {
+  animation: none;
+}

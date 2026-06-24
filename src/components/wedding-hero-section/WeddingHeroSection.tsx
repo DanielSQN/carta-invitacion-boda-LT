@@ -74,7 +74,7 @@ function ConfettiBurst({ mood = "happy" }: { mood?: "happy" | "sad" }) {
   const [pieces] = useState(() => {
     const sad = mood === "sad";
     const symbols = sad
-      ? ["😢", "🥺", "💔", "💧", "🤍"]
+      ? ["🥹", "🥺", "💍", "🤍", "💙"]
       : ["🎉", "🎊", "✨", "❤️", "💛", "♥", "❀"];
     const colors = ["#e0566a", "#5f8fb4", "#c6a24f", "#fffaf1"];
     const count = sad ? 30 : 54;

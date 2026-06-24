@@ -18,12 +18,14 @@ const detailCards = [
   {
     icon: Gift,
     title: "Tu presencia",
-    text: "Tu compañía es el regalo que más nos ilusiona.",
+    text: "Más que cualquier obsequio, lo que de verdad anhelamos es tenerte a nuestro lado. Tu presencia es, sin duda, el regalo más grande que podríamos recibir.",
+    wide: true,
   },
   {
     icon: Mail,
     title: "Lluvia de sobres",
-    text: "Tu cariño en un sobre, el día del evento.",
+    text: "Tu compañía ya lo es todo para nosotros. Si además deseas darnos un detalle, una lluvia de sobres el día del evento la recibiremos con el corazón.",
+    wide: true,
   },
   {
     title: "Opción virtual",
