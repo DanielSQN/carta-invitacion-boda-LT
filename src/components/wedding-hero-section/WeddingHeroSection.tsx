@@ -67,22 +67,28 @@ function LaurelBranch({ className = "" }: { className?: string }) {
   );
 }
 
-// Confeti celebratorio (CSS, sin librería) que se dispara una sola vez al
-// confirmar la asistencia. Posiciones/colores fijos por montaje.
-function ConfettiBurst() {
-  const [pieces] = useState(() =>
-    Array.from({ length: 48 }, (_, id) => ({
+// Confeti que se dispara una sola vez al enviar el RSVP. "happy" (corazones de
+// colores) al confirmar asistencia; "sad" (emojis tristes, caída más lenta y
+// suave) cuando la persona indica que no podrá asistir.
+function ConfettiBurst({ mood = "happy" }: { mood?: "happy" | "sad" }) {
+  const [pieces] = useState(() => {
+    const sad = mood === "sad";
+    const symbols = sad ? ["😢", "🥺", "💔", "💧", "🤍"] : ["♥", "❀", "•", "♥"];
+    const colors = ["#e0566a", "#5f8fb4", "#c6a24f", "#fffaf1"];
+    const count = sad ? 30 : 48;
+
+    return Array.from({ length: count }, (_, id) => ({
       id,
       left: Math.random() * 100,
-      delay: Math.random() * 0.8,
-      duration: 2.6 + Math.random() * 1.6,
-      drift: (Math.random() - 0.5) * 150,
-      rotate: (Math.random() - 0.5) * 720,
-      size: 0.85 + Math.random() * 0.9,
-      symbol: ["♥", "❀", "•", "♥"][Math.floor(Math.random() * 4)],
-      color: ["#e0566a", "#5f8fb4", "#c6a24f", "#fffaf1"][Math.floor(Math.random() * 4)],
-    })),
-  );
+      delay: Math.random() * (sad ? 1 : 0.8),
+      duration: (sad ? 3.4 : 2.6) + Math.random() * 1.6,
+      drift: (Math.random() - 0.5) * (sad ? 70 : 150),
+      rotate: (Math.random() - 0.5) * (sad ? 160 : 720),
+      size: (sad ? 1.1 : 0.85) + Math.random() * 0.9,
+      symbol: symbols[Math.floor(Math.random() * symbols.length)],
+      color: colors[Math.floor(Math.random() * colors.length)],
+    }));
+  });
 
   if (typeof document === "undefined") {
     return null;
@@ -536,7 +542,7 @@ function AttendanceSection() {
 
         {showConfirmation ? (
           <div className="rsvp-done" data-reveal>
-            {status === "success" && attending ? <ConfettiBurst /> : null}
+            {status === "success" ? <ConfettiBurst mood={attending ? "happy" : "sad"} /> : null}
             <div className={`rsvp-done-badge${attending ? "" : " rsvp-done-badge--no"}`} role="status">
               <LaurelBranch className="rsvp-laurel--left" />
               <span className="rsvp-done-check" aria-hidden="true">
