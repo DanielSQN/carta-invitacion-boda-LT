@@ -17,7 +17,7 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
           ? { opacity: 0, scale: 0.35, x: "-50%", y: "calc(-50% - 8px)" }
           : { opacity: 1, scale: 1, x: "-50%", y: "-50%" }
       }
-      transition={{ delay: isOpen ? 0 : 1.18, duration: isOpen ? 0.42 : 0.58, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ delay: isOpen ? 0 : 0.7, duration: isOpen ? 0.42 : 0.58, ease: [0.22, 1, 0.36, 1] }}
       aria-hidden="true"
     >
       <Image

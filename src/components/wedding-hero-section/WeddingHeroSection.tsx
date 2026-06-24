@@ -82,8 +82,9 @@ function ConfettiBurst({ mood = "happy" }: { mood?: "happy" | "sad" }) {
     return Array.from({ length: count }, (_, id) => ({
       id,
       left: Math.random() * 100,
-      delay: Math.random() * (sad ? 1 : 0.8),
-      duration: (sad ? 3.4 : 2.6) + Math.random() * 1.6,
+      // Misma caída lenta para "sí" y "no".
+      delay: Math.random() * 1,
+      duration: 3.4 + Math.random() * 1.6,
       drift: (Math.random() - 0.5) * (sad ? 70 : 150),
       rotate: (Math.random() - 0.5) * (sad ? 160 : 720),
       size: (sad ? 1.1 : 0.85) + Math.random() * 0.9,
