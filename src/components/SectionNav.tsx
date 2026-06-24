@@ -29,13 +29,12 @@ export default function SectionNav() {
       return;
     }
 
-    // El botón aparece al pasar el hero (más del ~65% del alto de pantalla).
-    // Al ocultarse (volver al hero) también se cierra el panel.
+    // El botón aparece al pasar el hero (más del ~65% del alto de pantalla) y,
+    // una vez visible, ya no se vuelve a ocultar (se deja de escuchar el scroll).
     const onScroll = () => {
-      const show = scroller.scrollTop > window.innerHeight * 0.65;
-      setVisible(show);
-      if (!show) {
-        setOpen(false);
+      if (scroller.scrollTop > window.innerHeight * 0.65) {
+        setVisible(true);
+        scroller.removeEventListener("scroll", onScroll);
       }
     };
     onScroll();
