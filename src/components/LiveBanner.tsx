@@ -3,7 +3,7 @@
 import { AnimatePresence, m } from "framer-motion";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { isLiveNow, YOUTUBE_LIVE_URL } from "./liveStream";
+import { isLiveNow, YOUTUBE_LIVE_URL } from "@/lib/liveStream";
 import YouTubeIcon from "./YouTubeIcon";
 
 export default function LiveBanner() {

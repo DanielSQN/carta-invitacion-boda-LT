@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 import { blurData } from "@/lib/blur";
 import MemoriesGallery from "./MemoriesGallery";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createSectionReveal } from "./sectionFx";
+import { createSectionReveal } from "@/lib/sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 

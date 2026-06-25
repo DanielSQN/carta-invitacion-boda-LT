@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { blurData } from "@/lib/blur";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "./sectionFx";
+import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "@/lib/sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 

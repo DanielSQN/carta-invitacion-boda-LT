@@ -13,7 +13,7 @@ import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
 import OurStorySection from "../OurStorySection";
-import { createSectionReveal, getSectionScroller } from "../sectionFx";
+import { createSectionReveal, getSectionScroller } from "@/lib/sectionFx";
 
 function EditorialRule({ className = "" }: { className?: string }) {
   return (

@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { galleryBlur } from "@/lib/galleryBlur";
-import { prefersReducedMotion } from "./sectionFx";
+import { prefersReducedMotion } from "@/lib/sectionFx";
 
 gsap.registerPlugin(ScrollTrigger);
 

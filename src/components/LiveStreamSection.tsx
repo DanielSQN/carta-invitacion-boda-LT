@@ -4,8 +4,8 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
 import SectionFrameDecor from "./SectionFrameDecor";
-import { createSectionReveal } from "./sectionFx";
-import { isLiveNow, YOUTUBE_LIVE_URL } from "./liveStream";
+import { createSectionReveal } from "@/lib/sectionFx";
+import { isLiveNow, YOUTUBE_LIVE_URL } from "@/lib/liveStream";
 import YouTubeIcon from "./YouTubeIcon";
 
 gsap.registerPlugin(ScrollTrigger);
