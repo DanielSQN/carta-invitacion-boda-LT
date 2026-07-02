@@ -26,7 +26,6 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
         alt=""
         fill
         sizes="108px"
-        priority
       />
       <span className="sr-only">L&amp;T</span>
     </m.div>

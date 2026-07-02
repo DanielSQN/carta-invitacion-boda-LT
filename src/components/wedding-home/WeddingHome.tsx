@@ -244,10 +244,17 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, []);
 
   useEffect(() => {
-    // Precarga del chunk del hero: al primer toque en pantalla (garantiza que
-    // esté listo aunque abran el sobre rápido en una red lenta), con el timer
-    // de 1.6s como respaldo para quien no toca nada.
-    const preloadHero = () => void import("../wedding-hero-section/WeddingHeroSection");
+    // Precarga al primer toque en pantalla: el chunk del hero (garantiza que
+    // esté listo aunque abran el sobre rápido en una red lenta) y el buffer del
+    // audio (preload none -> auto), para que la música arranque sin espera al
+    // abrir. El timer de 1.6s queda de respaldo para quien no toca nada.
+    const preloadHero = () => {
+      void import("../wedding-hero-section/WeddingHeroSection");
+
+      if (audioRef.current) {
+        audioRef.current.preload = "auto";
+      }
+    };
     const timer = window.setTimeout(preloadHero, 1600);
 
     window.addEventListener("pointerdown", preloadHero, { once: true, passive: true });
@@ -277,8 +284,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return () => window.clearTimeout(timer);
     }
 
-    let timeline: gsap.core.Timeline | undefined;
-
     const ctx = gsap.context(() => {
       const cardGeometry = {
         centeredHeight: 0,
@@ -305,7 +310,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       gsap.set(".hero-transition-black", { opacity: 1 });
       gsap.set(".hero-transition-particle", { opacity: 0, scale: 0.6 });
 
-      timeline = gsap
+      gsap
         .timeline({
           defaults: { ease: "power3.inOut" },
           onComplete: () => {
@@ -456,19 +461,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         );
     });
 
-    // Tap para saltar: durante la transición, un toque acelera la timeline
-    // (x7) hasta el hero. Se arma con retraso para que el mismo tap que abrió
-    // el sobre no la dispare.
-    const skipTransition = () => timeline?.timeScale(7);
-    const armSkip = window.setTimeout(() => {
-      document.addEventListener("pointerdown", skipTransition, { passive: true });
-    }, 450);
-
-    return () => {
-      window.clearTimeout(armSkip);
-      document.removeEventListener("pointerdown", skipTransition);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, [isEnvelopeOpen]);
 
   useEffect(() => {

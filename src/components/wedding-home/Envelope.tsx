@@ -43,11 +43,13 @@ export default function Envelope({ isOpen, letterRef, onOpen }: EnvelopeProps) {
           transition={{ duration: 1.08, delay: isOpen ? 0.26 : 0, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="relative h-full w-full overflow-hidden rounded-sm">
+            {/* Oculta detrás del sobre hasta abrir: lazy por defecto (está en
+                viewport, así que carga un instante después del primer paint)
+                para no competir con el LCP (textura + sobre). */}
             <Image
               src="/images/couple/couple-photo.webp?v=20260601-assets-2"
               alt=""
               fill
-              priority
               sizes="(max-width: 430px) 58vw, 245px"
               className="hero-transition-image object-cover"
             />

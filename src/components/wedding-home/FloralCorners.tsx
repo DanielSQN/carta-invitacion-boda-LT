@@ -19,7 +19,6 @@ export default function FloralCorners() {
           height={760}
           sizes="(max-width: 480px) 74vw, 320px"
           quality={50}
-          priority
         />
       </m.div>
       <m.div
@@ -35,7 +34,6 @@ export default function FloralCorners() {
           height={760}
           sizes="(max-width: 480px) 60vw, 280px"
           quality={50}
-          priority
         />
       </m.div>
       <m.div
@@ -51,7 +49,6 @@ export default function FloralCorners() {
           height={760}
           sizes="(max-width: 480px) 42vw, 205px"
           quality={50}
-          priority
         />
       </m.div>
     </div>
