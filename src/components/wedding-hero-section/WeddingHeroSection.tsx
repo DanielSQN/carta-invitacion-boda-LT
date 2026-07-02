@@ -167,8 +167,8 @@ function HeroSection() {
       gsap.to(contentRef.current, {
         opacity: 1,
         y: 0,
-        delay: 0.18,
-        duration: 1.15,
+        delay: 0.1,
+        duration: 0.9,
         ease: "power3.out",
       });
 
@@ -192,14 +192,16 @@ function HeroSection() {
         });
       };
 
+      // Intro compacto (~3.3s): mismo orden y efecto máquina de escribir, con
+      // tipeo más ágil y menos pausas entre pasos.
       gsap
-        .timeline({ delay: 0.45 })
-        .fromTo(introRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.72, ease: "power2.out" })
+        .timeline({ delay: 0.25 })
+        .fromTo(introRef.current, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" })
         .set(cursorRef.current, { opacity: 1 }, ">-0.08")
-        .add(typeText(luisaRef.current, "Luisa", 0.82), ">")
-        .fromTo(ampRef.current, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.48, ease: "power2.out" }, ">+0.16")
-        .add(typeText(jhonnatanRef.current, "Jhonnatan", 1.15), ">+0.14")
-        .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.78, ease: "power2.out" }, ">+0.18")
+        .add(typeText(luisaRef.current, "Luisa", 0.55), ">")
+        .fromTo(ampRef.current, { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.36, ease: "power2.out" }, ">+0.08")
+        .add(typeText(jhonnatanRef.current, "Jhonnatan", 0.75), ">+0.08")
+        .fromTo(dateRef.current, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, ">+0.08")
         .call(() => window.dispatchEvent(new Event("hero-intro-complete")), [], ">+0.05")
         .to(cursorRef.current, { opacity: 0.18, duration: 0.72, repeat: -1, yoyo: true, ease: "sine.inOut" }, ">");
 

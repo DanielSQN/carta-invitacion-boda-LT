@@ -6,7 +6,6 @@ import { Music, VolumeX } from "lucide-react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { blurData } from "@/lib/blur";
 import { isLowEndDevice } from "@/lib/device";
 import LiveBanner from "../LiveBanner";
 import SectionNav from "../SectionNav";
@@ -124,6 +123,19 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, []);
 
   useEffect(() => {
+    // El indicador "Desliza para continuar" no espera a que termine toda la
+    // máquina de escribir del hero: aparece poco después de montarse el hero
+    // (el evento hero-intro-complete sigue siendo el otro disparador).
+    if (!showWeddingHero) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => setIsHeroIntroDone(true), 1400);
+
+    return () => window.clearTimeout(timer);
+  }, [showWeddingHero]);
+
+  useEffect(() => {
     // Modo lite en gama baja: marca el documento para que el CSS quite el
     // backdrop-filter (desenfoque) de los controles flotantes, costoso en GPUs
     // viejas.
@@ -232,11 +244,18 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      void import("../wedding-hero-section/WeddingHeroSection");
-    }, 1600);
+    // Precarga del chunk del hero: al primer toque en pantalla (garantiza que
+    // esté listo aunque abran el sobre rápido en una red lenta), con el timer
+    // de 1.6s como respaldo para quien no toca nada.
+    const preloadHero = () => void import("../wedding-hero-section/WeddingHeroSection");
+    const timer = window.setTimeout(preloadHero, 1600);
 
-    return () => window.clearTimeout(timer);
+    window.addEventListener("pointerdown", preloadHero, { once: true, passive: true });
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("pointerdown", preloadHero);
+    };
   }, []);
 
   useEffect(() => {
@@ -257,6 +276,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       }, 460);
       return () => window.clearTimeout(timer);
     }
+
+    let timeline: gsap.core.Timeline | undefined;
 
     const ctx = gsap.context(() => {
       const cardGeometry = {
@@ -284,7 +305,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       gsap.set(".hero-transition-black", { opacity: 1 });
       gsap.set(".hero-transition-particle", { opacity: 0, scale: 0.6 });
 
-      gsap
+      timeline = gsap
         .timeline({
           defaults: { ease: "power3.inOut" },
           onComplete: () => {
@@ -303,7 +324,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         .to(homeSceneRef.current, { duration: 0.42, opacity: 0.98, scale: 0.996 }, 0)
         // el sobre se va desvaneciendo mientras la carta termina de salir
         // (despues de que el flap termina su animacion de framer ~0.96s)
-        .to(".envelope-shell, .envelope-top-flap", { autoAlpha: 0, duration: 0.55, ease: "sine.inOut" }, 0.98)
+        .to(".envelope-shell, .envelope-top-flap", { autoAlpha: 0, duration: 0.5, ease: "sine.inOut" }, 0.95)
         .call(
           () => {
             const viewportWidth = window.innerWidth;
@@ -361,15 +382,15 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             gsap.set(envelopeLetterRef.current, { opacity: 1 });
           },
           [],
-          1.48,
+          1.42,
         )
-        .to(envelopeLetterRef.current, { autoAlpha: 0, duration: 0.04, ease: "sine.out" }, 1.5)
-        .to(homeSceneRef.current, { duration: 0.6, opacity: 0, y: -10, ease: "sine.inOut" }, 1.5)
+        .to(envelopeLetterRef.current, { autoAlpha: 0, duration: 0.04, ease: "sine.out" }, 1.44)
+        .to(homeSceneRef.current, { duration: 0.55, opacity: 0, y: -10, ease: "sine.inOut" }, 1.44)
         .to(
           transitionCardRef.current,
           {
             boxShadow: "0 1.25rem 2.6rem rgba(28, 25, 18, 0.28)",
-            duration: 0.72,
+            duration: 0.58,
             height: () => cardGeometry.centeredHeight,
             left: () => cardGeometry.centeredLeft,
             rotation: 0,
@@ -381,7 +402,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             x: 0,
             y: 0,
           },
-          1.72,
+          1.5,
         )
         .to(
           transitionCardRef.current,
@@ -389,7 +410,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             "--photo-frame": "0rem",
             "--photo-frame-bottom": "0rem",
             borderRadius: 0,
-            duration: 1.14,
+            duration: 0.95,
             height: "100svh",
             left: 0,
             padding: 0,
@@ -402,7 +423,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             x: 0,
             y: 0,
           },
-          2.32,
+          2.0,
         )
         // Las partículas aparecen al salir del sobre (titilan al frente)...
         .to(
@@ -414,12 +435,12 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             ease: "power1.out",
             stagger: { each: 0.012, from: "random" },
           },
-          1.5,
+          1.44,
         )
         // ...aguantan durante el centrado y, al disparar el zoom a pantalla
         // completa, el negro se disuelve y las partículas se dispersan para
         // "revelar" la foto (el revelado va sincronizado con el zoom).
-        .to(".hero-transition-black", { opacity: 0, duration: 1.3, ease: "power2.inOut" }, 2.28)
+        .to(".hero-transition-black", { opacity: 0, duration: 1.05, ease: "power2.inOut" }, 1.96)
         .to(
           ".hero-transition-particle",
           {
@@ -427,15 +448,27 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             scale: "random(1.4, 2.6)",
             x: "random(-70, 70)",
             y: "random(-90, 50)",
-            duration: 1.15,
+            duration: 1.0,
             ease: "power2.out",
             stagger: { each: 0.006, from: "center" },
           },
-          2.34,
+          2.02,
         );
     });
 
-    return () => ctx.revert();
+    // Tap para saltar: durante la transición, un toque acelera la timeline
+    // (x7) hasta el hero. Se arma con retraso para que el mismo tap que abrió
+    // el sobre no la dispare.
+    const skipTransition = () => timeline?.timeScale(7);
+    const armSkip = window.setTimeout(() => {
+      document.addEventListener("pointerdown", skipTransition, { passive: true });
+    }, 450);
+
+    return () => {
+      window.clearTimeout(armSkip);
+      document.removeEventListener("pointerdown", skipTransition);
+      ctx.revert();
+    };
   }, [isEnvelopeOpen]);
 
   useEffect(() => {
@@ -608,12 +641,15 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       const audio = audioRef.current;
 
       if (audio) {
-        audio.volume = 0.58;
+        // Fade-in: la música entra desde silencio hasta su volumen normal,
+        // acompañando la apertura del sobre en vez de arrancar de golpe.
+        audio.volume = 0;
         audio
           .play()
           .then(() => {
             setHasMusicStarted(true);
             setIsMusicPlaying(true);
+            gsap.to(audio, { volume: 0.58, duration: 1.8, ease: "sine.out" });
           })
           .catch(() => {
             setHasMusicStarted(true);
@@ -631,6 +667,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     }
 
     if (audio.paused) {
+      // Restaura el volumen por si el fade-in inicial quedó a medias.
+      gsap.killTweensOf(audio);
+      audio.volume = 0.58;
       audio
         .play()
         .then(() => {
@@ -767,17 +806,18 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       {isHeroTransitioning ? (
         <div ref={transitionCardRef} className="hero-transition-card" aria-hidden="true">
           <div className="hero-transition-photo">
-            <Image
-              src="/images/couple/couple-photo.webp?v=20260601-assets-2"
-              alt=""
-              fill
-              sizes="100vw"
-              quality={60}
-              placeholder="blur"
-              blurDataURL={blurData["couple/couple-photo"]}
-              className="hero-transition-image object-cover"
-              priority
-            />
+            {/* Misma fuente (AVIF + respaldo WebP) que el fondo CSS del hero:
+                una sola descarga para la transición y el hero, sin costura en
+                el intercambio card -> hero. El AVIF ya se precarga al inicio. */}
+            <picture>
+              <source srcSet="/images/couple/couple-photo.avif?v=20260616" type="image/avif" />
+              <img
+                src="/images/couple/couple-photo.webp?v=20260601-assets-2"
+                alt=""
+                decoding="async"
+                className="hero-transition-image object-cover"
+              />
+            </picture>
             <div className="hero-transition-reveal">
               <div className="hero-transition-black" />
               <div className="hero-transition-particles">
