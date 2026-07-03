@@ -13,7 +13,6 @@ const NAV_ITEMS: Array<{ label: string; selector: string }> = [
   { label: "Nuestra historia", selector: ".story-section" },
   { label: "Vestimenta", selector: ".dress-section" },
   { label: "Detalles", selector: ".details-section" },
-  { label: "En vivo", selector: ".live-section" },
   { label: "Confirmar", selector: ".attendance-section" },
 ];
 

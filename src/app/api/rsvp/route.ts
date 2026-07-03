@@ -1,3 +1,4 @@
+import { getInvitationByLabel } from "@/lib/invitations";
 import { getRsvpByInvitation, insertRsvp, isSupabaseConfigured, type RsvpInput } from "@/lib/rsvp";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +46,23 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, persisted: false }, { headers: noStoreHeaders });
   }
 
+  // Cupo por invitación: si el "para" tiene guests_planned asignado, el número
+  // de asistentes se limita en el servidor (el formulario ya lo limita en la
+  // interfaz, esto evita saltárselo).
+  if (attending && invitedAs) {
+    try {
+      const invitation = await getInvitationByLabel(invitedAs);
+      const allowed = invitation?.guestsPlanned ?? null;
+
+      if (allowed && allowed > 0) {
+        payload.guestCount = Math.min(payload.guestCount, allowed);
+        payload.names = payload.names.slice(0, allowed);
+      }
+    } catch (error) {
+      console.warn("[rsvp] no se pudo verificar el cupo de la invitación:", error);
+    }
+  }
+
   try {
     await insertRsvp(payload);
     return Response.json({ ok: true, persisted: true }, { headers: noStoreHeaders });
@@ -68,7 +86,17 @@ export async function GET(request: Request) {
 
   try {
     const rsvp = await getRsvpByInvitation(invitedAs);
-    return Response.json({ ok: true, persisted: true, rsvp }, { headers: noStoreHeaders });
+
+    // Cupo de acompañantes asignado a esta invitación (si existe en el panel).
+    let allowedGuests: number | null = null;
+    try {
+      const invitation = await getInvitationByLabel(invitedAs);
+      allowedGuests = invitation?.guestsPlanned ?? null;
+    } catch (error) {
+      console.warn("[rsvp] no se pudo leer el cupo de la invitación:", error);
+    }
+
+    return Response.json({ ok: true, persisted: true, rsvp, allowedGuests }, { headers: noStoreHeaders });
   } catch (error) {
     console.error("[rsvp] error al leer:", error);
     return Response.json({ ok: false, error: "No se pudo leer" }, { status: 500, headers: noStoreHeaders });

@@ -62,6 +62,45 @@ export async function listInvitations(): Promise<InvitationRecord[]> {
   }));
 }
 
+// Busca una invitación por su "para" (label), sin distinguir mayúsculas.
+// Se usa para conocer el cupo de acompañantes (guests_planned) del invitado.
+export async function getInvitationByLabel(label: string): Promise<InvitationRecord | null> {
+  if (!isInvitationsAvailable() || !label.trim()) {
+    return null;
+  }
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/${TABLE}?select=id,created_at,label,guests_planned,notes&label=ilike.${encodeURIComponent(label.trim())}&limit=1`,
+    { headers: restHeaders(), cache: "no-store" },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Error leyendo invitación (${response.status})`);
+  }
+
+  const rows = (await response.json()) as Array<{
+    id: string;
+    created_at: string;
+    label: string;
+    guests_planned: number | null;
+    notes: string | null;
+  }>;
+
+  const row = rows[0];
+
+  if (!row) {
+    return null;
+  }
+
+  return {
+    id: row.id,
+    created_at: row.created_at,
+    label: row.label,
+    guestsPlanned: row.guests_planned,
+    notes: row.notes,
+  };
+}
+
 // Inserta (o ignora duplicados por label) un lote de invitaciones.
 export async function upsertInvitations(inputs: InvitationInput[]): Promise<void> {
   if (!isInvitationsAvailable() || inputs.length === 0) {

@@ -8,7 +8,6 @@ import { type CSSProperties, type FormEvent, useCallback, useEffect, useRef, use
 import { createPortal } from "react-dom";
 import CelebrationSection from "../CelebrationSection";
 import CountdownSection from "../CountdownSection";
-import LiveStreamSection from "../LiveStreamSection";
 import SectionFrameDecor from "../SectionFrameDecor";
 import DetailsSection from "../DetailsSection";
 import DressCodeSection from "../DressCodeSection";
@@ -280,6 +279,7 @@ type RsvpLookupResponse = {
   ok: boolean;
   persisted?: boolean;
   rsvp?: SavedRsvp | null;
+  allowedGuests?: number | null;
 };
 
 function getInvitationParam(): string | null {
@@ -313,9 +313,21 @@ function AttendanceSection() {
   const [editing, setEditing] = useState(false);
   const [calendarHref, setCalendarHref] = useState(googleCalendarUrl);
   const [isIcsCalendar, setIsIcsCalendar] = useState(false);
+  // Cupo de acompañantes de esta invitación (guests_planned del panel de
+  // invitados). 6 por defecto mientras no se conozca el cupo asignado.
+  const [maxGuests, setMaxGuests] = useState(6);
+  const maxGuestsRef = useRef(6);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
+
+  const applyGuestLimit = useCallback((allowed: number) => {
+    const cap = Math.min(Math.max(Math.round(allowed), 1), 12);
+    maxGuestsRef.current = cap;
+    setMaxGuests(cap);
+    setGuestCount((count) => Math.min(count, cap));
+    setGuestNames((names) => (names.length > cap ? names.slice(0, cap) : names));
+  }, []);
 
   const applySavedRsvp = useCallback((data: SavedRsvp) => {
     const names = Array.isArray(data.names) ? data.names.map((name) => name.trim()).filter(Boolean) : [];
@@ -325,7 +337,7 @@ function AttendanceSection() {
 
     if (data.attending) {
       const savedGuestCount = data.guestCount ?? names.length;
-      const count = Math.min(Math.max(savedGuestCount || 1, 1), 6);
+      const count = Math.min(Math.max(savedGuestCount || 1, 1), maxGuestsRef.current);
       setGuestCount(count);
       setGuestNames(Array.from({ length: count }, (_, index) => names[index] ?? ""));
       return;
@@ -414,6 +426,12 @@ function AttendanceSection() {
           return;
         }
 
+        // El cupo se aplica ANTES de restaurar la respuesta guardada, para que
+        // el clamp de applySavedRsvp use el límite correcto.
+        if (typeof result.allowedGuests === "number" && result.allowedGuests > 0) {
+          applyGuestLimit(result.allowedGuests);
+        }
+
         if (result.rsvp) {
           applySavedRsvp(result.rsvp);
           return;
@@ -445,10 +463,10 @@ function AttendanceSection() {
       cancelled = true;
       controller.abort();
     };
-  }, [applySavedRsvp]);
+  }, [applyGuestLimit, applySavedRsvp]);
 
   const updateGuestCount = (value: number) => {
-    const nextValue = Math.min(Math.max(value, 1), 6);
+    const nextValue = Math.min(Math.max(value, 1), maxGuests);
     setGuestCount(nextValue);
     setGuestNames((names) => Array.from({ length: nextValue }, (_, index) => names[index] ?? ""));
   };
@@ -558,7 +576,7 @@ function AttendanceSection() {
             <p className="rsvp-done-subtitle">
               {attending
                 ? "Tu respuesta nos ayuda a seguir preparando este día tan especial."
-                : "Te vamos a extrañar. Estarás en nuestros corazones."}
+                : "Lamentamos que no puedas asistir. Pensando en ti, pronto recibirás noticias de cómo disfrutar con nosotros de este momento."}
             </p>
 
             <div className="rsvp-done-card">
@@ -569,7 +587,7 @@ function AttendanceSection() {
                 <span className="rsvp-done-row-text">
                   {attending
                     ? `Asistirán ${guestCount} ${guestCount === 1 ? "persona" : "personas"}`
-                    : "Lamentamos que no puedas asistir"}
+                    : "Te vamos a extrañar"}
                 </span>
               </div>
               {attending ? (
@@ -654,14 +672,14 @@ function AttendanceSection() {
                     <button
                       type="button"
                       onClick={() => updateGuestCount(guestCount + 1)}
-                      disabled={guestCount >= 6}
+                      disabled={guestCount >= maxGuests}
                       aria-label="Aumentar cantidad de asistentes"
                     >
                       +
                     </button>
                   </div>
 
-                  <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo 6).</p>
+                  <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo {maxGuests}).</p>
                 </div>
 
                 <div className="attendance-step">
@@ -783,7 +801,6 @@ export default function WeddingHeroSection() {
       <OurStorySection />
       <DressCodeSection />
       <DetailsSection />
-      <LiveStreamSection />
       <AttendanceSection />
     </m.div>
   );

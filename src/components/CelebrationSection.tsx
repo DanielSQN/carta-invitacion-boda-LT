@@ -185,15 +185,15 @@ export default function CelebrationSection() {
               </div>
               <div className="celebration-meta">
                 <Clock aria-hidden="true" strokeWidth={1.5} />
-                <span>Hora</span>
-                <strong>XX:XX P.M.</strong>
+                <span>Ceremonia</span>
+                <strong>2:00 P.M.</strong>
               </div>
             </div>
 
             <div className="celebration-place">
               <span>Lugar</span>
               <strong>Hacienda Santa Elena</strong>
-              <em>Cota, Cundinamarca</em>
+              <em>Salón Antonino · Cota, Cundinamarca</em>
             </div>
 
             <div ref={actionsRef} className="celebration-location-card">

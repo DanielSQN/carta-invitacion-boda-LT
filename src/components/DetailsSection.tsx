@@ -18,7 +18,7 @@ const detailCards = [
   {
     icon: Gift,
     title: "Tu presencia",
-    text: "Más que cualquier obsequio, lo que de verdad anhelamos es tenerte a nuestro lado. Tu presencia es, sin duda, el regalo más grande que podríamos recibir.",
+    text: "Más que cualquier obsequio, nuestro mayor deseo es contar con tu presencia. Tu compañía será, sin duda, el mejor regalo que podemos recibir.",
     wide: true,
   },
   {

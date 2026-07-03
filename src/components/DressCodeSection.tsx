@@ -122,8 +122,9 @@ export default function DressCodeSection() {
             ))}
           </div>
           <p className="dress-reserved-note">
-            Todo tipo de azul nos lo reservamos los novios <span aria-hidden="true">♥</span>
+            Nos reservamos gama de azules y tonalidades de blanco <span aria-hidden="true">♥</span>
           </p>
+          <p className="dress-shoes-note">Siéntete libre de elegir el calzado que prefieras</p>
         </div>
       </div>
     </section>

@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { isLowEndDevice } from "@/lib/device";
-import LiveBanner from "../LiveBanner";
 import SectionNav from "../SectionNav";
 import DecorativeText from "./DecorativeText";
 import Envelope from "./Envelope";
@@ -730,7 +729,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       }
     >
       <audio ref={audioRef} src="/audio/song1.mp3?v=20260616-64k" preload="none" loop />
-      <LiveBanner />
       {showWeddingHero ? <SectionNav /> : null}
       {musicControl}
       {swipeDownControl}

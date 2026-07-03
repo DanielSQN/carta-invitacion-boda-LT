@@ -4625,3 +4625,46 @@ html.is-lightbox-open .music-control-button {
 .lite-mode .details-card-icon {
   animation: none;
 }
+
+/* Nota de calzado en vestimenta (línea secundaria, más suave) */
+.dress-shoes-note {
+  max-width: 19rem;
+  margin: 0.55rem auto 0;
+  color: rgba(237, 243, 250, 0.68);
+  font-size: clamp(0.88rem, 3.6vw, 1rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: center;
+  text-shadow: 0 0.12rem 0.3rem rgba(3, 12, 22, 0.85);
+}
+
+/* "Nuestra historia" más compacta SOLO en celular: título y línea de tiempo
+   ~15% más pequeños. Tablets/escritorio no cambian. */
+@media (max-width: 480px) {
+  .story-heading h2 {
+    font-size: clamp(3.1rem, 13.5vw, 5.4rem);
+  }
+
+  .story-heading p {
+    max-width: 19rem;
+    font-size: clamp(0.9rem, 3.7vw, 1.05rem);
+  }
+
+  .story-timeline {
+    width: min(100%, 19.5rem);
+    gap: clamp(0.85rem, 3.6svh, 1.3rem);
+  }
+
+  .story-icon-wrap {
+    width: clamp(2.2rem, 9.2vw, 2.55rem);
+  }
+
+  .story-year {
+    font-size: clamp(1.1rem, 4.9vw, 1.5rem);
+  }
+
+  .story-item p {
+    font-size: clamp(0.88rem, 3.7vw, 1.12rem);
+  }
+}
