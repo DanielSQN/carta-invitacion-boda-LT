@@ -17,29 +17,10 @@ type MemoryPhoto = {
   file: string;
   alt: string;
   year: string;
-  caption: string;
   width: number;
   height: number;
   orientation: "landscape" | "portrait" | "square";
 };
-
-// Leyendas amorosas para el marco de cada foto (el año va solo en el badge).
-const memoryCaptions = [
-  "Donde todo comenzó",
-  "Cómplices para siempre",
-  "Entre risas y miradas",
-  "Caminando de tu mano",
-  "Nuestro lugar favorito: juntos",
-  "Amor en cada detalle",
-  "El mejor equipo",
-  "Sueños compartidos",
-  "Cada día te elijo",
-  "Pedacitos de felicidad",
-  "Tu risa es mi hogar",
-  "Aventura de dos",
-  "Un sí para toda la vida",
-  "Momentos que atesoramos",
-];
 
 const galleryPhotos = [
   { file: "2016-1.webp", year: "2016", width: 1600, height: 1200, orientation: "landscape" },
@@ -76,16 +57,15 @@ const galleryPhotos = [
   { file: "2026-1.webp", year: "2026", width: 2316, height: 3088, orientation: "portrait" },
   { file: "2026-2.webp", year: "2026", width: 439, height: 589, orientation: "portrait" },
   { file: "2026.webp", year: "2026", width: 4032, height: 3024, orientation: "landscape" },
-] satisfies Array<Omit<MemoryPhoto, "src" | "alt" | "caption"> & { file: string }>;
+] satisfies Array<Omit<MemoryPhoto, "src" | "alt"> & { file: string }>;
 
 const memoryPhotos: MemoryPhoto[] = galleryPhotos
   .sort((a, b) => Number(a.year) - Number(b.year) || a.file.localeCompare(b.file, undefined, { numeric: true }))
-  .map((photo, index) => ({
+  .map((photo) => ({
     src: `/images/story/gallery/${photo.file}`,
     file: photo.file,
     alt: `Luisa y Jhonnatan, recuerdo de ${photo.year}`,
     year: photo.year,
-    caption: memoryCaptions[index % memoryCaptions.length],
     width: photo.width,
     height: photo.height,
     orientation: photo.orientation,
@@ -352,11 +332,6 @@ export default function MemoriesGallery() {
             transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
             onClick={(event) => event.stopPropagation()}
           >
-            <span className="memories-lightbox-year">
-              <i aria-hidden="true" />
-              {memoryPhotos[lightboxIndex].year}
-              <i aria-hidden="true" />
-            </span>
             <span className="memories-lightbox-photo">
               <Image
                 src={memoryPhotos[lightboxIndex].src}
@@ -368,8 +343,13 @@ export default function MemoriesGallery() {
                 className="memories-lightbox-image"
               />
             </span>
+            {/* Solo el año, en la franja inferior del polaroid */}
             <figcaption>
-              <strong>{memoryPhotos[lightboxIndex].caption}</strong>
+              <span className="memories-lightbox-year">
+                <i aria-hidden="true" />
+                {memoryPhotos[lightboxIndex].year}
+                <i aria-hidden="true" />
+              </span>
             </figcaption>
           </m.figure>
 
@@ -430,7 +410,7 @@ export default function MemoriesGallery() {
               type="button"
               className="memories-card-trigger"
               onClick={() => openLightbox(index)}
-              aria-label={`Ampliar foto: ${photo.caption} (${photo.year})`}
+              aria-label={`Ampliar foto de ${photo.year}`}
             >
               <span className="memories-card-photo">
                 <Image
@@ -445,11 +425,8 @@ export default function MemoriesGallery() {
                   className="memories-photo"
                 />
               </span>
-              <span className="memories-card-year" aria-hidden="true">
-                {photo.year}
-              </span>
             </button>
-            <figcaption className="memories-card-caption">{photo.caption}</figcaption>
+            <figcaption className="memories-card-caption">{photo.year}</figcaption>
           </figure>
         ))}
       </div>

@@ -173,7 +173,10 @@ export default function CelebrationSection() {
                 />
               </span>
             </span>
-            <figcaption className="celebration-venue-caption">Hacienda Santa Elena</figcaption>
+            <figcaption className="celebration-venue-caption">
+              Hacienda Santa Elena
+              <small>Salón Antonino</small>
+            </figcaption>
           </figure>
 
           <div ref={infoRef} className="celebration-info-card">

@@ -121,7 +121,10 @@ export default function DressCodeSection() {
               <span key={color} className="dress-swatch" style={{ backgroundColor: color }} />
             ))}
           </div>
-          <p className="dress-shoes-note">Siéntete libre de elegir el calzado que prefieras</p>
+          <p className="dress-shoes-note">
+            <span className="dress-shoes-icons" aria-hidden="true">👠 👡 👢 👞 👟</span>
+            Siéntete libre de elegir el calzado que prefieras
+          </p>
         </div>
       </div>
     </section>
