@@ -115,15 +115,12 @@ export default function DressCodeSection() {
         </div>
 
         <div className="dress-column dress-column--reserved" data-reveal>
-          <h3>Nos reservamos</h3>
+          <h3>Nos reservamos gama de azules y tonalidades de blanco</h3>
           <div className="dress-palette" aria-label="Paleta de colores reservados">
             {dressColors.map((color) => (
               <span key={color} className="dress-swatch" style={{ backgroundColor: color }} />
             ))}
           </div>
-          <p className="dress-reserved-note">
-            Nos reservamos gama de azules y tonalidades de blanco <span aria-hidden="true">♥</span>
-          </p>
           <p className="dress-shoes-note">Siéntete libre de elegir el calzado que prefieras</p>
         </div>
       </div>

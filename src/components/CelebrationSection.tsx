@@ -193,7 +193,8 @@ export default function CelebrationSection() {
             <div className="celebration-place">
               <span>Lugar</span>
               <strong>Hacienda Santa Elena</strong>
-              <em>Salón Antonino · Cota, Cundinamarca</em>
+              <em>Salón Antonino</em>
+              <em className="celebration-place-city">Cota, Cundinamarca</em>
             </div>
 
             <div ref={actionsRef} className="celebration-location-card">

@@ -313,10 +313,11 @@ function AttendanceSection() {
   const [editing, setEditing] = useState(false);
   const [calendarHref, setCalendarHref] = useState(googleCalendarUrl);
   const [isIcsCalendar, setIsIcsCalendar] = useState(false);
-  // Cupo de acompañantes de esta invitación (guests_planned del panel de
-  // invitados). 6 por defecto mientras no se conozca el cupo asignado.
-  const [maxGuests, setMaxGuests] = useState(6);
-  const maxGuestsRef = useRef(6);
+  // Cupo de asistentes de esta invitación (guests_planned del panel de
+  // invitados). Sin cupo asignado solo asiste 1 persona: el selector de
+  // acompañantes ni siquiera se muestra.
+  const [maxGuests, setMaxGuests] = useState(1);
+  const maxGuestsRef = useRef(1);
   const sectionRef = useRef<HTMLElement>(null);
   const confirmInnerRef = useRef<HTMLDivElement>(null);
   const footerEnvelopeRef = useRef<HTMLDivElement>(null);
@@ -337,7 +338,15 @@ function AttendanceSection() {
 
     if (data.attending) {
       const savedGuestCount = data.guestCount ?? names.length;
-      const count = Math.min(Math.max(savedGuestCount || 1, 1), maxGuestsRef.current);
+      const count = Math.min(Math.max(savedGuestCount || 1, 1), 12);
+
+      // Si ya había confirmado por más personas que el cupo conocido, se
+      // respeta su confirmación (el cupo sube hasta lo ya guardado).
+      if (count > maxGuestsRef.current) {
+        maxGuestsRef.current = count;
+        setMaxGuests(count);
+      }
+
       setGuestCount(count);
       setGuestNames(Array.from({ length: count }, (_, index) => names[index] ?? ""));
       return;
@@ -645,49 +654,61 @@ function AttendanceSection() {
             {attending ? (
               <>
                 <p className="attendance-hint">
-                  ¡Qué alegría! Cuéntanos <strong>cuántos asistirán</strong> y sus nombres.
+                  {maxGuests > 1 ? (
+                    <>
+                      ¡Qué alegría! Cuéntanos <strong>cuántos asistirán</strong> y sus nombres.
+                    </>
+                  ) : (
+                    <>
+                      ¡Qué alegría! <strong>Confírmanos tu nombre.</strong>
+                    </>
+                  )}
                 </p>
 
+                {/* El selector de acompañantes solo aparece si la invitación
+                    tiene cupo asignado (> 1) en el panel de invitados. */}
+                {maxGuests > 1 ? (
+                  <div className="attendance-step">
+                    <div className="attendance-step-head">
+                      <span className="attendance-step-number" aria-hidden="true">
+                        1
+                      </span>
+                      <span className="attendance-step-title">¿Cuántas personas asisten?</span>
+                    </div>
+
+                    <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount(guestCount - 1)}
+                        disabled={guestCount <= 1}
+                        aria-label="Disminuir cantidad de asistentes"
+                      >
+                        −
+                      </button>
+                      <output aria-live="polite" aria-label={`${guestCount} asistentes`}>
+                        {guestCount}
+                        <small>{guestCount === 1 ? "persona" : "personas"}</small>
+                      </output>
+                      <button
+                        type="button"
+                        onClick={() => updateGuestCount(guestCount + 1)}
+                        disabled={guestCount >= maxGuests}
+                        aria-label="Aumentar cantidad de asistentes"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo {maxGuests}).</p>
+                  </div>
+                ) : null}
+
                 <div className="attendance-step">
                   <div className="attendance-step-head">
                     <span className="attendance-step-number" aria-hidden="true">
-                      1
+                      {maxGuests > 1 ? 2 : 1}
                     </span>
-                    <span className="attendance-step-title">¿Cuántas personas asisten?</span>
-                  </div>
-
-                  <div className="attendance-stepper" role="group" aria-label="Cantidad de asistentes">
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount(guestCount - 1)}
-                      disabled={guestCount <= 1}
-                      aria-label="Disminuir cantidad de asistentes"
-                    >
-                      −
-                    </button>
-                    <output aria-live="polite" aria-label={`${guestCount} asistentes`}>
-                      {guestCount}
-                      <small>{guestCount === 1 ? "persona" : "personas"}</small>
-                    </output>
-                    <button
-                      type="button"
-                      onClick={() => updateGuestCount(guestCount + 1)}
-                      disabled={guestCount >= maxGuests}
-                      aria-label="Aumentar cantidad de asistentes"
-                    >
-                      +
-                    </button>
-                  </div>
-
-                  <p className="attendance-step-note">Incluyete a ti y a tus acompañantes (máximo {maxGuests}).</p>
-                </div>
-
-                <div className="attendance-step">
-                  <div className="attendance-step-head">
-                    <span className="attendance-step-number" aria-hidden="true">
-                      2
-                    </span>
-                    <span className="attendance-step-title">¿Quiénes asisten?</span>
+                    <span className="attendance-step-title">{maxGuests > 1 ? "¿Quiénes asisten?" : "¿Quién asiste?"}</span>
                   </div>
 
                   <div className="attendance-name-grid">

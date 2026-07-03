@@ -1564,6 +1564,15 @@ button {
   text-transform: uppercase;
 }
 
+/* Ciudad en línea propia, un paso más suave que el salón */
+.celebration-place-city {
+  margin-top: -0.12rem;
+  color: rgba(127, 157, 187, 0.72);
+  font-size: clamp(0.78rem, 3vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+
 .celebration-location-card {
   margin-top: 1.3rem;
   padding-top: 1.15rem;
@@ -1739,51 +1748,55 @@ button {
   text-shadow: 0 0.7rem 1.4rem rgba(7, 24, 39, 0.58);
 }
 
+/* Línea de tiempo en columnas (los 4 hitos lado a lado) en TODOS los tamaños:
+   icono arriba, año y texto debajo, conectados por una línea horizontal. */
 .story-timeline {
   position: relative;
   display: grid;
-  width: min(100%, 22.5rem);
-  gap: clamp(1.05rem, 4.35svh, 1.62rem);
+  width: min(100%, 24rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(0.4rem, 2vw, 0.8rem);
   margin: 0 auto;
-  padding: 0.15rem 0;
+  padding: 0.35rem 0 0;
+  align-items: start;
 }
 
 .story-line {
   position: absolute;
-  top: 1.1rem;
-  bottom: 1.1rem;
-  left: calc(clamp(2.62rem, 11vw, 3rem) / 2);
+  top: calc(0.35rem + clamp(2.05rem, 9vw, 2.6rem) / 2);
+  left: 10%;
+  right: 10%;
   display: block;
-  width: 2px;
+  height: 2px;
   overflow: hidden;
   border-radius: 999px;
   background: rgba(95, 143, 180, 0.16);
-  transform: translateX(-50%);
 }
 
 .story-line-fill {
   display: block;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, rgba(143, 193, 233, 0.5), rgba(95, 143, 180, 0.95), rgba(95, 143, 180, 0.42));
+  background: linear-gradient(90deg, rgba(143, 193, 233, 0.5), rgba(95, 143, 180, 0.95), rgba(95, 143, 180, 0.42));
   box-shadow: 0 0 0.6rem rgba(95, 143, 180, 0.55);
-  transform-origin: top center;
+  transform-origin: left center;
 }
 
 .story-item {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: clamp(2.7rem, 11.8vw, 3.1rem) minmax(0, 1fr);
-  align-items: center;
-  gap: clamp(0.72rem, 3.1vw, 0.95rem);
-  text-align: left;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  align-items: start;
+  gap: clamp(0.5rem, 2vw, 0.8rem);
+  text-align: center;
 }
 
 .story-icon-wrap {
   position: relative;
   display: grid;
-  width: clamp(2.62rem, 11vw, 3rem);
+  width: clamp(2.05rem, 9vw, 2.6rem);
   aspect-ratio: 1;
   place-items: center;
   overflow: hidden;
@@ -1814,7 +1827,9 @@ button {
 
 .story-copy {
   min-width: 0;
-  padding: clamp(0.6rem, 2.6vw, 0.78rem) clamp(0.78rem, 3.2vw, 1rem) clamp(0.66rem, 2.8vw, 0.82rem);
+  width: 100%;
+  padding: clamp(0.45rem, 2vw, 0.7rem) clamp(0.3rem, 1.6vw, 0.6rem) clamp(0.5rem, 2.1vw, 0.72rem);
+  text-align: center;
   border: 1px solid rgba(95, 143, 180, 0.26);
   border-radius: 0.58rem;
   background: linear-gradient(180deg, rgba(7, 24, 39, 0.34), rgba(7, 24, 39, 0.2));
@@ -1829,7 +1844,7 @@ button {
   display: block;
   color: #c79a4a;
   font-family: var(--font-great-vibes), "Brush Script MT", cursive;
-  font-size: clamp(1.28rem, 5.85vw, 1.82rem);
+  font-size: clamp(1.02rem, 4.4vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0;
   line-height: 0.95;
@@ -1843,7 +1858,7 @@ button {
   display: block;
   width: clamp(2rem, 9vw, 2.75rem);
   height: 1px;
-  margin: 0.2rem 0 0.32rem;
+  margin: 0.2rem auto 0.32rem;
   background: rgba(20, 55, 86, 0.92);
   box-shadow:
     0 0 0.28rem rgba(255, 250, 241, 0.58),
@@ -1854,9 +1869,9 @@ button {
   margin: 0;
   color: #fffaf1;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1rem, 4.35vw, 1.34rem);
+  font-size: clamp(0.72rem, 3.1vw, 1.05rem);
   font-weight: 700;
-  line-height: 1.08;
+  line-height: 1.18;
   text-shadow:
     0 0.75rem 1.25rem rgba(7, 24, 39, 0.58),
     0 0 0.85rem rgba(20, 55, 86, 0.52);
@@ -1873,9 +1888,6 @@ button {
     width: min(100%, 26rem);
   }
 
-  .story-line {
-    left: 1.49rem;
-  }
 }
 
 /* En desktop la linea de tiempo pasa a ser horizontal: los 4 hitos en
@@ -1920,6 +1932,18 @@ button {
 
   .story-flourish {
     margin-inline: auto;
+  }
+
+  .story-icon-wrap {
+    width: 3rem;
+  }
+
+  .story-year {
+    font-size: 1.7rem;
+  }
+
+  .story-item p {
+    font-size: 1.2rem;
   }
 }
 
@@ -2101,17 +2125,6 @@ button {
     0 0 0 1px rgba(7, 24, 39, 0.08);
 }
 
-.dress-reserved-note {
-  max-width: 19rem;
-  margin: clamp(0.85rem, 3vw, 1.15rem) auto 0;
-  color: rgba(237, 243, 250, 0.88);
-  font-size: clamp(1rem, 4.2vw, 1.18rem);
-  font-style: italic;
-  font-weight: 600;
-  line-height: 1.35;
-  text-align: center;
-  text-shadow: 0 0.12rem 0.3rem rgba(3, 12, 22, 0.85);
-}
 
 .dress-reserved-note span {
   color: #8fc1e9;
@@ -4627,6 +4640,16 @@ html.is-lightbox-open .music-control-button {
 }
 
 /* Nota de calzado en vestimenta (línea secundaria, más suave) */
+/* El título de la columna reservada ahora es una frase completa: se ajusta
+   el tamaño/espaciado para que quepa en 2 líneas elegantes. */
+.dress-column--reserved h3 {
+  max-width: 21rem;
+  margin-inline: auto;
+  font-size: clamp(0.92rem, 3.8vw, 1.25rem);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+}
+
 .dress-shoes-note {
   max-width: 19rem;
   margin: 0.55rem auto 0;
@@ -4651,20 +4674,4 @@ html.is-lightbox-open .music-control-button {
     font-size: clamp(0.9rem, 3.7vw, 1.05rem);
   }
 
-  .story-timeline {
-    width: min(100%, 19.5rem);
-    gap: clamp(0.85rem, 3.6svh, 1.3rem);
-  }
-
-  .story-icon-wrap {
-    width: clamp(2.2rem, 9.2vw, 2.55rem);
-  }
-
-  .story-year {
-    font-size: clamp(1.1rem, 4.9vw, 1.5rem);
-  }
-
-  .story-item p {
-    font-size: clamp(0.88rem, 3.7vw, 1.12rem);
-  }
 }

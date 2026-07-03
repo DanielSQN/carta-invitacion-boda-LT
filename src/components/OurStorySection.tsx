@@ -25,16 +25,13 @@ export default function OurStorySection() {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // En desktop la linea es horizontal (se rellena en X); en mobile/tablet
-    // es vertical (se rellena en Y).
-    const isHorizontalTimeline = window.matchMedia("(min-width: 1024px)").matches;
     const scroller = sectionRef.current?.closest(".details-scroll") as HTMLElement | null;
     const triggerDefaults = scroller ? { scroller } : {};
 
     const ctx = gsap.context(() => {
       if (reduceMotion) {
         gsap.set([titleRef.current, ".story-item"], { opacity: 1, y: 0 });
-        gsap.set(".story-line-fill", { scaleX: 1, scaleY: 1 });
+        gsap.set(".story-line-fill", { scaleX: 1 });
         return;
       }
 
@@ -55,12 +52,13 @@ export default function OurStorySection() {
         },
       );
 
-      // La linea conectora se va llenando con el scroll (y se vacia al subir).
+      // La linea conectora (horizontal) se llena de izquierda a derecha con el
+      // scroll (y se vacia al subir).
       gsap.fromTo(
         ".story-line-fill",
-        isHorizontalTimeline ? { scaleX: 0 } : { scaleY: 0 },
+        { scaleX: 0 },
         {
-          ...(isHorizontalTimeline ? { scaleX: 1 } : { scaleY: 1 }),
+          scaleX: 1,
           ease: "none",
           scrollTrigger: {
             trigger: ".story-timeline",
@@ -73,22 +71,19 @@ export default function OurStorySection() {
         },
       );
 
-      // Cada hito aparece uno a uno al bajar y se retira al subir
-      // (play al entrar, reverse al salir, en ambas direcciones). En desktop
-      // los 4 hitos comparten altura, asi que se escalonan de izquierda a
-      // derecha (delay por indice) siguiendo el llenado de la linea.
+      // Los 4 hitos comparten fila: se escalonan de izquierda a derecha
+      // (delay por indice) siguiendo el llenado de la linea, y se retiran al
+      // subir (play/reverse en ambas direcciones).
       gsap.utils.toArray<HTMLElement>(".story-item").forEach((item, index) => {
         const icon = item.querySelector(".story-icon-wrap");
         const copy = item.querySelector(".story-copy");
         const itemTrigger = {
-          // En desktop dispara con la seccion para que el escalonado se vea;
-          // en mobile/tablet cada hito se dispara al entrar al viewport.
-          trigger: isHorizontalTimeline ? ".story-timeline" : item,
-          start: isHorizontalTimeline ? "top 78%" : "top 88%",
+          trigger: ".story-timeline",
+          start: "top 78%",
           toggleActions: "play reverse play reverse",
           ...triggerDefaults,
         };
-        const delay = isHorizontalTimeline ? index * 0.13 : 0;
+        const delay = index * 0.13;
 
         gsap.fromTo(
           icon,
@@ -97,10 +92,10 @@ export default function OurStorySection() {
         );
         gsap.fromTo(
           copy,
-          isHorizontalTimeline ? { opacity: 0, y: 24 } : { opacity: 0, x: -30 },
+          { opacity: 0, y: 24 },
           {
             opacity: 1,
-            ...(isHorizontalTimeline ? { y: 0 } : { x: 0 }),
+            y: 0,
             duration: 0.62,
             delay,
             ease: "power2.out",
