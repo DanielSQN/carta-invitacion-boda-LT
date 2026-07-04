@@ -1577,9 +1577,9 @@ button {
 }
 
 /* Ciudad en línea propia, un paso más suave que el salón */
-.celebration-place-city {
+.celebration-place em.celebration-place-city {
   margin-top: -0.12rem;
-  color: rgba(127, 157, 187, 0.72);
+  color: #7f9dbb;
   font-size: clamp(0.78rem, 3vw, 0.9rem);
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -2441,6 +2441,9 @@ button {
 .memories-strip {
   --memories-card-w: clamp(11.5rem, 56vw, 15.5rem);
   display: flex;
+  /* sin stretch: cada polaroid conserva su altura natural (una landscape no
+     se estira a la altura de las verticales dejando vacio bajo la foto) */
+  align-items: center;
   /* full-bleed: el carril llega a los bordes de la pantalla para que las
      fotos laterales no se corten a mitad de pantalla */
   width: 100vw;
@@ -2576,7 +2579,7 @@ button {
 }
 
 .memories-photo {
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   filter: saturate(0.94) contrast(0.98) sepia(0.06);
   transform: translateZ(0);
