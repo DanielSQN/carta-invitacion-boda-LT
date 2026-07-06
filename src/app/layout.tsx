@@ -40,9 +40,9 @@ const metadataBase = new URL(
     ? siteUrl
     : `https://${siteUrl}`,
 );
-const title = "Boda Luisa & Tattan";
-const description = "Estas invitado a celebrar con nosotros este dia tan especial.";
-const previewImage = "/preview-boda-v2.webp";
+const title = "Boda Luisa & Jhonnatan";
+const description = "Estás invitado a celebrar con nosotros este día tan especial.";
+const previewImage = "/preview-boda-v3.webp";
 
 export const metadata: Metadata = {
   metadataBase,

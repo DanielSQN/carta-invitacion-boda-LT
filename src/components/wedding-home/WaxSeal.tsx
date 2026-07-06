@@ -27,7 +27,7 @@ export default function WaxSeal({ isOpen }: WaxSealProps) {
         fill
         sizes="108px"
       />
-      <span className="sr-only">L&amp;T</span>
+      <span className="sr-only">L&amp;J</span>
     </m.div>
   );
 }
