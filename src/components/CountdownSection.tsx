@@ -38,7 +38,7 @@ function getCountdownTime(): CountdownTime {
 }
 
 const googleCalendarUrl =
-  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda%20Luisa%20%26%20Jhonnatan&dates=20260926T200000Z/20260927T050000Z&details=Celebramos%20nuestra%20boda%20con%20ustedes.&location=Hacienda%20Santa%20Elena%2C%20Cota%2C%20Cundinamarca";
+  "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda%20Luisa%20%26%20Jhonnatan&dates=20260926T190000Z/20260927T050000Z&details=Celebramos%20nuestra%20boda%20con%20ustedes.&location=Hacienda%20Santa%20Elena%20-%20Sal%C3%B3n%20Antonino%2C%20Cota%2C%20Cundinamarca";
 const icsCalendarUrl = "/boda-luisa-jhonnatan.ics";
 
 export default function CountdownSection() {

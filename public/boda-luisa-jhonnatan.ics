@@ -6,11 +6,11 @@ METHOD:PUBLISH
 BEGIN:VEVENT
 UID:boda-luisa-jhonnatan-20260926@invitacion
 DTSTAMP:20260612T000000Z
-DTSTART:20260926T200000Z
+DTSTART:20260926T190000Z
 DTEND:20260927T050000Z
 SUMMARY:Boda Luisa & Jhonnatan
 DESCRIPTION:Celebramos nuestra boda con ustedes.
-LOCATION:Hacienda Santa Elena\, Cota\, Cundinamarca
+LOCATION:Hacienda Santa Elena - Salón Antonino\, Cota\, Cundinamarca
 BEGIN:VALARM
 ACTION:DISPLAY
 DESCRIPTION:Boda Luisa & Jhonnatan
