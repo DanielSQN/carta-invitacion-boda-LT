@@ -169,7 +169,7 @@ export default function CountdownSection() {
           <div className="countdown-row">
             {isWeddingDay ? (
               <p className="countdown-today" role="status">
-                ¡Llegó el gran día! Nos vemos en la celebración.
+                ¡Llegó el gran día! Nos vemos a las 2:00 p.m. en la ceremonia.
               </p>
             ) : (
             <div className="countdown-grid" aria-label="Cuenta regresiva para la boda">
