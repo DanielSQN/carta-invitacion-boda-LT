@@ -69,8 +69,12 @@ export async function getInvitationByLabel(label: string): Promise<InvitationRec
     return null;
   }
 
+  // El label viene de la URL del invitado (?para=): se escapan los comodines
+  // de LIKE para que un valor como "%" no coincida con cualquier invitación.
+  const pattern = label.trim().replace(/([\\%_])/g, "\\$1");
+
   const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${TABLE}?select=id,created_at,label,guests_planned,notes&label=ilike.${encodeURIComponent(label.trim())}&limit=1`,
+    `${SUPABASE_URL}/rest/v1/${TABLE}?select=id,created_at,label,guests_planned,notes&label=ilike.${encodeURIComponent(pattern)}&limit=1`,
     { headers: restHeaders(), cache: "no-store" },
   );
 

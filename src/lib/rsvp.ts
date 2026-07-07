@@ -59,21 +59,6 @@ export async function insertRsvp(input: RsvpInput): Promise<void> {
 
   const invitedAs = input.invitedAs?.trim() || null;
 
-  // Re-confirmación: si la invitación (?para=) ya respondió antes, se reemplaza
-  // su registro para no dejar duplicados. Las respuestas sin ?para= no se
-  // pueden deduplicar, así que cada una queda como un registro nuevo.
-  if (invitedAs) {
-    const cleanup = await fetch(
-      `${SUPABASE_URL}/rest/v1/${TABLE}?invited_as=eq.${encodeURIComponent(invitedAs)}`,
-      { method: "DELETE", headers: restHeaders({ Prefer: "return=minimal" }), cache: "no-store" },
-    );
-
-    if (!cleanup.ok) {
-      const detail = await cleanup.text().catch(() => "");
-      throw new Error(`Error actualizando RSVP (${cleanup.status}): ${detail}`);
-    }
-  }
-
   const row = {
     attending: input.attending,
     guest_count: input.guestCount,
@@ -82,9 +67,14 @@ export async function insertRsvp(input: RsvpInput): Promise<void> {
     message: input.message ?? null,
   };
 
+  // Re-confirmación: primero se inserta la respuesta nueva y SOLO después se
+  // limpian las anteriores de la misma invitación. Con el orden inverso
+  // (borrar primero), un fallo del insert dejaba al invitado sin respuesta
+  // guardada. Si la limpieza falla queda un duplicado viejo, que es inofensivo:
+  // la lectura toma siempre la más reciente (order=created_at.desc&limit=1).
   const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
     method: "POST",
-    headers: restHeaders({ Prefer: "return=minimal" }),
+    headers: restHeaders({ Prefer: "return=representation" }),
     body: JSON.stringify(row),
     cache: "no-store",
   });
@@ -92,6 +82,26 @@ export async function insertRsvp(input: RsvpInput): Promise<void> {
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
     throw new Error(`Error guardando RSVP (${response.status}): ${detail}`);
+  }
+
+  if (!invitedAs) {
+    return;
+  }
+
+  const inserted = ((await response.json().catch(() => [])) as Array<{ id?: string }>)[0];
+
+  if (!inserted?.id) {
+    return;
+  }
+
+  const cleanup = await fetch(
+    `${SUPABASE_URL}/rest/v1/${TABLE}?invited_as=eq.${encodeURIComponent(invitedAs)}&id=neq.${encodeURIComponent(inserted.id)}`,
+    { method: "DELETE", headers: restHeaders({ Prefer: "return=minimal" }), cache: "no-store" },
+  );
+
+  if (!cleanup.ok) {
+    // No se lanza: la respuesta nueva ya quedó guardada y es la que se lee.
+    console.warn(`[rsvp] no se pudieron limpiar respuestas anteriores (${cleanup.status})`);
   }
 }
 

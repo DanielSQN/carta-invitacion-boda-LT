@@ -1,4 +1,5 @@
 import { getInvitationByLabel } from "@/lib/invitations";
+import { getClientIp, isRateLimited } from "@/lib/rateLimit";
 import { getRsvpByInvitation, insertRsvp, isSupabaseConfigured, type RsvpInput } from "@/lib/rsvp";
 
 export const dynamic = "force-dynamic";
@@ -19,6 +20,14 @@ function sanitizeNames(value: unknown): string[] {
 }
 
 export async function POST(request: Request) {
+  // Freno de spam: nadie necesita enviar más de un puñado de confirmaciones.
+  if (isRateLimited(`rsvp-post:${getClientIp(request)}`, 8, 60_000)) {
+    return Response.json(
+      { ok: false, error: "Demasiados intentos, espera un momento" },
+      { status: 429, headers: noStoreHeaders },
+    );
+  }
+
   let body: Record<string, unknown>;
 
   try {
@@ -73,6 +82,16 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
+  // Freno de enumeración: la consulta devuelve la respuesta guardada de una
+  // invitación (nombres), así que se limita el ritmo de lecturas por IP para
+  // que no se pueda barrer la lista probando valores de ?para= en masa.
+  if (isRateLimited(`rsvp-get:${getClientIp(request)}`, 30, 60_000)) {
+    return Response.json(
+      { ok: false, error: "Demasiadas consultas, espera un momento" },
+      { status: 429, headers: noStoreHeaders },
+    );
+  }
+
   const { searchParams } = new URL(request.url);
   const invitedAs = (searchParams.get("invitedAs") || searchParams.get("para") || searchParams.get("invitado") || "").trim();
 

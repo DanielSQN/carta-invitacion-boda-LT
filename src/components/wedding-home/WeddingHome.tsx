@@ -96,6 +96,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   // para no desajustar la hidratación.
   const [openCtaLabel, setOpenCtaLabel] = useState("Clic para abrir");
   const audioRef = useRef<HTMLAudioElement>(null);
+  // true cuando la música se pausó sola por salir de la página (cambio de
+  // pestaña/app): al volver se reanuda. La pausa manual del usuario lo apaga
+  // para respetar su decisión.
+  const resumeMusicOnReturnRef = useRef(false);
   const homeSceneRef = useRef<HTMLElement>(null);
   const envelopeLetterRef = useRef<HTMLDivElement>(null);
   const transitionCardRef = useRef<HTMLDivElement>(null);
@@ -481,24 +485,47 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
         return;
       }
 
+      // Pausa automática (no del usuario): se marca para reanudar al volver.
+      resumeMusicOnReturnRef.current = true;
       audio.pause();
       setIsMusicPlaying(false);
+    };
+
+    const resumeAudio = () => {
+      const audio = audioRef.current;
+
+      if (!audio || !audio.paused || !resumeMusicOnReturnRef.current || document.hidden) {
+        return;
+      }
+
+      gsap.killTweensOf(audio);
+      audio.volume = 0.58;
+      audio
+        .play()
+        .then(() => setIsMusicPlaying(true))
+        .catch(() => {
+          // El navegador bloqueó la reanudación: el botón queda en silencio.
+        });
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
         pauseAudio();
+      } else {
+        resumeAudio();
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("pagehide", pauseAudio);
     window.addEventListener("blur", pauseAudio);
+    window.addEventListener("focus", resumeAudio);
 
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pagehide", pauseAudio);
       window.removeEventListener("blur", pauseAudio);
+      window.removeEventListener("focus", resumeAudio);
     };
   }, []);
 
@@ -687,6 +714,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       return;
     }
 
+    // Pausa manual: al volver a la página NO se reanuda sola.
+    resumeMusicOnReturnRef.current = false;
     audio.pause();
     setIsMusicPlaying(false);
   };
