@@ -2268,10 +2268,12 @@ button {
   background: linear-gradient(135deg, rgba(23, 58, 92, 0.96), rgba(10, 30, 50, 0.96));
   color: #eaf3fc;
   cursor: pointer;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.6rem, 2.7vw, 0.7rem);
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  /* Tipografía básica del sistema para que letras y números de la llave
+     se lean sin ambigüedad. */
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  font-size: clamp(0.64rem, 2.8vw, 0.74rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
   line-height: 1.25;
   box-shadow:
     inset 0 0 0 1px rgba(255, 250, 241, 0.06),
