@@ -22,45 +22,35 @@ type MemoryPhoto = {
   orientation: "landscape" | "portrait" | "square";
 };
 
+// Orden cronológico: dentro de cada año va primero el archivo "fecha sola"
+// (p. ej. 2026.webp) y después los numerados (2026-2.webp). El array ya está
+// ordenado a mano; no se reordena en runtime.
 const galleryPhotos = [
   { file: "2016-1.webp", year: "2016", width: 1600, height: 1200, orientation: "landscape" },
   { file: "2016-2.webp", year: "2016", width: 720, height: 720, orientation: "square" },
-  { file: "2016.webp", year: "2016", width: 960, height: 1280, orientation: "portrait" },
   { file: "2017-1.webp", year: "2017", width: 1280, height: 720, orientation: "landscape" },
   { file: "2017-2.webp", year: "2017", width: 960, height: 1280, orientation: "portrait" },
   { file: "2018-1.webp", year: "2018", width: 1280, height: 720, orientation: "landscape" },
-  { file: "2018-2.webp", year: "2018", width: 4608, height: 3456, orientation: "landscape" },
-  { file: "2018-2(1).webp", year: "2018", width: 4496, height: 3000, orientation: "landscape" },
-  { file: "2019-1.webp", year: "2019", width: 4608, height: 3456, orientation: "landscape" },
-  { file: "2019-2.webp", year: "2019", width: 4608, height: 3456, orientation: "landscape" },
-  { file: "2020-1.webp", year: "2020", width: 4618, height: 3464, orientation: "landscape" },
+  { file: "2018-2.webp", year: "2018", width: 1600, height: 1068, orientation: "landscape" },
+  { file: "2019-1.webp", year: "2019", width: 1600, height: 1200, orientation: "landscape" },
+  { file: "2019-2.webp", year: "2019", width: 1600, height: 1200, orientation: "landscape" },
+  { file: "2020-1.webp", year: "2020", width: 1600, height: 1200, orientation: "landscape" },
   { file: "2020-2.webp", year: "2020", width: 960, height: 1280, orientation: "portrait" },
   { file: "2021-1.webp", year: "2021", width: 664, height: 1297, orientation: "portrait" },
   { file: "2021-2.webp", year: "2021", width: 664, height: 1297, orientation: "portrait" },
-  { file: "2022-1.webp", year: "2022", width: 3468, height: 4624, orientation: "portrait" },
-  { file: "2022-1(1).webp", year: "2022", width: 3000, height: 4000, orientation: "portrait" },
+  { file: "2022-1.webp", year: "2022", width: 1200, height: 1600, orientation: "portrait" },
   { file: "2022-2.webp", year: "2022", width: 1200, height: 1600, orientation: "portrait" },
-  { file: "2022-4.webp", year: "2022", width: 640, height: 1324, orientation: "portrait" },
-  { file: "2023-1.webp", year: "2023", width: 3468, height: 4624, orientation: "portrait" },
-  { file: "2023-1(1).webp", year: "2023", width: 3468, height: 4624, orientation: "portrait" },
-  { file: "2023-2.webp", year: "2023", width: 3468, height: 4624, orientation: "portrait" },
-  { file: "2023-2(1).webp", year: "2023", width: 720, height: 1280, orientation: "portrait" },
+  { file: "2023-1.webp", year: "2023", width: 1200, height: 1600, orientation: "portrait" },
+  { file: "2023-2.webp", year: "2023", width: 1200, height: 1600, orientation: "portrait" },
   { file: "2024-1.webp", year: "2024", width: 1280, height: 960, orientation: "landscape" },
-  { file: "2024-1(1).webp", year: "2024", width: 960, height: 1280, orientation: "portrait" },
-  { file: "2024-1(2).webp", year: "2024", width: 720, height: 1280, orientation: "portrait" },
   { file: "2024-2.webp", year: "2024", width: 1600, height: 1200, orientation: "landscape" },
-  { file: "2024-3.webp", year: "2024", width: 1200, height: 1600, orientation: "portrait" },
-  { file: "2024-6.webp", year: "2024", width: 1280, height: 960, orientation: "landscape" },
-  { file: "2025-1.webp", year: "2025", width: 4032, height: 3024, orientation: "landscape" },
+  { file: "2025-1.webp", year: "2025", width: 1600, height: 1200, orientation: "landscape" },
   { file: "2025-2.webp", year: "2025", width: 960, height: 1280, orientation: "portrait" },
-  { file: "2025-2(1).webp", year: "2025", width: 1280, height: 853, orientation: "landscape" },
-  { file: "2026-1.webp", year: "2026", width: 2316, height: 3088, orientation: "portrait" },
+  { file: "2026.webp", year: "2026", width: 1600, height: 1200, orientation: "landscape" },
   { file: "2026-2.webp", year: "2026", width: 439, height: 589, orientation: "portrait" },
-  { file: "2026.webp", year: "2026", width: 4032, height: 3024, orientation: "landscape" },
 ] satisfies Array<Omit<MemoryPhoto, "src" | "alt"> & { file: string }>;
 
 const memoryPhotos: MemoryPhoto[] = galleryPhotos
-  .sort((a, b) => Number(a.year) - Number(b.year) || a.file.localeCompare(b.file, undefined, { numeric: true }))
   .map((photo) => ({
     src: `/images/story/gallery/${photo.file}`,
     file: photo.file,
