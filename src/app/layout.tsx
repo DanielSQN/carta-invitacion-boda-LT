@@ -48,6 +48,13 @@ export const metadata: Metadata = {
   metadataBase,
   title,
   description,
+  // Invitación personal (las URLs llevan el nombre del invitado en ?para=):
+  // se pide a los buscadores no indexarla. Los previews de WhatsApp/redes no
+  // dependen de esto (usan Open Graph).
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title,
     description,

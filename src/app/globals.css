@@ -1064,6 +1064,20 @@ button {
   gap: clamp(0.34rem, 1.55vw, 0.56rem);
 }
 
+/* Mensaje que reemplaza la cuadrícula cuando la cuenta llega a cero. */
+.countdown-today {
+  margin: 0;
+  align-self: center;
+  color: #fffaf1;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.05rem, 4.6vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-align: center;
+  text-shadow: 0 0.12rem 0.5rem rgba(3, 12, 22, 0.7);
+}
+
 .countdown-unit {
   min-width: 0;
   border: 0;
@@ -2306,6 +2320,25 @@ button {
 }
 
 .details-card-qr-badge:focus-visible {
+  outline: 2px solid rgba(255, 250, 241, 0.86);
+  outline-offset: 0.16rem;
+}
+
+/* Foco visible unificado para la navegación con teclado en todos los
+   controles interactivos de la invitación. */
+.open-cta:focus-visible,
+.section-nav-toggle:focus-visible,
+.section-nav-item:focus-visible,
+.music-control-button:focus-visible,
+.attendance-choice-btn:focus-visible,
+.attendance-back:focus-visible,
+.attendance-stepper button:focus-visible,
+.attendance-input-wrap input:focus-visible,
+.attendance-field--message textarea:focus-visible,
+.rsvp-done-action:focus-visible,
+.celebration-map-button:focus-visible,
+.countdown-actions a:focus-visible,
+.memories-lightbox-close:focus-visible {
   outline: 2px solid rgba(255, 250, 241, 0.86);
   outline-offset: 0.16rem;
 }

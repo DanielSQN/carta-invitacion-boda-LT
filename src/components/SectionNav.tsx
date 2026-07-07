@@ -1,7 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Accesos rápidos a las secciones. El scroll vive en el contenedor fijo del
 // app-shell (.details-scroll), así que tanto la visibilidad como el salto a cada
@@ -20,6 +20,25 @@ export default function SectionNav() {
   const [visible, setVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | null>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    // Cierra el panel con Escape y devuelve el foco al botón del menú.
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   useEffect(() => {
     const scroller = document.querySelector<HTMLElement>(".details-scroll");
@@ -107,6 +126,7 @@ export default function SectionNav() {
   return (
     <div className={`section-nav${visible ? " section-nav--visible" : ""}`}>
       <button
+        ref={toggleRef}
         type="button"
         className="section-nav-toggle"
         onClick={() => setOpen((value) => !value)}
@@ -125,22 +145,22 @@ export default function SectionNav() {
             aria-label="Cerrar menú"
             onClick={() => setOpen(false)}
           />
-          <div className="section-nav-panel" role="menu" aria-label="Secciones de la invitación">
+          <nav className="section-nav-panel" aria-label="Secciones de la invitación">
             <ul>
               {NAV_ITEMS.map((item) => (
                 <li key={item.selector}>
                   <button
                     type="button"
-                    role="menuitem"
                     className={`section-nav-item${active === item.selector ? " section-nav-item--active" : ""}`}
                     onClick={() => goTo(item.selector)}
+                    aria-current={active === item.selector ? "true" : undefined}
                   >
                     {item.label}
                   </button>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
         </>
       ) : null}
     </div>

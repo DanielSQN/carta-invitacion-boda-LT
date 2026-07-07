@@ -91,6 +91,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   const [guestName, setGuestName] = useState(initialGuestName);
   const [hasMusicStarted, setHasMusicStarted] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  // "Clic" solo tiene sentido con mouse: en pantallas táctiles (la mayoría de
+  // los invitados, vía WhatsApp) el gesto es un toque. Se resuelve tras montar
+  // para no desajustar la hidratación.
+  const [openCtaLabel, setOpenCtaLabel] = useState("Clic para abrir");
   const audioRef = useRef<HTMLAudioElement>(null);
   const homeSceneRef = useRef<HTMLElement>(null);
   const envelopeLetterRef = useRef<HTMLDivElement>(null);
@@ -112,6 +116,12 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       size: 1 + Math.random() * 3.2,
     }));
   });
+
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      queueMicrotask(() => setOpenCtaLabel("Toca para abrir"));
+    }
+  }, []);
 
   useEffect(() => {
     const handleIntroComplete = () => setIsHeroIntroDone(true);
@@ -787,9 +797,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
                   animate={{ opacity: 1, x: "7%", y: 0, rotate: -7 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ delay: 0.7, duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
-                  aria-label="Clic para abrir"
+                  aria-label={openCtaLabel}
                 >
-                  <span>Clic para abrir</span>
+                  <span>{openCtaLabel}</span>
                 </m.button>
               ) : null}
             </div>

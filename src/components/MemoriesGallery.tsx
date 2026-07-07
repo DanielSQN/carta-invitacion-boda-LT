@@ -117,7 +117,16 @@ export default function MemoriesGallery() {
     // Bloqueo del scroll NATIVO del documento mientras el lightbox esta abierto.
     // Tecnica iOS-safe: se fija el body en su posicion actual (position:fixed +
     // top negativo) para que el fondo no se mueva y al cerrar se restaura el
-    // scroll exacto. No se toca ningun contenedor interno (ya no existe).
+    // scroll exacto. El scroll real de la invitación vive en .details-scroll
+    // (contenedor fijo con overflow interno) y fijar el body no lo detiene,
+    // así que ese contenedor se bloquea aparte.
+    const scroller = galleryRef.current?.closest<HTMLElement>(".details-scroll");
+    const previousScrollerOverflowY = scroller?.style.overflowY ?? "";
+
+    if (scroller) {
+      scroller.style.overflowY = "hidden";
+    }
+
     const html = document.documentElement;
     const body = document.body;
     const scrollY = window.scrollY;
@@ -151,6 +160,10 @@ export default function MemoriesGallery() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      if (scroller) {
+        scroller.style.overflowY = previousScrollerOverflowY;
+      }
+
       html.classList.remove("is-lightbox-open");
       body.style.position = previous.position;
       body.style.top = previous.top;

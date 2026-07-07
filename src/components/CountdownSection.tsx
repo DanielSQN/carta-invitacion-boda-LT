@@ -49,6 +49,9 @@ export default function CountdownSection() {
   const metaRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [countdown, setCountdown] = useState<CountdownTime>(initialCountdown);
+  // El estado inicial (todo en cero) es solo el placeholder de SSR: hasta el
+  // primer tick real no se puede saber si la cuenta de verdad llegó a cero.
+  const [hasTicked, setHasTicked] = useState(false);
   const [calendarHref, setCalendarHref] = useState(googleCalendarUrl);
 
   useEffect(() => {
@@ -64,8 +67,12 @@ export default function CountdownSection() {
   }, []);
 
   useEffect(() => {
-    const initialTimer = window.setTimeout(() => setCountdown(getCountdownTime()), 0);
-    const interval = window.setInterval(() => setCountdown(getCountdownTime()), 1000);
+    const tick = () => {
+      setCountdown(getCountdownTime());
+      setHasTicked(true);
+    };
+    const initialTimer = window.setTimeout(tick, 0);
+    const interval = window.setInterval(tick, 1000);
 
     return () => {
       window.clearTimeout(initialTimer);
@@ -122,6 +129,10 @@ export default function CountdownSection() {
     { label: "SEGUNDOS", value: countdown.seconds },
   ];
   const isIcsCalendar = calendarHref === icsCalendarUrl;
+  // Cuando la cuenta llega a cero (26 de septiembre de 2026) la cuadrícula se
+  // reemplaza por el mensaje del gran día.
+  const isWeddingDay =
+    hasTicked && countdown.days === 0 && countdown.hours === 0 && countdown.minutes === 0 && countdown.seconds === 0;
 
   return (
     <section ref={sectionRef} className="countdown-section" aria-labelledby="countdown-title">
@@ -151,11 +162,16 @@ export default function CountdownSection() {
 
         <div className="countdown-content">
           <div ref={titleRef} className="countdown-title-block">
-            <h2 id="countdown-title">Faltan</h2>
+            <h2 id="countdown-title">{isWeddingDay ? "¡Es hoy!" : "Faltan"}</h2>
             <span aria-hidden="true" />
           </div>
 
           <div className="countdown-row">
+            {isWeddingDay ? (
+              <p className="countdown-today" role="status">
+                ¡Llegó el gran día! Nos vemos en la celebración.
+              </p>
+            ) : (
             <div className="countdown-grid" aria-label="Cuenta regresiva para la boda">
               {items.map((item, index) => (
                 <div
@@ -172,6 +188,7 @@ export default function CountdownSection() {
                 </div>
               ))}
             </div>
+            )}
 
             <div ref={metaRef} className="countdown-meta">
               <p className="countdown-date">26 · SEP · 2026</p>
