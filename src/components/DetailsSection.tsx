@@ -11,8 +11,8 @@ import { createSectionReveal, getSectionScroller, prefersReducedMotion } from "@
 
 gsap.registerPlugin(ScrollTrigger);
 
-const virtualQrSrc = "/images/details/qr-transferencia.svg";
-const brebKey = "@miBodaLT";
+const virtualQrSrc = "/images/details/qr-llave-nu.svg";
+const brebKey = "@JOH421";
 
 const detailCards = [
   {
@@ -126,7 +126,7 @@ export default function DetailsSection() {
                       <Image className="details-card-qr-image" src={virtualQrSrc} alt="QR para transferencia" width={148} height={148} />
                     </div>
                     <div className="details-qr-col details-qr-col--right">
-                      <button className="details-card-qr-badge" type="button" onClick={copyBrebKey} aria-label="Copiar llave Bre-B @miBodaLT">
+                      <button className="details-card-qr-badge" type="button" onClick={copyBrebKey} aria-label={`Copiar llave Bre-B ${brebKey}`}>
                         {hasCopiedBrebKey ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
                         {hasCopiedBrebKey ? "Copiado" : `Llave: ${brebKey}`}
                       </button>
