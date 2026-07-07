@@ -633,9 +633,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       const audio = audioRef.current;
 
       if (audio) {
-        // Fade-in en dos etapas: suave y sutil durante la transición del sobre
-        // (~3.1s) y el arranque del hero, y el swell a volumen pleno cae justo
-        // a mitad de la escritura de los nombres (~5.5s después del clic).
+        // Fade-in progresivo: los primeros ~5s la música se mantiene baja y
+        // sube de forma continua; el swell a volumen pleno cae justo a mitad
+        // de la escritura de los nombres (~5.5s después del clic).
         audio.volume = 0;
         audio
           .play()
@@ -644,9 +644,9 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
             setIsMusicPlaying(true);
             gsap
               .timeline()
-              .to(audio, { volume: 0.16, duration: 1.1, ease: "sine.out" })
-              .to(audio, { volume: 0.26, duration: 3.6, ease: "none" })
-              .to(audio, { volume: 0.58, duration: 1.4, ease: "sine.inOut" });
+              .to(audio, { volume: 0.1, duration: 0.8, ease: "sine.out" })
+              .to(audio, { volume: 0.22, duration: 4.2, ease: "power1.in" })
+              .to(audio, { volume: 0.58, duration: 1.3, ease: "sine.inOut" });
           })
           .catch(() => {
             setHasMusicStarted(true);
