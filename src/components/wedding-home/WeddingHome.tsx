@@ -728,7 +728,7 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
           : "relative h-svh overflow-hidden bg-paper text-olive"
       }
     >
-      <audio ref={audioRef} src="/audio/song1.mp3?v=20260707-athousandyears" preload="none" loop />
+      <audio ref={audioRef} src="/audio/song1.mp3?v=20260707-athousandyears-15s" preload="none" loop />
       {showWeddingHero ? <SectionNav /> : null}
       {musicControl}
       {swipeDownControl}
