@@ -5,6 +5,11 @@ type DecorativeTextProps = {
 };
 
 export default function DecorativeText({ guestName }: DecorativeTextProps) {
+  // La letra se reduce según el largo del nombre para que los "para" largos
+  // no pasen de 2-3 líneas ni invadan el "Para:" o las esquinas decoradas.
+  const sizeClass =
+    guestName.length > 32 ? " decorative-name--sm" : guestName.length > 18 ? " decorative-name--md" : "";
+
   return (
     <m.header
       className="decorative-text relative z-[3] w-full text-olive"
@@ -15,7 +20,7 @@ export default function DecorativeText({ guestName }: DecorativeTextProps) {
       <p className="decorative-label font-script leading-none">
         Para:
       </p>
-      <h1 className="decorative-name font-script leading-[0.88] tracking-normal">
+      <h1 className={`decorative-name${sizeClass} font-script leading-[0.88] tracking-normal`}>
         <span className="decorative-name-line">
           <span>{guestName}</span>
           <svg

@@ -273,6 +273,19 @@ button {
   max-width: min(100%, 7.9em);
 }
 
+/* Nombres largos: la letra se reduce (en em, así respeta todos los
+   breakpoints) y el ancho máximo sube en proporción para que quepan más
+   caracteres por línea. */
+.decorative-name--md .decorative-name-line {
+  font-size: 0.84em;
+  max-width: min(100%, 9.4em);
+}
+
+.decorative-name--sm .decorative-name-line {
+  font-size: 0.68em;
+  max-width: min(100%, 11.6em);
+}
+
 .calligraphy-heart {
   display: inline-block;
   width: 0.92em;
