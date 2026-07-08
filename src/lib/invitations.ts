@@ -105,21 +105,29 @@ export async function getInvitationByLabel(label: string): Promise<InvitationRec
   };
 }
 
-// Inserta (o ignora duplicados por label) un lote de invitaciones.
-export async function upsertInvitations(inputs: InvitationInput[]): Promise<void> {
+// Inserta un lote de invitaciones.
+//
+// mode controla qué pasa con un label que ya existe:
+//   - "ignore": se deja intacto (no se pisa el cupo/notas que ya tuviera).
+//     Es el modo para líneas importadas SIN cupo.
+//   - "merge": se actualiza su cupo con el valor recibido. Solo se envían las
+//     columnas label y guests_planned, así que las notas nunca se tocan.
+export async function upsertInvitations(inputs: InvitationInput[], mode: "ignore" | "merge" = "ignore"): Promise<void> {
   if (!isInvitationsAvailable() || inputs.length === 0) {
     return;
   }
 
-  const rows = inputs.map((input) => ({
-    label: input.label,
-    guests_planned: input.guestsPlanned ?? null,
-    notes: input.notes ?? null,
-  }));
+  // Todos los objetos del lote deben tener las mismas claves (PostgREST).
+  const rows =
+    mode === "merge"
+      ? inputs.map((input) => ({ label: input.label, guests_planned: input.guestsPlanned ?? null }))
+      : inputs.map((input) => ({ label: input.label }));
+
+  const resolution = mode === "merge" ? "merge-duplicates" : "ignore-duplicates";
 
   const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?on_conflict=label`, {
     method: "POST",
-    headers: restHeaders({ Prefer: "resolution=merge-duplicates,return=minimal" }),
+    headers: restHeaders({ Prefer: `resolution=${resolution},return=minimal` }),
     body: JSON.stringify(rows),
     cache: "no-store",
   });
@@ -127,6 +135,26 @@ export async function upsertInvitations(inputs: InvitationInput[]): Promise<void
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
     throw new Error(`Error guardando invitaciones (${response.status}): ${detail}`);
+  }
+}
+
+// Actualiza el cupo de acompañantes de una invitación (null = sin cupo, en el
+// formulario solo podrá confirmar 1 persona).
+export async function updateInvitationGuests(id: string, guestsPlanned: number | null): Promise<void> {
+  if (!isInvitationsAvailable()) {
+    throw new Error("Supabase no está configurado");
+  }
+
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?id=eq.${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: restHeaders({ Prefer: "return=minimal" }),
+    body: JSON.stringify({ guests_planned: guestsPlanned }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    const detail = await response.text().catch(() => "");
+    throw new Error(`Error actualizando cupo (${response.status}): ${detail}`);
   }
 }
 

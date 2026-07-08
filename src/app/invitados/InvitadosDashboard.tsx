@@ -56,6 +56,69 @@ function downloadCsv(rows: RsvpRecord[]) {
   URL.revokeObjectURL(url);
 }
 
+// Celda editable del cupo de asistentes de una invitación. Guarda al salir del
+// campo o con Enter; vacío = sin cupo (solo confirma 1 persona).
+function CupoCell({ invitation }: { invitation: InvitationRecord }) {
+  const initial = invitation.guestsPlanned ? String(invitation.guestsPlanned) : "";
+  const [value, setValue] = useState(initial);
+  const [savedValue, setSavedValue] = useState(initial);
+  const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+
+  const save = async () => {
+    const trimmed = value.trim();
+
+    if (trimmed === savedValue) {
+      return;
+    }
+
+    setState("saving");
+
+    try {
+      const response = await fetch("/api/invitados/invitaciones", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: invitation.id, guestsPlanned: trimmed === "" ? null : Number(trimmed) }),
+      });
+
+      if (!response.ok) {
+        throw new Error("save failed");
+      }
+
+      setSavedValue(trimmed);
+      setState("saved");
+      setTimeout(() => setState((current) => (current === "saved" ? "idle" : current)), 1400);
+    } catch {
+      setValue(savedValue);
+      setState("error");
+      setTimeout(() => setState((current) => (current === "error" ? "idle" : current)), 2000);
+    }
+  };
+
+  return (
+    <span className="dash-cupo">
+      <input
+        type="number"
+        className="dash-cupo-input"
+        min={1}
+        max={12}
+        placeholder="—"
+        value={value}
+        disabled={state === "saving"}
+        onChange={(event) => setValue(event.target.value)}
+        onBlur={save}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.currentTarget.blur();
+          }
+        }}
+        aria-label={`Cupo de asistentes de ${invitation.label}`}
+      />
+      {state === "saved" ? <span className="dash-cupo-state dash-cupo-state--ok">✓</span> : null}
+      {state === "error" ? <span className="dash-cupo-state dash-cupo-state--error">no se guardó</span> : null}
+    </span>
+  );
+}
+
 export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigured, loadError }: Props) {
   const [tab, setTab] = useState<"respuestas" | "invitaciones">("invitaciones");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -148,10 +211,17 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
       return;
     }
     const content = await file.text();
-    // Primera columna de cada fila, sin comillas; se descarta encabezado obvio.
+    // Primeras dos columnas de cada fila (nombre y cupo opcional), sin
+    // comillas; se descarta encabezado obvio.
+    const unquote = (value: string) => value.replace(/^["']|["']$/g, "").trim();
     const names = content
       .split(/\r?\n/)
-      .map((line) => (line.split(/[,;]/)[0] ?? "").replace(/^["']|["']$/g, "").trim())
+      .map((line) => {
+        const [rawLabel, rawCupo] = line.split(/[,;]/);
+        const label = unquote(rawLabel ?? "");
+        const cupo = unquote(rawCupo ?? "");
+        return label && /^\d{1,2}$/.test(cupo) ? `${label}, ${cupo}` : label;
+      })
       .filter((name, index) => name && !(index === 0 && /^(nombre|para|invitaci[oó]n|label)s?$/i.test(name)));
     setImportText((current) => (current.trim() ? `${current.trim()}\n${names.join("\n")}` : names.join("\n")));
   };
@@ -309,7 +379,9 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
             <h2>Importar invitaciones</h2>
             <p>
               Sube un <strong>CSV</strong> con los nombres tal cual van en el <code>?para=</code> (un nombre por fila,
-              primera columna). También puedes pegarlos abajo, uno por línea.
+              primera columna). La segunda columna es el <strong>cupo</strong> de asistentes de esa invitación
+              (opcional; sin cupo solo confirma 1 persona). También puedes pegarlos abajo, uno por línea. Reimportar un
+              nombre existente sin cupo no borra el cupo que ya tenga.
             </p>
             <label className="dash-csv">
               <input type="file" accept=".csv,text/csv" onChange={(event) => handleCsvFile(event.target.files?.[0])} />
@@ -318,7 +390,7 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
             <textarea
               className="dash-import-text"
               rows={4}
-              placeholder={"Familia Pérez\nLaura Gómez\nTíos Restrepo"}
+              placeholder={"Familia Pérez, 4\nLaura Gómez\nTíos Restrepo, 2"}
               value={importText}
               onChange={(event) => setImportText(event.target.value)}
             />
@@ -352,6 +424,7 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
                 <thead>
                   <tr>
                     <th>Para (invitación)</th>
+                    <th>Cupo</th>
                     <th>Estado</th>
                     <th>Respondió</th>
                     <th>Link</th>
@@ -362,6 +435,9 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
                   {invitationRows.map(({ inv, response, status }) => (
                     <tr key={inv.id}>
                       <td className="dash-td-names">{inv.label}</td>
+                      <td>
+                        <CupoCell invitation={inv} />
+                      </td>
                       <td>
                         <span
                           className={`dash-badge${

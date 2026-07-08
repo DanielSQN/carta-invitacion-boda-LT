@@ -576,3 +576,45 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Celda editable del cupo de asistentes por invitación. */
+.dash-cupo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dash-cupo-input {
+  width: 3.4rem;
+  padding: 0.32rem 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: 0.45rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.dash-cupo-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.dash-cupo-input:disabled {
+  opacity: 0.55;
+}
+
+.dash-cupo-state {
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.dash-cupo-state--ok {
+  color: var(--yes, #1f9d55);
+  font-weight: 700;
+}
+
+.dash-cupo-state--error {
+  color: var(--no, #c0392b);
+}
