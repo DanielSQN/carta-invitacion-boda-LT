@@ -20,12 +20,14 @@ type MemoryPhoto = {
   width: number;
   height: number;
   orientation: "landscape" | "portrait" | "square";
+  // Momento especial que se resalta en la galería (sello dorado + leyenda).
+  highlight?: string;
 };
 
 // Orden cronológico: dentro de cada año va primero el archivo "fecha sola"
 // (p. ej. 2026.webp) y después los numerados (2026-2.webp). El array ya está
 // ordenado a mano; no se reordena en runtime.
-const galleryPhotos = [
+const galleryPhotos: Array<Omit<MemoryPhoto, "src" | "alt">> = [
   { file: "2016-1.webp", year: "2016", width: 1600, height: 1200, orientation: "landscape" },
   { file: "2016-2.webp", year: "2016", width: 720, height: 720, orientation: "square" },
   { file: "2017-1.webp", year: "2017", width: 1280, height: 720, orientation: "landscape" },
@@ -43,7 +45,7 @@ const galleryPhotos = [
   { file: "2023-1.webp", year: "2023", width: 1200, height: 1600, orientation: "portrait" },
   { file: "2023-2.webp", year: "2023", width: 1200, height: 1600, orientation: "portrait" },
   { file: "2024-1.webp", year: "2024", width: 1280, height: 960, orientation: "landscape" },
-  { file: "2024-2.webp", year: "2024", width: 1600, height: 1200, orientation: "landscape" },
+  { file: "2024-2.webp", year: "2024", width: 1600, height: 1200, orientation: "landscape", highlight: "La propuesta" },
   { file: "2025-1.webp", year: "2025", width: 1600, height: 1200, orientation: "landscape" },
   { file: "2025-2.webp", year: "2025", width: 960, height: 1280, orientation: "portrait" },
   { file: "2026.webp", year: "2026", width: 1600, height: 1200, orientation: "landscape" },
@@ -54,14 +56,27 @@ const memoryPhotos: MemoryPhoto[] = galleryPhotos
   .map((photo) => ({
     src: `/images/story/gallery/${photo.file}`,
     file: photo.file,
-    alt: `Luisa y Jhonnatan, recuerdo de ${photo.year}`,
+    alt: photo.highlight
+      ? `Luisa y Jhonnatan, ${photo.highlight.toLowerCase()} (${photo.year})`
+      : `Luisa y Jhonnatan, recuerdo de ${photo.year}`,
     year: photo.year,
     width: photo.width,
     height: photo.height,
     orientation: photo.orientation,
+    highlight: photo.highlight,
   }));
 
 const memoryYears = Array.from(new Set(memoryPhotos.map((photo) => photo.year)));
+
+// Anillo de compromiso para el sello dorado de la foto de la propuesta.
+function ProposalRingIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="14.6" r="6.1" strokeWidth="1.7" />
+      <path d="M9.2 5.4 12 2.7l2.8 2.7L12 8.4z" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 function normalizeMemoryIndex(index: number) {
   return (index + memoryPhotos.length) % memoryPhotos.length;
@@ -314,7 +329,7 @@ export default function MemoriesGallery() {
         >
           <m.figure
             key={`memories-lightbox-card-${lightboxIndex}`}
-            className={`memories-lightbox-card is-${memoryPhotos[lightboxIndex].orientation}`}
+            className={`memories-lightbox-card is-${memoryPhotos[lightboxIndex].orientation}${memoryPhotos[lightboxIndex].highlight ? " is-highlight" : ""}`}
             initial={{ scale: 0.88, y: 22 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.92, y: 12 }}
@@ -346,13 +361,16 @@ export default function MemoriesGallery() {
                 className="memories-lightbox-image"
               />
             </span>
-            {/* Solo el año, en la franja inferior del polaroid */}
+            {/* Año (y leyenda del momento especial) en la franja del polaroid */}
             <figcaption>
               <span className="memories-lightbox-year">
                 <i aria-hidden="true" />
                 {memoryPhotos[lightboxIndex].year}
                 <i aria-hidden="true" />
               </span>
+              {memoryPhotos[lightboxIndex].highlight ? (
+                <span className="memories-lightbox-tag">{memoryPhotos[lightboxIndex].highlight} ♥</span>
+              ) : null}
             </figcaption>
           </m.figure>
 
@@ -407,7 +425,7 @@ export default function MemoriesGallery() {
         {memoryPhotos.map((photo, index) => (
           <figure
             key={photo.src}
-            className={`memories-card is-${photo.orientation} ${index === activeIndex ? "is-active" : ""}`}
+            className={`memories-card is-${photo.orientation} ${index === activeIndex ? "is-active" : ""}${photo.highlight ? " is-highlight" : ""}`}
           >
             <button
               type="button"
@@ -429,7 +447,14 @@ export default function MemoriesGallery() {
                 />
               </span>
             </button>
-            <figcaption className="memories-card-caption">{photo.year}</figcaption>
+            {photo.highlight ? (
+              <span className="memories-card-badge" aria-hidden="true">
+                <ProposalRingIcon />
+              </span>
+            ) : null}
+            <figcaption className="memories-card-caption">
+              {photo.highlight ? `${photo.highlight} · ${photo.year}` : photo.year}
+            </figcaption>
           </figure>
         ))}
       </div>

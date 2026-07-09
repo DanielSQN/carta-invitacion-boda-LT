@@ -2609,6 +2609,103 @@ button {
 }
 
 
+/* Polaroid destacado: la foto de la propuesta de matrimonio. Marco interior
+   dorado + resplandor suave + sello con anillo, en la misma línea del sello
+   de cera del sobre. */
+.memories-card.is-highlight {
+  box-shadow:
+    0 0.4rem 0.85rem -0.25rem rgba(2, 8, 15, 0.26),
+    0 1.5rem 2.9rem -0.85rem rgba(2, 8, 15, 0.46),
+    0 0.1rem 0.35rem rgba(2, 8, 15, 0.14),
+    0 0 0.95rem rgba(214, 178, 94, 0.4);
+}
+
+.memories-card.is-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0.22rem;
+  z-index: 2;
+  border: 1px solid rgba(198, 162, 79, 0.6);
+  border-radius: 0.14rem;
+  pointer-events: none;
+}
+
+.memories-card.is-highlight.is-active {
+  box-shadow:
+    0 0.5rem 1rem -0.25rem rgba(2, 8, 15, 0.32),
+    0 1.9rem 3.4rem -0.7rem rgba(2, 8, 15, 0.55),
+    0 0.15rem 0.45rem rgba(2, 8, 15, 0.18),
+    0 0 1.5rem rgba(214, 178, 94, 0.55);
+  animation: memories-highlight-glow 2.8s ease-in-out infinite;
+}
+
+@keyframes memories-highlight-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0.15rem rgba(214, 178, 94, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 0.55rem rgba(214, 178, 94, 0.5));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memories-card.is-highlight.is-active {
+    animation: none;
+  }
+}
+
+/* Sello dorado con el anillo, colgado de la esquina del polaroid. */
+.memories-card-badge {
+  position: absolute;
+  top: -0.55rem;
+  right: -0.5rem;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: clamp(1.8rem, 7.4vw, 2.15rem);
+  height: clamp(1.8rem, 7.4vw, 2.15rem);
+  border-radius: 999px;
+  background: radial-gradient(circle at 32% 28%, #ecd28f, #c6a24f 62%, #9e7c36);
+  color: #fffaf1;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 241, 0.35),
+    0 0.25rem 0.6rem rgba(2, 8, 15, 0.32);
+  transform: rotate(8deg);
+  pointer-events: none;
+}
+
+.memories-card-badge svg {
+  width: 58%;
+  height: 58%;
+}
+
+.memories-card.is-highlight .memories-card-caption {
+  color: #7d6023;
+}
+
+/* Leyenda del momento especial bajo el año en el lightbox: la franja
+   inferior crece y el año + leyenda se apilan en columna. */
+.memories-lightbox-card.is-highlight {
+  padding-bottom: clamp(3.5rem, 12.5vw, 4.4rem);
+}
+
+.memories-lightbox-card.is-highlight figcaption {
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12rem;
+}
+
+.memories-lightbox-card figcaption span.memories-lightbox-tag {
+  color: #7d6023;
+  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
+  font-size: clamp(1.3rem, 5.6vw, 1.6rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.05;
+  text-align: center;
+}
+
 .memories-card-caption {
   position: absolute;
   inset-inline: clamp(0.42rem, 1.7vw, 0.6rem);
