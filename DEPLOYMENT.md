@@ -77,3 +77,27 @@ npx vercel --prod --yes
 Puedes reemplazar esos archivos manteniendo el mismo nombre para no tocar código.
 
 WhatsApp puede guardar cache del preview. Para probar cambios puedes compartir la URL con `?preview=2` o cambiar el nombre de la imagen a una nueva versión, por ejemplo `preview-boda-v3.png`.
+
+## Dominio Propio (boda-tattan-lu.info)
+
+El dominio se conecta una sola vez; después todo despliegue queda publicado ahí automáticamente.
+
+1. **Agregar el dominio en Vercel**: proyecto → Settings → Domains → Add → `boda-tattan-lu.info`. Agrega también `www.boda-tattan-lu.info` y márcalo para que redirija al dominio principal.
+
+2. **Configurar el DNS en el registrador** (donde compraste el .info) con los valores exactos que Vercel muestra al agregar el dominio. Normalmente son:
+   - Registro `A` para `@` → `76.76.21.21`
+   - Registro `CNAME` para `www` → `cname.vercel-dns.com`
+
+   La propagación puede tardar de minutos a unas horas. Vercel emite el certificado HTTPS solo (no hay que hacer nada).
+
+3. **Variable de entorno**: en Vercel → Settings → Environment Variables, define para Production:
+
+   ```
+   NEXT_PUBLIC_SITE_URL=https://boda-tattan-lu.info
+   ```
+
+   y vuelve a desplegar. (El código ya usa este dominio como valor por defecto, pero la variable manda.) Esto hace que los previews de WhatsApp apunten al dominio nuevo.
+
+4. **Links de los invitados**: desde ese momento compárte los links como `https://boda-tattan-lu.info/?para=Nombre`. El botón "Copiar link" del panel usa automáticamente el dominio desde el que abras el panel, así que ábrelo en `https://boda-tattan-lu.info/invitados` para copiar links con el dominio nuevo. Los links viejos (`*.vercel.app`) siguen funcionando.
+
+Nota: las mayúsculas en el dominio no importan (`Boda-Tattan-Lu.info` y `boda-tattan-lu.info` son el mismo).

@@ -34,7 +34,10 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
+// Dominio propio de la invitación; NEXT_PUBLIC_SITE_URL lo puede sobrescribir
+// (p. ej. en previews de Vercel). Es la base de las URLs absolutas de los
+// previews de WhatsApp/redes (Open Graph).
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://boda-tattan-lu.info";
 const metadataBase = new URL(
   siteUrl.startsWith("http://") || siteUrl.startsWith("https://")
     ? siteUrl
