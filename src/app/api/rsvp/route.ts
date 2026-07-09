@@ -55,18 +55,32 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, persisted: false }, { headers: noStoreHeaders });
   }
 
-  // Cupo por invitación: si el "para" tiene guests_planned asignado, el número
-  // de asistentes se limita en el servidor (el formulario ya lo limita en la
-  // interfaz, esto evita saltárselo).
-  if (attending && invitedAs) {
+  // Cupo por invitación, validado en el servidor (el formulario ya lo limita
+  // en la interfaz, esto evita saltárselo con una petición armada a mano):
+  //   - "para" con cupo asignado  -> se recorta a ese cupo.
+  //   - "para" sin cupo, "para" inexistente o sin "para" -> solo 1 asistente,
+  //     igual que la interfaz. Se respeta una confirmación previa mayor (por
+  //     si el cupo se retiró después de que el invitado ya había confirmado).
+  //   - Si Supabase falla al consultar, no se bloquea la confirmación (se
+  //     acepta tal cual llegó y se registra el aviso).
+  if (attending) {
     try {
-      const invitation = await getInvitationByLabel(invitedAs);
-      const allowed = invitation?.guestsPlanned ?? null;
+      const allowed = invitedAs ? ((await getInvitationByLabel(invitedAs))?.guestsPlanned ?? null) : null;
+
+      let cap = 1;
 
       if (allowed && allowed > 0) {
-        payload.guestCount = Math.min(payload.guestCount, allowed);
-        payload.names = payload.names.slice(0, allowed);
+        cap = allowed;
+      } else if (invitedAs) {
+        const existing = await getRsvpByInvitation(invitedAs);
+
+        if (existing?.attending && existing.guestCount > cap) {
+          cap = Math.min(existing.guestCount, 12);
+        }
       }
+
+      payload.guestCount = Math.min(payload.guestCount, cap);
+      payload.names = payload.names.slice(0, cap);
     } catch (error) {
       console.warn("[rsvp] no se pudo verificar el cupo de la invitación:", error);
     }
