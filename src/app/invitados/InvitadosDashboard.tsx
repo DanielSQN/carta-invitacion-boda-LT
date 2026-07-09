@@ -517,9 +517,10 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
           >
             <h3 id="dash-delete-title">¿Eliminar esta invitación?</h3>
             <p>
-              Vas a eliminar <strong>{pendingDelete.label}</strong> de la lista. Perderás el seguimiento de si
-              responde o no (su link seguirá abriendo la invitación y, si ya respondió, su respuesta seguirá en la
-              pestaña &ldquo;Respuestas&rdquo;).
+              Vas a eliminar <strong>{pendingDelete.label}</strong>{" "}de la lista. Perderás el seguimiento de si
+              responde o no y, si aún no ha confirmado, esa invitación quedará <strong>sin cupo</strong>: solo podrá
+              confirmar 1 persona. Su link seguirá abriendo la invitación y, si ya respondió, su respuesta seguirá en
+              la pestaña &ldquo;Respuestas&rdquo;.
             </p>
             <div className="dash-modal-actions">
               <button type="button" className="dash-modal-cancel" onClick={() => setPendingDelete(null)} disabled={deleting}>
