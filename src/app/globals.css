@@ -2684,28 +2684,6 @@ button {
   color: #7d6023;
 }
 
-/* Leyenda del momento especial bajo el año en el lightbox: la franja
-   inferior crece y el año + leyenda se apilan en columna. */
-.memories-lightbox-card.is-highlight {
-  padding-bottom: clamp(3.5rem, 12.5vw, 4.4rem);
-}
-
-.memories-lightbox-card.is-highlight figcaption {
-  flex-direction: column;
-  align-items: center;
-  gap: 0.12rem;
-}
-
-.memories-lightbox-card figcaption span.memories-lightbox-tag {
-  color: #7d6023;
-  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
-  font-size: clamp(1.3rem, 5.6vw, 1.6rem);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1.05;
-  text-align: center;
-}
-
 .memories-card-caption {
   position: absolute;
   inset-inline: clamp(0.42rem, 1.7vw, 0.6rem);

@@ -329,7 +329,7 @@ export default function MemoriesGallery() {
         >
           <m.figure
             key={`memories-lightbox-card-${lightboxIndex}`}
-            className={`memories-lightbox-card is-${memoryPhotos[lightboxIndex].orientation}${memoryPhotos[lightboxIndex].highlight ? " is-highlight" : ""}`}
+            className={`memories-lightbox-card is-${memoryPhotos[lightboxIndex].orientation}`}
             initial={{ scale: 0.88, y: 22 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.92, y: 12 }}
@@ -361,16 +361,13 @@ export default function MemoriesGallery() {
                 className="memories-lightbox-image"
               />
             </span>
-            {/* Año (y leyenda del momento especial) en la franja del polaroid */}
+            {/* Solo el año, en la franja inferior del polaroid */}
             <figcaption>
               <span className="memories-lightbox-year">
                 <i aria-hidden="true" />
                 {memoryPhotos[lightboxIndex].year}
                 <i aria-hidden="true" />
               </span>
-              {memoryPhotos[lightboxIndex].highlight ? (
-                <span className="memories-lightbox-tag">{memoryPhotos[lightboxIndex].highlight} ♥</span>
-              ) : null}
             </figcaption>
           </m.figure>
 
@@ -452,9 +449,7 @@ export default function MemoriesGallery() {
                 <ProposalRingIcon />
               </span>
             ) : null}
-            <figcaption className="memories-card-caption">
-              {photo.highlight ? `${photo.highlight} · ${photo.year}` : photo.year}
-            </figcaption>
+            <figcaption className="memories-card-caption">{photo.year}</figcaption>
           </figure>
         ))}
       </div>
