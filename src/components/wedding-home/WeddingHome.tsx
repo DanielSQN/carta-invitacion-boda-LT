@@ -164,8 +164,11 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
   useEffect(() => {
     // Deshabilita el pinch-zoom en toda la invitación. iOS ignora el viewport
     // maximumScale/userScalable, así que se bloquean sus gestos de pellizco
-    // (gesturestart/change/end) y el touchmove con 2+ dedos. El scroll (1 dedo)
-    // y el pull-to-refresh del tope NO se ven afectados.
+    // (gesturestart/change/end) y el touchmove con 2+ dedos.
+    //
+    // El touchmove NO pasivo obliga al navegador a esperar al JS en cada frame
+    // del scroll, así que solo se registra mientras haya 2+ dedos en pantalla:
+    // el scroll de 1 dedo (el 99% del uso) queda completamente pasivo.
     const preventGesture = (event: Event) => event.preventDefault();
     const preventMultiTouch = (event: TouchEvent) => {
       if (event.touches.length > 1) {
@@ -173,15 +176,36 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       }
     };
 
+    let multiTouchArmed = false;
+
+    const armMultiTouchBlock = (event: TouchEvent) => {
+      if (event.touches.length > 1 && !multiTouchArmed) {
+        multiTouchArmed = true;
+        document.addEventListener("touchmove", preventMultiTouch, { passive: false });
+      }
+    };
+
+    const disarmMultiTouchBlock = (event: TouchEvent) => {
+      if (event.touches.length <= 1 && multiTouchArmed) {
+        multiTouchArmed = false;
+        document.removeEventListener("touchmove", preventMultiTouch);
+      }
+    };
+
     document.addEventListener("gesturestart", preventGesture);
     document.addEventListener("gesturechange", preventGesture);
     document.addEventListener("gestureend", preventGesture);
-    document.addEventListener("touchmove", preventMultiTouch, { passive: false });
+    document.addEventListener("touchstart", armMultiTouchBlock, { passive: true });
+    document.addEventListener("touchend", disarmMultiTouchBlock, { passive: true });
+    document.addEventListener("touchcancel", disarmMultiTouchBlock, { passive: true });
 
     return () => {
       document.removeEventListener("gesturestart", preventGesture);
       document.removeEventListener("gesturechange", preventGesture);
       document.removeEventListener("gestureend", preventGesture);
+      document.removeEventListener("touchstart", armMultiTouchBlock);
+      document.removeEventListener("touchend", disarmMultiTouchBlock);
+      document.removeEventListener("touchcancel", disarmMultiTouchBlock);
       document.removeEventListener("touchmove", preventMultiTouch);
     };
   }, []);
@@ -606,6 +630,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       pulling = true;
       distance = 0;
       indicator.style.transition = "";
+      // El touchmove NO pasivo solo se registra para el gesto que empezó en el
+      // tope (único donde puede haber pull): el resto del scroll queda pasivo
+      // y el navegador no espera al JS en cada frame.
+      scroller.addEventListener("touchmove", onMove, { passive: false });
     };
 
     const onMove = (event: TouchEvent) => {
@@ -616,7 +644,10 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
       const dy = event.touches[0].clientY - startY;
 
       if (dy <= 0 || scroller.scrollTop > 0) {
+        // El gesto se volvió scroll normal: se suelta el listener no pasivo
+        // para que el resto del desplazamiento no espere al JS.
         pulling = false;
+        scroller.removeEventListener("touchmove", onMove);
         reset();
         return;
       }
@@ -630,6 +661,8 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     };
 
     const onEnd = () => {
+      scroller.removeEventListener("touchmove", onMove);
+
       if (!pulling || refreshing) {
         return;
       }
@@ -649,7 +682,6 @@ export default function WeddingHome({ initialGuestName }: WeddingHomeProps) {
     };
 
     scroller.addEventListener("touchstart", onStart, { passive: true });
-    scroller.addEventListener("touchmove", onMove, { passive: false });
     scroller.addEventListener("touchend", onEnd, { passive: true });
     scroller.addEventListener("touchcancel", onEnd, { passive: true });
 

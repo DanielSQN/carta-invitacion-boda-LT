@@ -104,18 +104,27 @@ export async function GET(request: Request) {
   }
 
   try {
-    const rsvp = await getRsvpByInvitation(invitedAs);
+    // Lecturas independientes en paralelo: la respuesta guardada y el cupo de
+    // acompañantes (antes iban en serie y duplicaban la latencia a Supabase).
+    const [rsvpResult, invitationResult] = await Promise.allSettled([
+      getRsvpByInvitation(invitedAs),
+      getInvitationByLabel(invitedAs),
+    ]);
 
-    // Cupo de acompañantes asignado a esta invitación (si existe en el panel).
-    let allowedGuests: number | null = null;
-    try {
-      const invitation = await getInvitationByLabel(invitedAs);
-      allowedGuests = invitation?.guestsPlanned ?? null;
-    } catch (error) {
-      console.warn("[rsvp] no se pudo leer el cupo de la invitación:", error);
+    if (rsvpResult.status === "rejected") {
+      throw rsvpResult.reason;
     }
 
-    return Response.json({ ok: true, persisted: true, rsvp, allowedGuests }, { headers: noStoreHeaders });
+    let allowedGuests: number | null = null;
+
+    if (invitationResult.status === "fulfilled") {
+      allowedGuests = invitationResult.value?.guestsPlanned ?? null;
+    } else {
+      // El cupo es opcional: sin él, el formulario solo permite 1 asistente.
+      console.warn("[rsvp] no se pudo leer el cupo de la invitación:", invitationResult.reason);
+    }
+
+    return Response.json({ ok: true, persisted: true, rsvp: rsvpResult.value, allowedGuests }, { headers: noStoreHeaders });
   } catch (error) {
     console.error("[rsvp] error al leer:", error);
     return Response.json({ ok: false, error: "No se pudo leer" }, { status: 500, headers: noStoreHeaders });

@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronLeft, ChevronRight, ChevronsRight, Hand, X } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { galleryBlur } from "@/lib/galleryBlur";
 import { prefersReducedMotion } from "@/lib/sectionFx";
@@ -82,14 +82,68 @@ function normalizeMemoryIndex(index: number) {
   return (index + memoryPhotos.length) % memoryPhotos.length;
 }
 
+// Cache de precargas ya disparadas: al ir y volver por el carril no se crean
+// objetos Image ni peticiones repetidas para las mismas vecinas.
+const preloadedMemories = new Set<number>();
+
 function preloadMemoryNeighbors(index: number) {
   [index - 1, index + 1, index + 2].forEach((target) => {
-    const photo = memoryPhotos[normalizeMemoryIndex(target)];
+    const normalized = normalizeMemoryIndex(target);
+
+    if (preloadedMemories.has(normalized)) {
+      return;
+    }
+
+    preloadedMemories.add(normalized);
     const image = new window.Image();
     image.decoding = "async";
-    image.src = photo.src;
+    image.src = memoryPhotos[normalized].src;
   });
 }
+
+// Tarjeta memoizada: al cambiar la tarjeta activa durante el scroll solo se
+// re-renderizan las 2 tarjetas afectadas, no las 22 con sus next/image.
+type MemoryCardProps = {
+  photo: MemoryPhoto;
+  index: number;
+  isActive: boolean;
+  onOpen: (index: number) => void;
+};
+
+const MemoryCard = memo(function MemoryCard({ photo, index, isActive, onOpen }: MemoryCardProps) {
+  return (
+    <figure
+      className={`memories-card is-${photo.orientation} ${isActive ? "is-active" : ""}${photo.highlight ? " is-highlight" : ""}`}
+    >
+      <button
+        type="button"
+        className="memories-card-trigger"
+        onClick={() => onOpen(index)}
+        aria-label={`Ampliar foto de ${photo.year}`}
+      >
+        <span className="memories-card-photo">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            fill
+            loading={index < 3 ? "eager" : "lazy"}
+            sizes="(max-width: 760px) 62vw, 18rem"
+            quality={60}
+            placeholder="blur"
+            blurDataURL={galleryBlur[photo.file]}
+            className="memories-photo"
+          />
+        </span>
+      </button>
+      {photo.highlight ? (
+        <span className="memories-card-badge" aria-hidden="true">
+          <ProposalRingIcon />
+        </span>
+      ) : null}
+      <figcaption className="memories-card-caption">{photo.year}</figcaption>
+    </figure>
+  );
+});
 
 export default function MemoriesGallery() {
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -420,37 +474,13 @@ export default function MemoriesGallery() {
 
       <div ref={stripRef} className="memories-strip" aria-label="Galeria de recuerdos">
         {memoryPhotos.map((photo, index) => (
-          <figure
+          <MemoryCard
             key={photo.src}
-            className={`memories-card is-${photo.orientation} ${index === activeIndex ? "is-active" : ""}${photo.highlight ? " is-highlight" : ""}`}
-          >
-            <button
-              type="button"
-              className="memories-card-trigger"
-              onClick={() => openLightbox(index)}
-              aria-label={`Ampliar foto de ${photo.year}`}
-            >
-              <span className="memories-card-photo">
-                <Image
-                  src={photo.src}
-                  alt={photo.alt}
-                  fill
-                  loading={index < 3 ? "eager" : "lazy"}
-                  sizes="(max-width: 760px) 62vw, 18rem"
-                  quality={60}
-                  placeholder="blur"
-                  blurDataURL={galleryBlur[photo.file]}
-                  className="memories-photo"
-                />
-              </span>
-            </button>
-            {photo.highlight ? (
-              <span className="memories-card-badge" aria-hidden="true">
-                <ProposalRingIcon />
-              </span>
-            ) : null}
-            <figcaption className="memories-card-caption">{photo.year}</figcaption>
-          </figure>
+            photo={photo}
+            index={index}
+            isActive={index === activeIndex}
+            onOpen={openLightbox}
+          />
         ))}
       </div>
 
