@@ -84,11 +84,19 @@ El dominio se conecta una sola vez; después todo despliegue queda publicado ah�
 
 1. **Agregar el dominio en Vercel**: proyecto → Settings → Domains → Add → `boda-tattan-lu.info`. Agrega también `www.boda-tattan-lu.info` y márcalo para que redirija al dominio principal.
 
-2. **Configurar el DNS en el registrador** (donde compraste el .info) con los valores exactos que Vercel muestra al agregar el dominio. Normalmente son:
-   - Registro `A` para `@` → `76.76.21.21`
-   - Registro `CNAME` para `www` → `cname.vercel-dns.com`
+2. **Configurar el DNS en DonDominio** (registrador del dominio): entra a
+   dondominio.com → Área de cliente → Dominios → `boda-tattan-lu.info` →
+   pestaña **Zona DNS** (el dominio debe usar los nameservers de DonDominio,
+   que es lo predeterminado). Ahí:
+   - Si existe un registro `A` de parking para `@`, elimínalo.
+   - Crea un registro `A` con host `@` (o vacío) → `76.76.21.21`
+   - Crea un registro `CNAME` con host `www` → `cname.vercel-dns.com`
+   - TTL: el valor por defecto está bien.
 
-   La propagación puede tardar de minutos a unas horas. Vercel emite el certificado HTTPS solo (no hay que hacer nada).
+   Usa los valores exactos que Vercel muestre al agregar el dominio (si
+   difieren de los de arriba, mandan los de Vercel). La propagación puede
+   tardar de minutos a unas horas. Vercel emite el certificado HTTPS solo
+   (no hay que hacer nada).
 
 3. **Variable de entorno**: en Vercel → Settings → Environment Variables, define para Production:
 
