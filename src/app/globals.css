@@ -2506,7 +2506,9 @@ button {
   /* padding vertical amplio: el overflow del carril recortaba las sombras
      difusas y se veia un recuadro marcado */
   padding: 2.7rem calc(50% - var(--memories-card-w) / 2) 3.5rem;
-  scroll-snap-type: x mandatory;
+  /* proximity en vez de mandatory: el snap obligatorio peleaba con la
+     inercia del dedo en iOS y el carril se sentía trabado */
+  scroll-snap-type: x proximity;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -2542,11 +2544,28 @@ button {
     0 0.1rem 0.35rem rgba(2, 8, 15, 0.14);
   scroll-snap-align: center;
   transform: rotate(3.2deg) scale(0.87) translateY(0.45rem);
-  filter: brightness(0.82) saturate(0.92);
   transition:
-    transform 520ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 420ms ease,
-    box-shadow 420ms ease;
+    transform 420ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 360ms ease;
+}
+
+/* Atenuado de las tarjetas no activas con una capa oscura (opacity es
+   composición pura en GPU); el filter brightness/saturate anterior repintaba
+   cada pixel en cada frame del scroll y trababa el carril en iPhone. */
+.memories-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 0.2rem;
+  background: rgba(7, 17, 31, 0.22);
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 360ms ease;
+}
+
+.memories-card.is-active::after {
+  opacity: 0;
 }
 
 .memories-card.is-landscape {
@@ -2571,7 +2590,6 @@ button {
 .memories-card.is-active {
   z-index: 3;
   transform: rotate(0deg) scale(1.05) translateY(0);
-  filter: none;
 }
 
 .memories-card-photo {
@@ -2611,8 +2629,12 @@ button {
 
 /* Polaroid destacado: la foto de la propuesta de matrimonio. Marco interior
    dorado + resplandor suave + sello con anillo, en la misma línea del sello
-   de cera del sobre. */
+   de cera del sobre. Sin animaciones de filter: repintaban cada frame y
+   trababan la galería en iPhone. */
 .memories-card.is-highlight {
+  /* Por encima de los polaroids vecinos (se traslapan): si no, el vecino
+     posterior tapaba el sello dorado. */
+  z-index: 2;
   box-shadow:
     0 0.4rem 0.85rem -0.25rem rgba(2, 8, 15, 0.26),
     0 1.5rem 2.9rem -0.85rem rgba(2, 8, 15, 0.46),
@@ -2631,35 +2653,20 @@ button {
 }
 
 .memories-card.is-highlight.is-active {
+  z-index: 3;
   box-shadow:
     0 0.5rem 1rem -0.25rem rgba(2, 8, 15, 0.32),
     0 1.9rem 3.4rem -0.7rem rgba(2, 8, 15, 0.55),
     0 0.15rem 0.45rem rgba(2, 8, 15, 0.18),
     0 0 1.5rem rgba(214, 178, 94, 0.55);
-  animation: memories-highlight-glow 2.8s ease-in-out infinite;
 }
 
-@keyframes memories-highlight-glow {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 0.15rem rgba(214, 178, 94, 0.25));
-  }
-  50% {
-    filter: drop-shadow(0 0 0.55rem rgba(214, 178, 94, 0.5));
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .memories-card.is-highlight.is-active {
-    animation: none;
-  }
-}
-
-/* Sello dorado con el anillo, colgado de la esquina del polaroid. */
+/* Sello dorado con el anillo, colgado del borde superior del polaroid
+   (centrado: las esquinas quedan bajo los polaroids vecinos traslapados). */
 .memories-card-badge {
   position: absolute;
-  top: -0.55rem;
-  right: -0.5rem;
+  top: -0.7rem;
+  left: 50%;
   z-index: 4;
   display: grid;
   place-items: center;
@@ -2671,7 +2678,7 @@ button {
   box-shadow:
     inset 0 0 0 1px rgba(255, 250, 241, 0.35),
     0 0.25rem 0.6rem rgba(2, 8, 15, 0.32);
-  transform: rotate(8deg);
+  transform: translateX(-50%) rotate(8deg);
   pointer-events: none;
 }
 
