@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { InvitationRecord } from "@/lib/invitations";
 import type { RsvpRecord } from "@/lib/rsvp";
 
@@ -127,6 +127,25 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
   const [importing, setImporting] = useState(false);
   const [importMsg, setImportMsg] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
+  // Invitación pendiente de confirmar su eliminación (modal de seguridad).
+  const [pendingDelete, setPendingDelete] = useState<InvitationRecord | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    if (!pendingDelete) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setPendingDelete(null);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [pendingDelete]);
 
   const stats = useMemo(() => {
     const yes = rsvps.filter((r) => r.attending);
@@ -226,13 +245,24 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
     setImportText((current) => (current.trim() ? `${current.trim()}\n${names.join("\n")}` : names.join("\n")));
   };
 
-  const deleteInvitation = async (id: string) => {
-    await fetch("/api/invitados/invitaciones", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    window.location.reload();
+  const confirmDeleteInvitation = async () => {
+    if (!pendingDelete) {
+      return;
+    }
+
+    setDeleting(true);
+
+    try {
+      await fetch("/api/invitados/invitaciones", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: pendingDelete.id }),
+      });
+      window.location.reload();
+    } catch {
+      setDeleting(false);
+      setPendingDelete(null);
+    }
   };
 
   const copyLink = async (label: string) => {
@@ -457,7 +487,7 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
                         <button
                           type="button"
                           className="dash-del-btn"
-                          onClick={() => deleteInvitation(inv.id)}
+                          onClick={() => setPendingDelete(inv)}
                           aria-label={`Eliminar ${inv.label}`}
                         >
                           ✕
@@ -471,6 +501,37 @@ export default function InvitadosDashboard({ rsvps, invitations, supabaseConfigu
           )}
         </section>
       )}
+
+      {pendingDelete ? (
+        <div
+          className="dash-modal-backdrop"
+          role="presentation"
+          onClick={() => (deleting ? null : setPendingDelete(null))}
+        >
+          <div
+            className="dash-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dash-delete-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h3 id="dash-delete-title">¿Eliminar esta invitación?</h3>
+            <p>
+              Vas a eliminar <strong>{pendingDelete.label}</strong> de la lista. Perderás el seguimiento de si
+              responde o no (su link seguirá abriendo la invitación y, si ya respondió, su respuesta seguirá en la
+              pestaña &ldquo;Respuestas&rdquo;).
+            </p>
+            <div className="dash-modal-actions">
+              <button type="button" className="dash-modal-cancel" onClick={() => setPendingDelete(null)} disabled={deleting}>
+                Cancelar
+              </button>
+              <button type="button" className="dash-modal-delete" onClick={confirmDeleteInvitation} disabled={deleting}>
+                {deleting ? "Eliminando…" : "Sí, eliminar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

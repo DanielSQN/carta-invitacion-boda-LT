@@ -618,3 +618,66 @@
 .dash-cupo-state--error {
   color: var(--no, #c0392b);
 }
+
+/* Modal de confirmación para eliminar una invitación. */
+.dash-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(10, 16, 24, 0.55);
+}
+
+.dash-modal {
+  width: min(100%, 26rem);
+  padding: 1.15rem 1.25rem 1.05rem;
+  border: 1px solid var(--border);
+  border-radius: 0.85rem;
+  background: var(--surface);
+  box-shadow: 0 1.2rem 3rem rgba(10, 16, 24, 0.35);
+}
+
+.dash-modal h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.dash-modal p {
+  margin: 0.55rem 0 0;
+  color: var(--muted, #5b6572);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dash-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.dash-modal-cancel,
+.dash-modal-delete {
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.dash-modal-delete {
+  border-color: #c0392b;
+  background: #c0392b;
+  color: #fff;
+}
+
+.dash-modal-cancel:disabled,
+.dash-modal-delete:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
