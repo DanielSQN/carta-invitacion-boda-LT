@@ -2510,7 +2510,10 @@ button {
      inercia del dedo en iOS y el carril se sentía trabado */
   scroll-snap-type: x proximity;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
+  /* Sin -webkit-overflow-scrolling: touch (obsoleto desde iOS 13): forzaba
+     el compositing heredado de WebKit y, al terminar de cargar una foto
+     lazy, Safari la promovía a una capa por ENCIMA del sello dorado
+     (ignorando su z-index). La inercia es el comportamiento nativo actual. */
 }
 
 .memories-strip::-webkit-scrollbar {
@@ -2678,7 +2681,9 @@ button {
   box-shadow:
     inset 0 0 0 1px rgba(255, 250, 241, 0.35),
     0 0.25rem 0.6rem rgba(2, 8, 15, 0.32);
-  transform: translateX(-50%) rotate(8deg);
+  /* translateZ fuerza al sello a su propia capa de compositing: sin esto,
+     Safari lo dejaba detrás de la foto cuando esta terminaba de cargar. */
+  transform: translateX(-50%) rotate(8deg) translateZ(0);
   pointer-events: none;
 }
 
@@ -3840,283 +3845,6 @@ html.is-lightbox-open .music-control-button {
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Transmision en vivo: seccion (apartado) + banner fijo del dia del evento.
---------------------------------------------------------------------------- */
-.live-section {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(95, 143, 180, 0.16), transparent 26rem),
-    linear-gradient(180deg, #061523 0%, #0a1f33 55%, #061321 100%);
-  color: #fffaf1;
-}
-
-.live-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 38%, rgba(255, 0, 0, 0.06), transparent 40%),
-    linear-gradient(90deg, rgba(7, 24, 39, 0.5), transparent 26%, transparent 74%, rgba(7, 24, 39, 0.5));
-}
-
-.live-inner {
-  position: relative;
-  z-index: 3;
-  display: grid;
-  width: min(100%, 40rem);
-  align-content: center;
-  justify-items: center;
-  gap: clamp(1.6rem, 6vw, 2.6rem);
-  margin: 0 auto;
-  padding: clamp(4rem, 14vw, 6rem) clamp(1.35rem, 5vw, 3rem) clamp(4rem, 14vw, 6rem);
-  text-align: center;
-}
-
-.live-heading h2 {
-  margin: 0.5rem 0 0;
-  font-family: var(--font-great-vibes), "Brush Script MT", cursive;
-  font-size: clamp(3rem, 13vw, 5rem);
-  font-weight: 400;
-  line-height: 0.92;
-}
-
-.live-heading p {
-  max-width: 24rem;
-  margin: clamp(0.9rem, 3vw, 1.3rem) auto 0;
-  color: rgba(237, 243, 250, 0.88);
-  font-size: clamp(1rem, 4.2vw, 1.16rem);
-  font-weight: 600;
-  line-height: 1.4;
-  text-shadow: 0 0.6rem 1.2rem rgba(3, 12, 22, 0.5);
-}
-
-.live-card {
-  display: grid;
-  width: min(100%, 24rem);
-  justify-items: center;
-  gap: clamp(1rem, 4vw, 1.5rem);
-  padding: clamp(1.6rem, 6vw, 2.2rem) clamp(1.3rem, 5vw, 1.8rem);
-  border: 1px solid rgba(255, 0, 0, 0.22);
-  border-radius: 0.85rem;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(255, 0, 0, 0.08), transparent 60%),
-    rgba(7, 24, 39, 0.5);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 250, 241, 0.05),
-    0 1.2rem 2.6rem rgba(0, 0, 0, 0.36);
-  backdrop-filter: blur(5px) saturate(1.05);
-  -webkit-backdrop-filter: blur(5px) saturate(1.05);
-}
-
-.live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.42rem 0.95rem;
-  border: 1px solid rgba(255, 70, 70, 0.6);
-  border-radius: 999px;
-  background: rgba(220, 30, 30, 0.16);
-  color: #ffd9d9;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.live-badge-dot {
-  width: 0.6rem;
-  height: 0.6rem;
-  border-radius: 999px;
-  background: #ff2a2a;
-  box-shadow: 0 0 0.5rem rgba(255, 42, 42, 0.9);
-  animation: live-blink 1.1s steps(1, end) infinite;
-}
-
-.live-badge--soon {
-  border-color: rgba(95, 143, 180, 0.5);
-  background: rgba(95, 143, 180, 0.14);
-  color: #cfe4f6;
-  letter-spacing: 0.12em;
-}
-
-.live-badge--soon i {
-  width: 0.55rem;
-  height: 0.55rem;
-  border-radius: 999px;
-  background: #8fc1e9;
-}
-
-@keyframes live-blink {
-  0%,
-  55% {
-    opacity: 1;
-  }
-  56%,
-  100% {
-    opacity: 0.25;
-  }
-}
-
-.live-card-copy {
-  margin: 0;
-  color: rgba(237, 243, 250, 0.9);
-  font-size: clamp(0.96rem, 4vw, 1.08rem);
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.live-youtube-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  min-height: 3.2rem;
-  padding: 0.7rem 1.5rem;
-  border: 1px solid rgba(255, 250, 241, 0.2);
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ff3a3a, #c00);
-  color: #fff;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.86rem, 3.6vw, 1rem);
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  text-transform: uppercase;
-  box-shadow: 0 0.8rem 1.6rem rgba(180, 0, 0, 0.35);
-  transition:
-    transform 200ms ease,
-    box-shadow 200ms ease;
-}
-
-.live-youtube-button:hover {
-  box-shadow: 0 1rem 2rem rgba(180, 0, 0, 0.45);
-  transform: translateY(-2px);
-}
-
-.live-youtube-button.is-disabled {
-  background: rgba(120, 130, 140, 0.32);
-  box-shadow: none;
-  color: rgba(255, 250, 241, 0.62);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.live-youtube-icon {
-  width: 1.7rem;
-  height: 1.2rem;
-  flex: 0 0 auto;
-}
-
-.live-youtube-button.is-disabled .live-youtube-icon path:first-child {
-  fill: rgba(255, 250, 241, 0.5);
-}
-
-/* banner fijo del dia del evento (dos lineas, centrado) */
-.live-banner {
-  position: fixed;
-  inset-block-start: 0;
-  inset-inline: 0;
-  z-index: 95;
-  display: flex;
-  align-items: stretch;
-  padding: calc(env(safe-area-inset-top) + 0.42rem) 2.4rem 0.5rem;
-  background: linear-gradient(90deg, #c00, #ff2a2a, #c00);
-  box-shadow: 0 0.4rem 1.1rem rgba(120, 0, 0, 0.5);
-  will-change: transform;
-}
-
-.live-banner-link {
-  display: grid;
-  flex: 1;
-  justify-items: center;
-  gap: 0.16rem;
-  color: #fff;
-  text-decoration: none;
-}
-
-.live-banner-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.44rem;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.74rem, 3.2vw, 0.88rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.live-banner-chip {
-  display: inline-grid;
-  place-items: center;
-  width: 1.55rem;
-  height: 1.12rem;
-  border-radius: 0.24rem;
-  background: #fff;
-}
-
-.live-banner-yt {
-  width: 1.18rem;
-  height: 0.84rem;
-}
-
-.live-banner-dot {
-  width: 0.58rem;
-  height: 0.58rem;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.9);
-  animation: live-blink 1.1s steps(1, end) infinite;
-}
-
-.live-banner-text {
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: none;
-}
-
-.live-banner-sub {
-  color: rgba(255, 255, 255, 0.94);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(0.6rem, 2.7vw, 0.68rem);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  line-height: 1.1;
-  text-align: center;
-  text-transform: none;
-}
-
-.live-banner-close {
-  position: absolute;
-  top: calc(env(safe-area-inset-top) + 0.32rem);
-  right: 0.5rem;
-  width: 1.9rem;
-  height: 1.9rem;
-  border: 0;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  font-size: 0.9rem;
-  line-height: 1;
-}
-
-@media (max-width: 380px) {
-  .live-banner-text {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .live-badge-dot,
-  .live-banner-dot {
-    animation: none;
-  }
-}
 
 @media (max-height: 700px) {
   .wedding-hero-paper {
@@ -4423,7 +4151,6 @@ html.is-lightbox-open .music-control-button {
 .story-heading h2,
 .dress-heading h2,
 .details-inner h2,
-.live-heading h2,
 .finale-heading h2,
 .countdown-section .countdown-title-block h2 {
   background: linear-gradient(180deg, #f2f8fe 0%, #cde2f5 34%, #9cc3e6 72%, #7fa9d2 100%);
@@ -4812,4 +4539,16 @@ html.is-lightbox-open .music-control-button {
     font-size: clamp(0.9rem, 3.7vw, 1.05rem);
   }
 
+}
+
+/* Con "reducir movimiento" activado se detienen las animaciones decorativas
+   infinitas (flechas de deslizar, balanceo de iconos): además de accesibilidad,
+   ahorran trabajo continuo de GPU. */
+@media (prefers-reduced-motion: reduce) {
+  .fixed-swipe-down-svg,
+  .memories-swipe-hint svg,
+  .memories-cue-runner,
+  .details-card-icon {
+    animation: none;
+  }
 }
