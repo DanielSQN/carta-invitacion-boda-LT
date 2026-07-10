@@ -169,6 +169,9 @@ export default function AttendanceSection() {
 
     setAttending(data.attending);
     setAlreadyResponded(true);
+    // Aviso al menú de secciones: con la respuesta ya hecha, el menú se
+    // muestra de inmediato (quien vuelve viene a consultar datos).
+    window.dispatchEvent(new Event("rsvp-already-responded"));
 
     if (data.attending) {
       const savedGuestCount = data.guestCount ?? names.length;

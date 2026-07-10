@@ -51,12 +51,35 @@ export default function SectionNav() {
     // una vez visible, ya no se vuelve a ocultar (se deja de escuchar el scroll).
     const onScroll = () => {
       if (scroller.scrollTop > window.innerHeight * 0.65) {
-        setVisible(true);
-        scroller.removeEventListener("scroll", onScroll);
+        show();
       }
     };
+
+    const show = () => {
+      setVisible(true);
+      scroller.removeEventListener("scroll", onScroll);
+    };
+
     onScroll();
     scroller.addEventListener("scroll", onScroll, { passive: true });
+
+    // Si esta invitación ya respondió, el menú aparece de una vez: quien
+    // vuelve suele venir a consultar datos (lugar, hora, vestimenta) y el
+    // menú es su atajo. Dos señales: la respuesta guardada en este navegador
+    // (mismo dispositivo, inmediata) y el aviso del formulario cuando el
+    // servidor confirma la respuesta (otro dispositivo).
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const para = (params.get("para") || params.get("invitado") || "").trim().toLowerCase();
+
+      if (para && window.localStorage.getItem(`rsvp:${para}`)) {
+        show();
+      }
+    } catch {
+      // sin almacenamiento disponible: queda el aviso del servidor
+    }
+
+    window.addEventListener("rsvp-already-responded", show);
 
     // El hero se carga de forma diferida: se reintenta hasta que existan las
     // secciones para conectar el observer que marca la sección activa.
@@ -100,6 +123,7 @@ export default function SectionNav() {
 
     return () => {
       scroller.removeEventListener("scroll", onScroll);
+      window.removeEventListener("rsvp-already-responded", show);
       if (raf) {
         window.cancelAnimationFrame(raf);
       }
